@@ -40,7 +40,6 @@ export const signinUser = createAsyncThunk(
       });
       return response.data;
     } catch (error: any) {
-      console.log(error);
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message);
       } else {
@@ -199,6 +198,43 @@ export const signOutUser = createAsyncThunk(
         return rejectWithValue(error.response.data.message);
       } else {
         return rejectWithValue("Failed to signout");
+      }
+    }
+  }
+);
+
+export const getProviderProfile = createAsyncThunk(
+  "auth/getProviderProfile",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get("provider/profile");
+      return response.data;
+    } catch (error: any) {
+      console.log(error);
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue("Failed to fetch provider profile");
+      }
+    }
+  }
+);
+
+export const completeProviderProfile = createAsyncThunk(
+  "auth/completeProviderProfile",
+  async (profileData: any, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(
+        "provider/complete-profile",
+        profileData
+      );
+      return response.data;
+    } catch (error: any) {
+      console.log(error);
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue("Failed to complete provider profile");
       }
     }
   }

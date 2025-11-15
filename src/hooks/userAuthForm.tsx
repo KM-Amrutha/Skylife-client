@@ -45,9 +45,6 @@ const useAuthForm = (formState: SignState = "sign in"): UseAuthFormReturn => {
     validationSchema: userAuthValidationSchema(formState),
     onSubmit: async (values) => {
 
-       console.log('🔴 FORM SUBMITTED!'); // ADD THIS FIRST
-  console.log('📋 Form values:', values); 
-  console.log('📊 Form state:', formState); 
       try {
         if (formState === "sign up") {
           const response = await dispatch(signupUser({ userData: values })).unwrap();
@@ -57,43 +54,45 @@ const useAuthForm = (formState: SignState = "sign in"): UseAuthFormReturn => {
             email: values.email,
             countDown: 60,
             expiryTime,
-            is_verified: false
+            isVerified: false
           }));
           showSuccessToast(response.message);
           handleUserAuth.resetForm();
           navigate("/verify-otp");
         } else {
-          console.log('🔵 ENTERING SIGN-IN BRANCH');
-           
-
           const response = await dispatch(
             signinUser({ email: values.email, password: values.password })
           ).unwrap();
           localStorage.setItem("accessToken", response.data.accessToken);
           const role = response.data.userData.role;
-          if (role === "user") dispatch(setUser(response.data.userData));
-          if (role === "provider") dispatch(setProvider(response.data.userData));
-          if (role === "admin") dispatch(setAdmin(response.data.userData));
+          console.log('Provider role:', role, 'Full user data:', response.data.userData);
+          
+          if (role === "user")  {
+            dispatch(setUser(response.data.userData)) 
           showSuccessToast(`Welcome back ${response.data.userData.firstName}`);
+        }
+          else if (role === "admin") {
+            dispatch(setAdmin(response.data.userData));
+            showSuccessToast(`Welcome back ${response.data.userData.firstName}`)
+          }
+           else if (role === "provider"){
+             dispatch(setProvider(response.data.userData));
+          showSuccessToast(`Welcome back ${response.data.userData.companyName}`);
+           }
           handleUserAuth.resetForm();
 
            console.log('About to navigate to welcome...');
 
            
-          // navigate(
-          //   role === "user"
-          //     ? "/user/dashboard"
-          //     : role === "provider"
-          //     ? "/provider/dashboard"
-          //     : "/admin/dashboard"
-          // );
-          navigate("/welcome")
+          navigate(
+            role === "user"  ? "/user/dashboard" : role === "admin" ? "/admin/dashboard" : "/provider/dashboard"
+          );
+          // navigate("/welcome")
 
            console.log(' Navigation called');
         }
-      } catch (error: any) {
+      } catch (error:any) {
 
-          console.log('🔴 ERROR in form submission:', error);
         showErrorToast(error.message || "Authentication failed");
       }
     }
@@ -127,7 +126,7 @@ const useAuthForm = (formState: SignState = "sign in"): UseAuthFormReturn => {
           email: values.email,
           countDown: 60,
           expiryTime,
-          is_verified: false
+          isVerified: false
         }));
         showSuccessToast(response.message);
         handleProviderAuth.resetForm();

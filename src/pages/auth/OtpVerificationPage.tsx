@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { updateCountDown } from "../../redux/auth/authSlice";
 import OtpForm from "../../components/user-authentication/OtpForm";
 import useOtpForm from "../../hooks/userOtpForm";
+import BackGroundLayout from "../../layouts/BackGroundLayout";
 
 const OtpVerificationPage: React.FC = () => {
   const navigate = useNavigate();
@@ -44,13 +45,17 @@ const OtpVerificationPage: React.FC = () => {
 
   if (!otp) {
     return (
+        <BackGroundLayout>
+
       <div className="min-h-screen bg-slate-900 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
       </div>
+      </BackGroundLayout>
     );
   }
 
   return (
+    <BackGroundLayout>
     <OtpForm
       formik={handleOtpForm}
       email={otp.email}
@@ -60,6 +65,7 @@ const OtpVerificationPage: React.FC = () => {
       onGoBack={handleGoBack}
       otpType={otpType}
     />
+     </BackGroundLayout>
   );
 };
 

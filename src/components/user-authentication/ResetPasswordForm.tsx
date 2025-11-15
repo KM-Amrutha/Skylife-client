@@ -1,4 +1,3 @@
-// components/user-authentication/ResetPasswordForm.tsx
 import React from 'react';
 import { FormikProps } from 'formik';
 
@@ -17,23 +16,33 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
   onGoBack
 }) => {
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-5">
-      <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-black mb-2">
+    <div className="flex items-center justify-center min-h-screen p-4">
+      <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md max-h-screen overflow-y-auto">
+        {/* Header with Logo */}
+        <div className="text-center mb-6">
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <img 
+              src="/image/gemlogo.png" 
+              alt="Logo" 
+              className="h-10 w-10"
+            />
+            <h1 className="text-2xl font-bold text-slate-900">
+              Skylife
+            </h1>
+          </div>
+          <h2 className="text-2xl font-bold text-black mb-1">
             Reset Password
-          </h1>
-          <p className="text-gray-600 text-base">
+          </h2>
+          <p className="text-gray-600 text-sm">
             Create a new password for your account
           </p>
         </div>
 
         {/* Form */}
-        <form onSubmit={formik.handleSubmit} className="space-y-5">
+        <form onSubmit={formik.handleSubmit} className="space-y-4">
           {/* New Password */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-black mb-2">
+            <label htmlFor="password" className="block text-xs font-medium text-black mb-1">
               New Password
             </label>
             <input
@@ -43,7 +52,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
               value={formik.values.password}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className={`w-full px-4 py-3 border-2 rounded-lg text-black bg-white placeholder-gray-400 transition-colors focus:outline-none focus:ring-3 focus:ring-slate-900/10 ${
+              className={`w-full px-3 py-2 border-2 rounded-lg text-black bg-white placeholder-gray-400 text-sm transition-colors focus:outline-none focus:ring-3 focus:ring-slate-900/10 ${
                 formik.touched.password && formik.errors.password
                   ? 'border-red-500 focus:border-red-500' 
                   : 'border-gray-300 focus:border-slate-900'
@@ -51,7 +60,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
               placeholder="Enter new password"
             />
             {formik.touched.password && formik.errors.password && (
-              <p className="text-red-500 text-xs mt-1 font-medium">
+              <p className="text-red-500 text-xs mt-0.5 font-medium">
                 {formik.errors.password}
               </p>
             )}
@@ -59,7 +68,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
 
           {/* Confirm Password */}
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-black mb-2">
+            <label htmlFor="confirmPassword" className="block text-xs font-medium text-black mb-1">
               Confirm Password
             </label>
             <input
@@ -69,7 +78,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
               value={formik.values.confirmPassword}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className={`w-full px-4 py-3 border-2 rounded-lg text-black bg-white placeholder-gray-400 transition-colors focus:outline-none focus:ring-3 focus:ring-slate-900/10 ${
+              className={`w-full px-3 py-2 border-2 rounded-lg text-black bg-white placeholder-gray-400 text-sm transition-colors focus:outline-none focus:ring-3 focus:ring-slate-900/10 ${
                 formik.touched.confirmPassword && formik.errors.confirmPassword
                   ? 'border-red-500 focus:border-red-500' 
                   : 'border-gray-300 focus:border-slate-900'
@@ -77,7 +86,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
               placeholder="Confirm new password"
             />
             {formik.touched.confirmPassword && formik.errors.confirmPassword && (
-              <p className="text-red-500 text-xs mt-1 font-medium">
+              <p className="text-red-500 text-xs mt-0.5 font-medium">
                 {formik.errors.confirmPassword}
               </p>
             )}
@@ -87,12 +96,12 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
           <button
             type="submit"
             disabled={formik.isSubmitting}
-            className="w-full bg-slate-900 text-white py-3 px-4 rounded-lg font-semibold text-base hover:bg-slate-800 focus:outline-none focus:ring-4 focus:ring-slate-900/50 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 mt-6"
+            className="w-full bg-slate-900 text-white py-2.5 px-4 rounded-lg font-semibold text-sm hover:bg-slate-800 focus:outline-none focus:ring-4 focus:ring-slate-900/50 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 mt-3"
           >
             {formik.isSubmitting ? (
               <div className="flex items-center justify-center">
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                Resetting Password...
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                Resetting...
               </div>
             ) : (
               'Reset Password'
@@ -101,14 +110,9 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
         </form>
 
         {/* Footer */}
-        <div className="text-center mt-6 space-y-3">
-          <div className="flex items-center justify-center">
-            <div className="border-t border-gray-300 flex-grow mr-3"></div>
-            <span className="text-gray-400 text-sm">OR</span>
-            <div className="border-t border-gray-300 flex-grow ml-3"></div>
-          </div>
-          
+        <div className="text-center mt-4">
           <button 
+            type="button"
             onClick={onGoBack}
             className="text-slate-900 font-semibold hover:underline transition-colors text-sm"
           >

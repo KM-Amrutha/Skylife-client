@@ -53,7 +53,6 @@ const OtpForm: React.FC<OtpFormProps> = ({
     newOtp[index] = value;
     formik.setFieldValue('otp', newOtp);
 
-    // Auto-focus next input
     if (value && index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
@@ -77,30 +76,40 @@ const OtpForm: React.FC<OtpFormProps> = ({
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-5">
-      <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-black mb-2">
+    <div className="flex items-center justify-center min-h-screen p-4">
+      <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md max-h-screen overflow-y-auto">
+        {/* Header with Logo */}
+        <div className="text-center mb-6">
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <img 
+              src="/image/gemlogo.png" 
+              alt="Logo" 
+              className="h-10 w-10"
+            />
+            <h1 className="text-2xl font-bold text-slate-900">
+              Skylife
+            </h1>
+          </div>
+          <h2 className="text-2xl font-bold text-black mb-1">
             {texts.title}
-          </h1>
-          <p className="text-gray-600 text-base mb-3">
+          </h2>
+          <p className="text-gray-600 text-sm mb-2">
             {texts.subtitle}
           </p>
-          <p className="text-black font-semibold text-base mb-4">
+          <p className="text-black font-semibold text-sm mb-3">
             {email}
           </p>
           
           {/* Countdown Timer */}
           {countDown > 0 ? (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
-              <p className="text-blue-600 text-sm font-semibold">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-2 mb-3">
+              <p className="text-blue-600 text-xs font-semibold">
                 Time remaining: {formatTime(countDown)}
               </p>
             </div>
           ) : (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
-              <p className="text-red-500 text-sm font-semibold">
+            <div className="bg-red-50 border border-red-200 rounded-lg p-2 mb-3">
+              <p className="text-red-500 text-xs font-semibold">
                 OTP expired. Please request a new one.
               </p>
             </div>
@@ -108,13 +117,13 @@ const OtpForm: React.FC<OtpFormProps> = ({
         </div>
 
         {/* Form */}
-        <form onSubmit={formik.handleSubmit} className="space-y-5">
+        <form onSubmit={formik.handleSubmit} className="space-y-4">
           {/* OTP Input Fields */}
           <div>
-            <label className="block text-sm font-medium text-black mb-4 text-center">
-              Enter 6-Digit Verification Code
+            <label className="block text-xs font-medium text-black mb-3 text-center">
+              Enter 6-Digit Code
             </label>
-            <div className="flex justify-center space-x-3 mb-4">
+            <div className="flex justify-center gap-2 mb-3">
               {formik.values.otp.map((digit, index) => (
                 <input
                   key={index}
@@ -129,9 +138,9 @@ const OtpForm: React.FC<OtpFormProps> = ({
                   }
                   onKeyDown={(e) => handleKeyDown(index, e)}
                   className={`
-                    w-12 h-12 text-center text-xl font-bold text-black
+                    w-10 h-10 text-center text-lg font-bold text-black
                     border-2 rounded-lg bg-white placeholder-gray-400 
-                    transition-colors focus:outline-none focus:ring-3 focus:ring-slate-900/10
+                    transition-colors focus:outline-none focus:ring-2 focus:ring-slate-900/10
                     ${formik.errors.otp ? 'border-red-500 focus:border-red-500' : 
                       digit ? 'border-slate-900 bg-slate-50 focus:border-slate-900' : 'border-gray-300 focus:border-slate-900'
                     }
@@ -143,7 +152,7 @@ const OtpForm: React.FC<OtpFormProps> = ({
 
             {/* Error Message */}
             {formik.errors.otp && (
-              <p className="text-red-500 text-xs mt-2 font-medium text-center">
+              <p className="text-red-500 text-xs mt-1 font-medium text-center">
                 Please enter a valid 6-digit OTP
               </p>
             )}
@@ -157,11 +166,11 @@ const OtpForm: React.FC<OtpFormProps> = ({
               formik.values.otp.some(digit => !digit) || 
               countDown === 0
             }
-            className="w-full bg-slate-900 text-white py-3 px-4 rounded-lg font-semibold text-base hover:bg-slate-800 focus:outline-none focus:ring-4 focus:ring-slate-900/50 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 mt-6"
+            className="w-full bg-slate-900 text-white py-2.5 px-4 rounded-lg font-semibold text-sm hover:bg-slate-800 focus:outline-none focus:ring-4 focus:ring-slate-900/50 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 mt-3"
           >
             {formik.isSubmitting ? (
               <div className="flex items-center justify-center">
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                 Verifying...
               </div>
             ) : (
@@ -171,8 +180,8 @@ const OtpForm: React.FC<OtpFormProps> = ({
         </form>
 
         {/* Footer */}
-        <div className="text-center mt-6 space-y-3">
-          <p className="text-gray-600 text-sm">
+        <div className="text-center mt-4 space-y-2">
+          <p className="text-gray-600 text-xs">
             Didn't receive the code?{' '}
             <button
               type="button"
@@ -189,12 +198,13 @@ const OtpForm: React.FC<OtpFormProps> = ({
           </p>
           
           <div className="flex items-center justify-center">
-            <div className="border-t border-gray-300 flex-grow mr-3"></div>
-            <span className="text-gray-400 text-sm">OR</span>
-            <div className="border-t border-gray-300 flex-grow ml-3"></div>
+            <div className="border-t border-gray-300 flex-grow mr-2"></div>
+            <span className="text-gray-400 text-xs">OR</span>
+            <div className="border-t border-gray-300 flex-grow ml-2"></div>
           </div>
           
           <button 
+            type="button"
             onClick={onGoBack}
             className="text-slate-900 font-semibold hover:underline transition-colors text-sm"
           >

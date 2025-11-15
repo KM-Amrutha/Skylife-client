@@ -11,7 +11,9 @@ import {
     signupProvider,
     updateUserProfile,
     updateProviderProfile,
-    signOutUser
+    signOutUser,
+    getProviderProfile,
+    completeProviderProfile,
 
 } from "./authThunk";
 
@@ -215,6 +217,44 @@ const authSlice = createSlice({
             ? action.payload
             : "Failed to sign out user";
       })
+      // Get provider profile
+.addCase(getProviderProfile.pending, (state) => {
+  state.isLoading = true;
+  state.error = null;
+})
+.addCase(getProviderProfile.fulfilled, (state, action) => {
+  state.isLoading = false;
+  state.provider = action.payload.data;
+  state.error = null;
+})
+.addCase(getProviderProfile.rejected, (state, action) => {
+  state.isLoading = false;
+  state.error =
+    typeof action.payload === "string"
+      ? action.payload
+      : "Failed to fetch provider profile";
+})
+
+// Complete provider profile
+.addCase(completeProviderProfile.pending, (state) => {
+  state.isLoading = true;
+  state.error = null;
+})
+.addCase(completeProviderProfile.fulfilled, (state, action) => {
+  state.isLoading = false;
+  if (state.provider) {
+    state.provider.isProfileComplete = true;
+  }
+  state.error = null;
+})
+.addCase(completeProviderProfile.rejected, (state, action) => {
+  state.isLoading = false;
+  state.error =
+    typeof action.payload === "string"
+      ? action.payload
+      : "Failed to complete provider profile";
+})
+
         }
 
 })
