@@ -12,10 +12,17 @@ import WelcomePage from "./pages/user/WelcomePage";
 import ForgotPasswordPage from "./pages/auth/ForgetPasswordPage";
 import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 
+// PROVIDER SIDE
+
+import ProviderDashboardPage from "./pages/provider/ProviderDashboardPage";
+import CompleteProfilePage from "./pages/provider/CompleteProfilePage";
+
+
 // ADMIN SIDE
 
 import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
 
+import HomePage from "./pages/HomePage";
 
 
 // PROTECTED
@@ -54,7 +61,7 @@ const App = () => {
 
 
         {/* Default to signup */}
-        <Route path="/" element={<AuthPage />} />
+        <Route path="/" element={<HomePage />} />
 
         {/* Protected User Routes */}
         <Route element={<ProtectedUser />}>
@@ -68,11 +75,12 @@ const App = () => {
 
         {/* Protected Provider Routes */}
         <Route element={<ProtectedProvider />}>
-          <Route path="/provider/dashboard" element={<div>Provider Dashboard</div>} />
+          <Route path="/provider/dashboard" element={<ProviderDashboardPage />} />
+          <Route path="/provider/complete-profile" element={<CompleteProfilePage />} />
         </Route>
 
     
-        <Route path="*" element={<AuthPage />} />
+        <Route path="*" element={<HomePage />} />
       </Routes>
     </Suspense>
   );

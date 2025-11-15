@@ -13,19 +13,27 @@ export interface ProviderAuthFormData {
     email: string;
     password: string;
     mobile: string;
-    address?: string;
-    logoUrl?: string;  
-    airlineCode: string;
-  establishmentYear?: number;
-  typeOfOperation?: string;
+   airlineCode: string;
+  logoUrl?: string;
   registrationCertificateUrl?: string;
   insuranceProofUrl?: string;
+  establishmentYear?: number;
+  licenseExpiryDate?: Date;
   headquartersAddress?: string;
   countryOfOperation?: string;
+  typeOfOperation?: string;
   websiteUrl?: string;
   ceoName?: string;
   officeContactNumber?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  isActive?: boolean;
+  isVerified?: boolean;
+  adminApproval?: boolean; 
+  isProfileComplete?: boolean; 
  
    
 
 }
+
+

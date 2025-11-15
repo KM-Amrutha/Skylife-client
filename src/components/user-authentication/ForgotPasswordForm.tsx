@@ -16,15 +16,25 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
   onGoBack
 }) => {
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-5">
-      <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md">
+    <div className="flex items-center justify-center min-h-screen p-4">
+      <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md max-h-screen overflow-y-auto">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-black mb-2">
+       <div className="text-center mb-6">
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <img 
+              src="/image/gemlogo.png" 
+              alt="Logo" 
+              className="h-10 w-10"
+            />
+            <h1 className="text-2xl font-bold text-slate-900">
+              Skylife
+            </h1>
+          </div>
+          <h2 className="text-2xl font-bold text-black mb-1">
             Forgot Password?
-          </h1>
-          <p className="text-gray-600 text-base">
-            Enter your email address and we'll send you a reset link
+          </h2>
+          <p className="text-gray-600 text-sm">
+            Enter your email to reset your password
           </p>
         </div>
 

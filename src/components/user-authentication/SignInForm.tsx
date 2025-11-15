@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormikProps } from 'formik';
 import { UserAuthFormData } from '../../types/authTypes';
+import { useNavigate } from 'react-router-dom';
 
 interface SignInFormProps {
   showPassword: boolean;
@@ -15,18 +16,30 @@ const SignInForm: React.FC<SignInFormProps> = ({
   formik,
   onToggleAuth
 }) => {
+  const navigate = useNavigate();
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-5">
+      <div className="flex items-center justify-center min-h-screen p-5">
       <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md">
   
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-black mb-2">
-            Welcome Back
-          </h1>
-          <p className="text-gray-600 text-base">
-            Sign in to your AirTicket account
-          </p>
-        </div>
+        {/* Header */}
+<div className="text-center mb-8">
+  <div className="flex items-center justify-center gap-2 mb-3">
+    <img 
+      src="/image/gemlogo.png" 
+      alt="Logo" 
+      className="h-10 w-10"
+    />
+    <h1 className="text-2xl font-bold text-slate-900">
+      Skylife
+    </h1>
+  </div>
+  <h2 className="text-3xl font-bold text-black mb-2">
+    Welcome Back
+  </h2>
+  <p className="text-gray-600 text-base">
+    Sign in to your AirTicket account
+  </p>
+</div>
 
         <form onSubmit={formik.handleSubmit} className="space-y-5">
           {/* Email */}
@@ -126,11 +139,28 @@ const SignInForm: React.FC<SignInFormProps> = ({
             Don't have an account?{' '}
             <button 
               onClick={onToggleAuth}
-              className="text-slate-900 font-semibold hover:underline transition-colors"
+              className="text-blue-600 font-semibold hover:underline"
             >
               Sign Up
             </button>
           </p>
+
+<div className="flex items-center justify-center">
+        <div className="border-t border-gray-300 flex-grow mr-2"></div>
+        <span className="text-gray-400 text-xs">OR</span>
+        <div className="border-t border-gray-300 flex-grow ml-2"></div>
+      </div>
+       <p className="text-gray-600 text-xs">
+        Are you an airline provider?{' '}
+        <button 
+          type="button"
+          onClick={() => navigate('/provider-sign-up')}
+          className="text-blue-600 font-semibold hover:underline"
+        >
+          Register
+        </button>
+      </p>
+
         </div>
       </div>
     </div>

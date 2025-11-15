@@ -72,7 +72,28 @@ export interface Provider {
     isVerified: boolean;
     createdAt: Date;
     updatedAt: Date;
+    isProfileComplete?: boolean;
 }
+export interface completeProviderProfile{
+  companyName?: string;  
+  email?: string;                
+  mobile?: string;                
+  airlineCode?: string; 
+  logoUrl: string;  
+    role: Role;
+  registrationCertificateUrl: string;
+  insuranceProofUrl: string;
+  establishmentYear: number;
+    licenseExpiryDate: Date;
+  headquartersAddress: string;
+  countryOfOperation: string;
+    typeOfOperation: string;
+    websiteUrl: string;
+    ceoName: string;
+    officeContactNumber: string;
+}
+
+
 
 export interface SignupProvider{
     companyName: string;
@@ -86,7 +107,7 @@ export interface SignupProvider{
     email:string;
     countDown:number;
     expiryTime:string;
-    is_verified:boolean;
+    isVerified:boolean;
 
   }
   export interface Auth {
