@@ -220,6 +220,23 @@ export const getProviderProfile = createAsyncThunk(
   }
 );
 
+
+export const getAdminProfile = createAsyncThunk(
+  "auth/getAdminProfile",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get("/admin/providers/pending");
+      return response.data;
+    } catch (error: any) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue("Failed to fetch admin profile");
+      }
+    }
+  }
+);
+
 export const completeProviderProfile = createAsyncThunk(
   "auth/completeProviderProfile",
   async (profileData: any, { rejectWithValue }) => {

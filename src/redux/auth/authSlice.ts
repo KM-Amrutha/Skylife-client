@@ -1,6 +1,7 @@
 import { createSlice,PayloadAction } from "@reduxjs/toolkit";
 import { Auth,Otp } from "./authTypes";
 
+
 import {
     signupUser,
     signinUser,
@@ -14,6 +15,7 @@ import {
     signOutUser,
     getProviderProfile,
     completeProviderProfile,
+    getAdminProfile
 
 } from "./authThunk";
 
@@ -81,14 +83,46 @@ const authSlice = createSlice({
             state.isLoading = true;
             state.error = null;
         })
-        .addCase(signinUser.fulfilled,(state,action)=>{
-            state.isLoading = false;
-            state.error = null; 
-             if(action.payload.data?.user) {
-        state.user = action.payload.data.user;
-    }
-    
-        })
+    .addCase(signinUser.fulfilled, (state, action) => {
+  state.isLoading = false;
+  state.error = null;
+  const loggedInUser = action.payload.data?.user;
+  if (!loggedInUser) return;
+
+  if (loggedInUser.role === "admin") {
+    state.admin = loggedInUser;
+    state.user = null;
+    state.provider = null;
+  } else if (loggedInUser.role === "user") {
+    state.user = loggedInUser;
+    state.admin = null;
+    state.provider = null;
+  } else if (loggedInUser.role === "provider") {
+    state.provider = loggedInUser;
+    state.admin = null;
+    state.user = null;
+  }
+})
+
+
+
+builder
+  .addCase(getAdminProfile.pending, (state) => {
+    state.isLoading = true;
+    state.error = null;
+  })
+  .addCase(getAdminProfile.fulfilled, (state, action) => {
+    state.isLoading = false;
+    state.admin = action.payload.data;
+    state.error = null;
+  })
+  .addCase(getAdminProfile.rejected, (state, action) => {
+    state.isLoading = false;
+    state.admin = null;
+    state.error = typeof action.payload === "string" ? action.payload : "Failed to fetch admin profile";
+  })
+
+
         .addCase(signinUser.rejected,(state,action)=>{
             state.isLoading = false;
             state.error = action.payload === "string"
@@ -240,7 +274,7 @@ const authSlice = createSlice({
   state.isLoading = true;
   state.error = null;
 })
-.addCase(completeProviderProfile.fulfilled, (state, action) => {
+.addCase(completeProviderProfile.fulfilled, (state) => {
   state.isLoading = false;
   if (state.provider) {
     state.provider.isProfileComplete = true;
