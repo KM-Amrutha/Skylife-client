@@ -1,22 +1,32 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice} from "@reduxjs/toolkit";
 import { Aircraft } from "./aircraftTypes";
 import {
   getProviderAircrafts,
   createAircraft,
   updateAircraft,
   deleteAircraft,
+   getAvailableAircraftsForSchedule 
 } from "./aircraftThunk";
+
 
 interface AircraftState {
   aircrafts: Aircraft[];
   isLoading: boolean;
   error: string | null;
+
+    availableForSchedule: Aircraft[];
+  isLoadingAvailableForSchedule: boolean;
+  availableForScheduleError: string | null;
 }
 
 const initialState: AircraftState = {
   aircrafts: [],
   isLoading: false,
   error: null,
+
+   availableForSchedule: [],
+  isLoadingAvailableForSchedule: false,
+  availableForScheduleError: null
 };
 
 const aircraftSlice = createSlice({
@@ -103,9 +113,31 @@ const aircraftSlice = createSlice({
           typeof action.payload === "string"
             ? action.payload
             : "Failed to delete aircraft";
-      });
+      })
+
+      .addCase(getAvailableAircraftsForSchedule.pending, (state) => {
+  state.isLoadingAvailableForSchedule = true;
+  state.availableForScheduleError = null;
+})
+.addCase(getAvailableAircraftsForSchedule.fulfilled, (state, action) => {
+  state.isLoadingAvailableForSchedule = false;
+  state.availableForSchedule = action.payload.data || [];
+  state.availableForScheduleError = null;
+})
+.addCase(getAvailableAircraftsForSchedule.rejected, (state, action) => {
+  state.isLoadingAvailableForSchedule = false;
+  state.availableForSchedule = [];
+  state.availableForScheduleError = 
+    typeof action.payload === "string" ? action.payload : "Failed to fetch available aircrafts";
+})
   },
-});
+
+})
+
+
+
+
+
 
 export const { clearAircraftError } = aircraftSlice.actions;
 export default aircraftSlice.reducer;

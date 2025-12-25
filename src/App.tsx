@@ -21,6 +21,8 @@ import AddAircraftPage from "./pages/provider/AddAircraftPage";
 import AircraftListPage from "./pages/provider/AircraftListPage";
 import AircraftSeatLayoutPage from "./pages/provider/AricraftSeatLayoutPage";
 
+import AddFlightPage from "./pages/provider/AddFlightPage";
+import FlightListPage from "./pages/provider/FlightListPage";
 
 
 // ADMIN SIDE
@@ -88,6 +90,8 @@ const App = () => {
 
          <Route path="/provider/aircraft/:aircraftId/seat-layout" element={<AircraftSeatLayoutPage />} />
 
+          <Route path="/provider/add-flight" element={<AddFlightPage />} />
+          <Route path="/provider/flight-list" element={<FlightListPage />} />
 
         </Route>
 

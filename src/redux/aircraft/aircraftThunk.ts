@@ -72,4 +72,22 @@ export const deleteAircraft = createAsyncThunk(
       return rejectWithValue("Failed to delete aircraft");
     }
   }
+)
+
+export const getAvailableAircraftsForSchedule = createAsyncThunk(
+  "aircraft/getAvailableAircraftsForSchedule",
+  async ({ departureDestinationId, departureTime }: { departureDestinationId: string; departureTime: string }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get("/provider/aircraft/available-aircrafts", {
+        params: { departureDestinationId, departureTime }
+      });
+      return response.data;
+    } catch (error: any) {
+      console.log(error);
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      }
+      return rejectWithValue("Failed to fetch available aircrafts");
+    }
+  }
 );

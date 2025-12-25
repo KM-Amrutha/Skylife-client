@@ -5,7 +5,8 @@ import authReducer from './auth/authSlice';
 import adminReducer from "./admin/adminSlice";
 import aircraftReducer from './aircraft/aircraftSlice';
 import destinationsReducer from './destination/destinationSlice';
-import seatReducer from './seat/seatSlice'
+import seatReducer from './seat/seatSlice';
+import flightReudcer from './flight/flightSlice';
 
 const persistConfig = {
     key:"root",
@@ -23,7 +24,8 @@ const store = configureStore({
         admin:adminReducer,
         aircraft:aircraftReducer,
         destinations:destinationsReducer,
-        seat:seatReducer
+        seat:seatReducer,
+        flight:flightReudcer,
 
     },
      middleware: (getDefaultMiddleware) =>

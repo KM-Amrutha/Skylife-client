@@ -11,8 +11,19 @@ export interface Aircraft {
   flyingRangeKm: number;
   engineCount: number;
   lavatoryCount: number;
-  baseStationId: string;
-  currentLocationId: string;
+  baseStation?: {
+    _id: string;
+    name: string;
+    city?: string;
+    country?: string;
+  };
+
+  currentLocation?: {
+    _id: string;
+    name: string;
+    city?: string;
+    country?: string;
+  };
   availableFrom: Date;
   status: "active" | "inactive" | "maintenance";
   createdAt: Date;
@@ -26,7 +37,6 @@ export interface CreateAircraftDTO {
   manufacturer: string;
   buildYear: number;
   seatCapacity: number;
-  seatLayoutType: string;
   flyingRangeKm: number;
   engineCount: number;
   lavatoryCount: number;
