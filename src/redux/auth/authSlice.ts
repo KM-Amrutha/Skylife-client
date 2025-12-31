@@ -15,7 +15,8 @@ import {
     signOutUser,
     getProviderProfile,
     completeProviderProfile,
-    getAdminProfile
+    getAdminProfile,
+    googleAuth
 
 } from "./authThunk";
 
@@ -288,8 +289,25 @@ builder
       ? action.payload
       : "Failed to complete provider profile";
 })
-
-        }
+// google auth
+ .addCase(googleAuth.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(googleAuth.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+        const loggedInUser = action.payload. data?.user;
+        if (!loggedInUser) return;
+      })
+      .addCase(googleAuth.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error =
+          typeof action.payload === "string"
+            ? action.payload
+            : "Failed to signin with google";
+      });
+    }
 
 })
 
@@ -300,7 +318,8 @@ export const {
     setUser,
     setProvider,
     setAdmin,
-    clearAuthPerson
+    clearAuthPerson,
+    
 } = authSlice.actions;
 export default authSlice.reducer;
 

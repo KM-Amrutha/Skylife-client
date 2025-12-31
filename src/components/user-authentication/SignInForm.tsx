@@ -2,19 +2,24 @@ import React from 'react';
 import { FormikProps } from 'formik';
 import { UserAuthFormData } from '../../types/authTypes';
 import { useNavigate } from 'react-router-dom';
+import GoogleAuth from "./GoogleAuth";
+import { CredentialResponse } from "@react-oauth/google";
+
 
 interface SignInFormProps {
   showPassword: boolean;
   setShowPassword: (show: boolean) => void;
   formik: FormikProps<UserAuthFormData>;
   onToggleAuth: () => void;
+  handleGoogleAuthSuccess?: (credentialResponse: CredentialResponse) => Promise<void> | void;  // ← EXACT MATCH
 }
 
 const SignInForm: React.FC<SignInFormProps> = ({
   showPassword,
   setShowPassword,
   formik,
-  onToggleAuth
+  onToggleAuth,
+  handleGoogleAuthSuccess
 }) => {
   const navigate = useNavigate();
   return (
@@ -132,7 +137,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
             Forgot Password?
           </a>
         </div>
-
+        <GoogleAuth handleGoogleAuthSuccess={handleGoogleAuthSuccess} />
         {/* Footer */}
         <div className="text-center mt-6">
           <p className="text-gray-600 text-sm">
