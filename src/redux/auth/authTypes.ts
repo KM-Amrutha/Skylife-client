@@ -141,3 +141,6 @@ export interface RequestUpdatePassword {
   password: string;
   newPassword: string;
 }
+export interface RequestGoogleAuth {
+  token: string;
+}

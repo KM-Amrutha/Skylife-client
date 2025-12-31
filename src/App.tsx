@@ -17,6 +17,13 @@ import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 import ProviderDashboardPage from "./pages/provider/ProviderDashboardPage";
 import CompleteProfilePage from "./pages/provider/CompleteProfilePage";
 
+import AddAircraftPage from "./pages/provider/AddAircraftPage";
+import AircraftListPage from "./pages/provider/AircraftListPage";
+import AircraftSeatLayoutPage from "./pages/provider/AricraftSeatLayoutPage";
+
+import AddFlightPage from "./pages/provider/AddFlightPage";
+import FlightListPage from "./pages/provider/FlightListPage";
+
 
 // ADMIN SIDE
 
@@ -77,6 +84,15 @@ const App = () => {
         <Route element={<ProtectedProvider />}>
           <Route path="/provider/dashboard" element={<ProviderDashboardPage />} />
           <Route path="/provider/complete-profile" element={<CompleteProfilePage />} />
+
+          <Route path="/provider/add-aircraft" element={<AddAircraftPage />} />
+          < Route path="/provider/aircraft-list" element={<AircraftListPage />} />
+
+         <Route path="/provider/aircraft/:aircraftId/seat-layout" element={<AircraftSeatLayoutPage />} />
+
+          <Route path="/provider/add-flight" element={<AddFlightPage />} />
+          <Route path="/provider/flight-list" element={<FlightListPage />} />
+
         </Route>
 
     

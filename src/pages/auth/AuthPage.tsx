@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useAuthForm from "../../hooks/userAuthForm";
+import useGoogleAuth from "../../hooks/useGoogleAuth";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -51,6 +52,7 @@ const AuthPage: React.FC = () => {
     else navigate("/sign-in");
   };
 
+    const { handleGoogleAuthSuccess } = useGoogleAuth();
   const goProvider = () => navigate("/provider-sign-up");
   const goUser = () => navigate("/sign-up");
 
@@ -61,6 +63,7 @@ const AuthPage: React.FC = () => {
             showPassword={showPassword}
             setShowPassword={setShowPassword}
             formik={handleUserAuth}
+              handleGoogleAuthSuccess={handleGoogleAuthSuccess}
             onToggleAuth={toggleUser}
           />
       ) : mode === "sign up" ? (
@@ -68,6 +71,7 @@ const AuthPage: React.FC = () => {
           showPassword={showPassword}
           setShowPassword={setShowPassword}
           formik={handleUserAuth}
+            
           onToggleAuth={toggleUser}
         />
       ) : (

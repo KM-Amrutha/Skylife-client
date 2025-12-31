@@ -10,6 +10,7 @@ import {
   RequestSignin,
   RequestPasswordChange,
   RequestUpdatePassword,
+  RequestGoogleAuth,
 } from "./authTypes"
 
 export const signupUser = createAsyncThunk(
@@ -220,6 +221,23 @@ export const getProviderProfile = createAsyncThunk(
   }
 );
 
+
+export const getAdminProfile = createAsyncThunk(
+  "auth/getAdminProfile",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get("/admin/providers/pending");
+      return response.data;
+    } catch (error: any) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue("Failed to fetch admin profile");
+      }
+    }
+  }
+);
+
 export const completeProviderProfile = createAsyncThunk(
   "auth/completeProviderProfile",
   async (profileData: any, { rejectWithValue }) => {
@@ -235,6 +253,23 @@ export const completeProviderProfile = createAsyncThunk(
         return rejectWithValue(error.response.data.message);
       } else {
         return rejectWithValue("Failed to complete provider profile");
+      }
+    }
+  }
+);
+
+export const googleAuth = createAsyncThunk(
+  "auth/google",
+  async ({ token }: RequestGoogleAuth, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(`auth/google/`, { token });
+      return response.data;
+    } catch (error: any) {
+      console.log(error);
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue("Failed to verify google user");
       }
     }
   }
