@@ -4,6 +4,8 @@ import {
   getPendingProviders,
   verifyProvider,
   rejectProvider,
+  getAllProviders,
+  updateProviderStatus,
 } from "./adminThunk";
 
 const initialState: AdminState = {
@@ -83,7 +85,49 @@ const adminSlice = createSlice({
           typeof action.payload === "string"
             ? action.payload
             : "Failed to reject provider";
-      });
+      })
+
+      .addCase(getAllProviders.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+      })
+     .addCase(getAllProviders.fulfilled, (state, action) => {
+      state.isLoading = false;
+      console.log("Redux recieved Providers:", action.payload.data);
+      state.providers = action.payload.data || [];
+      state.error = null;
+      })
+     .addCase(getAllProviders.rejected, (state, action) => {
+      state.isLoading = false;
+       state.error =
+       typeof action.payload === "string"
+      ? action.payload
+      : "Failed to fetch all providers";
+      })
+
+    
+.addCase(updateProviderStatus.pending, (state) => {
+  state.isLoading = true;
+  state.error = null;
+})
+.addCase(updateProviderStatus.fulfilled, (state, action) => {
+  state.isLoading = false;
+  // Optimistically update the provider in the list
+  const { providerId, isActive } = action.meta.arg;
+  state.providers = state.providers.map((provider) =>
+    provider._id === providerId
+      ? { ...provider, isActive }
+      : provider
+  );
+  state.error = null;
+})
+.addCase(updateProviderStatus.rejected, (state, action) => {
+  state.isLoading = false;
+  state.error =
+    typeof action.payload === "string"
+      ? action.payload
+      : "Failed to update provider status";
+})
   },
 });
 

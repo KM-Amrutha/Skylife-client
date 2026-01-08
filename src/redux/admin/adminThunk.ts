@@ -1,6 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../config/axios";
-import { RequestVerifyProvider, RequestRejectProvider } from "./adminTypes";
+import { RequestVerifyProvider,
+   RequestRejectProvider,
+   UpdateProviderStatusRequest } from "./adminTypes";
 
 export const getPendingProviders = createAsyncThunk(
   "admin/getPendingProviders",
@@ -40,10 +42,11 @@ export const verifyProvider = createAsyncThunk(
 
 export const rejectProvider = createAsyncThunk(
   "admin/rejectProvider",
-  async ({ providerId }: RequestRejectProvider, { rejectWithValue }) => {
+  async ({ providerId ,reason}: RequestRejectProvider, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.patch(
-        `/admin/providers/${providerId}/reject`
+        `/admin/providers/${providerId}/reject`,
+        { reason }
       );
       return response.data;
     } catch (error: any) {
@@ -52,6 +55,41 @@ export const rejectProvider = createAsyncThunk(
         return rejectWithValue(error.response.data.message);
       } else {
         return rejectWithValue("Failed to reject provider");
+      }
+    }
+  }
+);
+export const getAllProviders = createAsyncThunk(
+  "admin/getAllProviders",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get("/admin/providers");
+      return response.data; 
+    } catch (error: any) {
+      console.log("Get all providers error:", error);
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue("Failed to fetch all providers");
+      }
+    }
+  }
+);
+export const updateProviderStatus = createAsyncThunk(
+  "admin/updateProviderStatus",
+  async ({ providerId, isActive }: UpdateProviderStatusRequest, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.patch(  
+        `/admin/providers/${providerId}/status`,         
+        { isActive }
+      );
+      return response.data;
+    } catch (error: any) {
+      console.log("Update provider status error:", error);
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue("Failed to update provider status");
       }
     }
   }

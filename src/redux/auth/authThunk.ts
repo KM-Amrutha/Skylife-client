@@ -274,3 +274,21 @@ export const googleAuth = createAsyncThunk(
     }
   }
 );
+
+// Add this to src/redux/auth/authThunk.ts
+export const getUserProfile = createAsyncThunk(
+  "auth/getUserProfile",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get("user/profile");
+      return response.data;
+    } catch (error: any) {
+      console.log(error);
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue("Failed to fetch user profile");
+      }
+    }
+  }
+);

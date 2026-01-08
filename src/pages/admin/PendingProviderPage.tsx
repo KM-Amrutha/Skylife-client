@@ -1,8 +1,8 @@
 import React from "react";
-import AdminDashboard from "../../components/admin/AdminDashboard";
-import useAdminDashboard from "../../hooks/useAdminDashboard";
+import PendingProvider from "../../components/admin/PendingProvider";
+import useAdminDashboard from "../../hooks/useAdminDashboard"; 
 
-const AdminDashboardPage: React.FC = () => {
+const PendingProvidersPage: React.FC = () => {
   const {
     pendingProviders,
     isLoading,
@@ -11,7 +11,7 @@ const AdminDashboardPage: React.FC = () => {
   } = useAdminDashboard();
 
   return (
-    <AdminDashboard
+    <PendingProvider
       pendingProviders={pendingProviders}
       onVerifyProvider={handleVerifyProvider}
       onRejectProvider={handleRejectProvider}
@@ -20,4 +20,4 @@ const AdminDashboardPage: React.FC = () => {
   );
 };
 
-export default AdminDashboardPage;
+export default PendingProvidersPage;

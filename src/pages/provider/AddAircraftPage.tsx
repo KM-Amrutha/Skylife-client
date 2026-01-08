@@ -1,6 +1,6 @@
 import React from 'react';
 import ProviderMainLayout from '../../layouts/ProviderMainLayout';
-import AircraftForm from '../../components/aircraft/aircraftForm';
+import AircraftForm from '../../components/aircraft/AircraftForm';
 import useAircraft from '../../hooks/useAircraft';
 
 const AddAircraftPage: React.FC = () => {

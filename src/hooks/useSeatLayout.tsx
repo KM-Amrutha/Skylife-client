@@ -25,6 +25,7 @@ interface UseSeatLayoutReturn {
   aircraftId: string;
   totalPlannedSeats: number;
   canGenerateSeats: boolean;
+  aircraftCapacity: number;
   handleGenerateSeats: () => void;
   handleDeleteLayout: (layoutId: string) => void;
   clearError: () => void;
@@ -44,6 +45,12 @@ const seatLayoutValidationSchema = Yup.object().shape({
 const useSeatLayout = (): UseSeatLayoutReturn => {
   const dispatch = useDispatch<AppDispatch>();
   const { aircraftId } = useParams<{ aircraftId: string }>();
+
+  const aircraft = useSelector((state: RootState) => 
+  state.aircraft.aircrafts.find(a => a._id === aircraftId)
+);
+
+const aircraftCapacity = aircraft?.seatCapacity || 0;
 
   const {
     seatTypes,
@@ -137,7 +144,8 @@ const useSeatLayout = (): UseSeatLayoutReturn => {
     canGenerateSeats,
     handleGenerateSeats,
     clearError,
-    handleDeleteLayout
+    handleDeleteLayout,
+    aircraftCapacity
   };
 };
 

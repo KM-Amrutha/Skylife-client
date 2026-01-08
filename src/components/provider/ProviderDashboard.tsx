@@ -21,6 +21,8 @@ const ProviderDashboard: React.FC<ProviderDashboardProps> = ({
     );
   }
 
+  const isRejected = provider?.profileStatus === 'rejected';
+
   return (
     <div 
       className="relative rounded-2xl overflow-hidden"
@@ -38,7 +40,25 @@ const ProviderDashboard: React.FC<ProviderDashboardProps> = ({
       <div className="relative p-8 text-white">
         {/* Title */}
         <h1 className="text-4xl font-bold text-center mb-12">Dashboard</h1>
-        
+
+        {/* NEW: Rejection Banner */}
+        {isRejected && provider?.rejectionReason && (
+          <div className="mb-8 p-6 bg-red-600/30 backdrop-blur-md border border-red-500/50 rounded-2xl text-center max-w-4xl mx-auto">
+            <h3 className="text-2xl font-bold text-red-300 mb-3">
+              Application Rejected
+            </h3>
+            <p className="text-lg mb-4">
+              <span className="font-semibold">Reason:</span>
+            </p>
+            <p className="text-base italic leading-relaxed bg-red-900/30 p-4 rounded-xl">
+              "{provider.rejectionReason}"
+            </p>
+            <p className="mt-4 text-sm">
+              Please review the feedback, make the necessary changes, and reapply.
+            </p>
+          </div>
+        )}
+
         {/* Two Column Layout */}
         <div className="flex gap-12 items-start justify-between">
           {/* Left Column - Logo & Details */}
@@ -61,9 +81,6 @@ const ProviderDashboard: React.FC<ProviderDashboardProps> = ({
             
             {/* Provider Details */}
             <div className="space-y-2 text-sm leading-relaxed">
-              {/* <p>
-                <span className="font-semibold">Provider Id:</span> {provider?._id?.slice(-5) || 'N/A'}
-              </p> */}
               <p>
                 <span className="font-semibold">Airline Code :</span> {provider?.airlineCode || '-'}
               </p>
@@ -84,12 +101,16 @@ const ProviderDashboard: React.FC<ProviderDashboardProps> = ({
               </p>
             </div>
             
-            {/* Edit Profile Button */}
+            {/* Edit Profile / Reapply Button */}
             <button
               onClick={() => navigate('/provider/complete-profile')}
-              className="mt-8 bg-[#00001F] text-white px-8 py-2 rounded-full text-sm font-medium hover:bg-blue-900 transition-colors"
+              className={`mt-8 px-8 py-3 rounded-full text-sm font-medium transition-colors ${
+                isRejected
+                  ? 'bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 shadow-lg hover:shadow-red-500/50'
+                  : 'bg-[#00001F] hover:bg-blue-900'
+              }`}
             >
-              Edit Profile
+              {isRejected ? 'Reapply Now' : 'Edit Profile'}
             </button>
           </div>
           

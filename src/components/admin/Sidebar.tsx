@@ -9,8 +9,11 @@ const Sidebar: React.FC = () => {
 
   const menuItems = [
     { name: "Dashboard", path: "/admin/dashboard", icon: "📊" },
+    { name: "Pending Providers", path: "/admin/pending-providers", icon: "✈️" },
+    { name: "Pending Flights", path: "/admin/pending-flights", icon: "🛫" },
     { name: "Providers", path: "/admin/providers", icon: "✈️" },
     { name: "Users", path: "/admin/users", icon: "👥" },
+    { name: "Sign out", path: "/admin/signout" },
   ];
 
   return (

@@ -4,7 +4,8 @@ import {
   getProviderFlights,
   createFlight,
   getPendingFlights,
-  approveFlight
+  approveFlight,
+  updateFlight
 } from "./flightThunk";
 
 interface FlightState {
@@ -107,7 +108,29 @@ const flightSlice = createSlice({
           typeof action.payload === "string"
             ? action.payload
             : "Failed to update flight approval";
-      });
+      })
+
+            // Update Flight (edit or reschedule)
+      .addCase(updateFlight.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(updateFlight.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const updatedFlight = action.payload.data as FlightDetails;
+
+        // Replace in providerFlights array
+        state.providerFlights = state.providerFlights.map((flight) =>
+          flight._id === updatedFlight._id ? updatedFlight : flight
+        );
+      })
+      .addCase(updateFlight.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error =
+          typeof action.payload === "string"
+            ? action.payload
+            : "Failed to update flight";
+      })
   }
 });
 

@@ -8,6 +8,7 @@ const SeatLayoutForm: React.FC = () => {
     isLoading,
     error,
     formik,
+    aircraftCapacity,
     totalPlannedSeats,
     canGenerateSeats,
     generatedSeatsCount,
@@ -142,16 +143,36 @@ const SeatLayoutForm: React.FC = () => {
       </div>
 
       {/* Seat Generation */}
-      <div className="mt-6 text-white text-center">
-        <p className="mb-2">Total Planned Seats: {totalPlannedSeats}</p>
-        <p className="mb-4">Generated Seats: {generatedSeatsCount}</p>
+            {/* Seat Generation */}
+      <div className="mt-6 text-white text-center space-y-4">
+        <div>
+          <p className="text-gray-400 text-sm">Aircraft Maximum Capacity</p>
+          <p className="text-3xl font-bold text-blue-300">{aircraftCapacity}</p>
+        </div>
+
+        <div>
+          <p className="text-gray-400 text-sm">Total Planned Seats</p>
+          <p className="text-2xl font-bold">{totalPlannedSeats}</p>
+        </div>
+
+        <div>
+          <p className="text-gray-400 text-sm">Generated Seats</p>
+          <p className="text-2xl font-bold text-green-300">{generatedSeatsCount}</p>
+        </div>
+
         <button
           onClick={handleGenerateSeats}
-          disabled={!canGenerateSeats || isLoading}
-          className="py-3 px-6 bg-green-600 rounded text-white font-semibold hover:bg-green-700 disabled:opacity-50 cursor-pointer transition"
+          disabled={!canGenerateSeats || isLoading || totalPlannedSeats > aircraftCapacity}
+          className="py-3 px-8 bg-green-600 rounded text-white font-bold hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
         >
-          Generate Seats
+          {isLoading ? "Generating..." : "Generate Seats"}
         </button>
+
+        {totalPlannedSeats > aircraftCapacity && (
+          <p className="text-red-400 text-sm mt-3">
+            Cannot generate: exceeds aircraft capacity ({aircraftCapacity} seats)
+          </p>
+        )}
       </div>
     </div>
   );

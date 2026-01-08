@@ -16,4 +16,12 @@ export interface RequestVerifyProvider {
 
 export interface RequestRejectProvider {
   providerId: string;
+  reason: string;
+}
+export interface GetAllProvidersResponse {
+  providers: Provider[];  
+}
+export interface UpdateProviderStatusRequest {
+  providerId: string;
+  isActive: boolean;
 }

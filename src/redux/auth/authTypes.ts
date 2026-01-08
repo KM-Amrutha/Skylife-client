@@ -73,6 +73,9 @@ export interface Provider {
     createdAt: Date;
     updatedAt: Date;
     isProfileComplete?: boolean;
+    profileStatus?: 'pending' | 'approved' | 'rejected';
+    rejectionReason?: string | null;
+    rejectionDate?: Date | null;
 }
 export interface completeProviderProfile{
   companyName?: string;  

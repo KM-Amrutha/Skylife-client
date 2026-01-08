@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/store";
 import {
@@ -14,10 +14,14 @@ const useAdminDashboard = () => {
     (state: RootState) => state.admin
   );
 
+  // New state for rejection modal
+  const [rejectModalOpen, setRejectModalOpen] = useState(false);
+  const [currentProviderId, setCurrentProviderId] = useState<string | null>(null);
+  const [rejectionReason, setRejectionReason] = useState("");
+
   useEffect(() => {
     dispatch(getPendingProviders());
   }, [dispatch]);
-
 
   const handleVerifyProvider = async (providerId: string) => {
     try {
@@ -31,15 +35,39 @@ const useAdminDashboard = () => {
     }
   };
 
-  const handleRejectProvider = async (providerId: string) => {
+  // Open modal with provider ID
+  const openRejectModal = (providerId: string) => {
+    setCurrentProviderId(providerId);
+    setRejectionReason("");
+    setRejectModalOpen(true);
+  };
+
+  // Close modal
+  const closeRejectModal = () => {
+    setRejectModalOpen(false);
+    setCurrentProviderId(null);
+    setRejectionReason("");
+  };
+
+  // Confirm reject with reason
+  const handleConfirmReject = async () => {
+    if (!currentProviderId || !rejectionReason.trim()) {
+      showErrorToast("Please provide a rejection reason");
+      return;
+    }
+
     try {
       const response = await dispatch(
-        rejectProvider({ providerId })
+        rejectProvider({
+          providerId: currentProviderId,
+          reason: rejectionReason.trim(),
+        })
       ).unwrap();
+
       showSuccessToast(response.message || "Provider rejected successfully");
-       dispatch(getPendingProviders());
-      
-    } catch (error:any) {
+      closeRejectModal();
+      dispatch(getPendingProviders());
+    } catch (error: any) {
       showErrorToast(error || "Failed to reject provider");
     }
   };
@@ -49,7 +77,13 @@ const useAdminDashboard = () => {
     isLoading,
     error,
     handleVerifyProvider,
-    handleRejectProvider,
+    // New handlers and state
+    rejectModalOpen,
+    openRejectModal,
+    closeRejectModal,
+    rejectionReason,
+    setRejectionReason,
+    handleConfirmReject,
   };
 };
 

@@ -90,3 +90,24 @@ export const approveFlight = createAsyncThunk(
     }
   }
 );
+
+// Provider: Update / Edit / Reschedule a flight
+export const updateFlight = createAsyncThunk(
+  "flight/updateFlight",
+  async (
+    { flightId, data }: { flightId: string; data: Partial<CreateFlightDTO> },
+    { rejectWithValue }
+  ) => {
+    try {
+      const res = await axiosInstance.put(
+        `/provider/update-flights/${flightId}`,
+        data
+      );
+      return res.data; // { message, data: FlightDetails }
+    } catch (error: any) {
+      const message =
+        error.response?.data?.message || "Failed to update flight";
+      return rejectWithValue(message);
+    }
+  }
+);
