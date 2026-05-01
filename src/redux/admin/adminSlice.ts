@@ -4,6 +4,10 @@ import {
   getPendingProviders,
   verifyProvider,
   rejectProvider,
+  getAllProviders,
+  updateProviderStatus,
+  updateUsersStatus,
+  getAllUsers
 } from "./adminThunk";
 
 const initialState: AdminState = {
@@ -12,6 +16,7 @@ const initialState: AdminState = {
   pendingProviders: [],
   isLoading: false,
   error: null,
+  pagination  : null,
   userDetails: {},
   providerDetails: {},
 };
@@ -83,8 +88,97 @@ const adminSlice = createSlice({
           typeof action.payload === "string"
             ? action.payload
             : "Failed to reject provider";
-      });
-  },
+      })
+
+      .addCase(getAllProviders.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+      })
+.addCase(getAllProviders.fulfilled, (state, action) => {
+  state.isLoading = false;
+  state.error = null;
+  state.providers = Array.isArray(action.payload?.providers) 
+    ? action.payload.providers 
+    : [];
+  state.pagination = action.payload?.pagination || null;
+})
+     .addCase(getAllProviders.rejected, (state, action) => {
+      state.isLoading = false;
+       state.error =
+       typeof action.payload === "string"
+      ? action.payload
+      : "Failed to fetch all providers";
+      })
+
+    
+.addCase(updateProviderStatus.pending, (state) => {
+  state.isLoading = true;
+  state.error = null;
+})
+.addCase(updateProviderStatus.fulfilled, (state, action) => {
+  state.isLoading = false;
+  // Optimistically update the provider in the list
+  const { providerId, isActive } = action.meta.arg;
+  state.providers = state.providers.map((provider) =>
+    provider._id === providerId
+      ? { ...provider, isActive }
+      : provider
+  );
+  state.error = null;
+})
+.addCase(updateProviderStatus.rejected, (state, action) => {
+  state.isLoading = false;
+  state.error =
+    typeof action.payload === "string"
+      ? action.payload
+      : "Failed to update provider status";
+})
+  .addCase(updateUsersStatus.pending, (state) => {
+    state.isLoading = true;
+    state.error = null;
+  })
+  .addCase(updateUsersStatus.fulfilled, (state, action) => {
+    state.isLoading = false;
+    // Optimistically update the user in the list
+    const { userId, isActive } = action.meta.arg;
+    state.users = state.users.map((user) =>
+      user._id === userId
+        ? { ...user, isActive }
+        : user
+    );
+    state.error = null;
+  })
+  .addCase( updateUsersStatus.rejected, (state, action) => {
+    state.isLoading = false;
+    state.error =
+      typeof action.payload === "string"
+        ? action.payload
+        : "Failed to update user status";
+  })
+  
+  .addCase(getAllUsers.pending, (state) => {
+  state.isLoading = true;
+  state.error = null;
+})
+.addCase(getAllUsers.fulfilled, (state, action) => {
+  state.isLoading = false;
+  state.users = action.payload.users;
+  state.pagination = action.payload.pagination;
+  state.error = null;
+})
+.addCase(getAllUsers.rejected, (state, action) => {
+  state.isLoading = false;
+  state.error =
+    typeof action.payload === "string"
+      ? action.payload
+      : "Failed to fetch all users";
+})
+  
+  
+
+
+}
+
 });
 
 export const { clearError } = adminSlice.actions;

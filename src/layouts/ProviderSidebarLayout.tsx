@@ -10,7 +10,7 @@ const ProviderSidebarLayout: React.FC = () => {
     { name: 'Dashboard', path: '/provider/dashboard', icon: '📊' },
     { name: 'Add aircraft', path: '/provider/add-aircraft', icon: '➕' },
     { name: 'Aircraft List', path: '/provider/aircraft-list', icon: '✈️' }, 
-    { name: 'Scheduled Aircraft', path: '/provider/add-flight', icon: '✈️' },
+    { name: 'Schedule Aircraft', path: '/provider/add-flight', icon: '✈️' },
      { name: 'Flight List', path: '/provider/flight-list', icon: '✈️' }, 
     { name: 'Food & Beverages', path: '/provider/food-beverages', icon: '🍔' },
     { name: 'Offers', path: '/provider/offers', icon: '🎁' },

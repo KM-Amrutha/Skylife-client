@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
-import { useAircraftSchedule } from "../../hooks/useAvailableAircrafts";
-import useFlights from "../../hooks/useFlight";
+import { useAircraftSchedule } from "../../hooks/provider/useAircraftSchedule";
+import useFlights from "../../hooks/provider/useFlight";
 
 const FlightForm: React.FC = () => {
   const {
@@ -39,7 +39,11 @@ const FlightForm: React.FC = () => {
     "w-full px-4 py-3 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 placeholder-white/60 text-white focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all duration-300 text-sm font-medium";
   const inputErrorClass = "border-red-500 focus:ring-red-500 focus:border-red-500 ring-2 ring-red-200/50";
 
-  const hasDepAndTime = !!formik.values.departureDestinationId && !!formik.values.departureTime;
+  
+  const hasDepAndTime = !!formik.values.departureDestinationId && 
+                      !!formik.values.departureTime && 
+                      !!formik.values.durationMinutes &&
+                      !!formik.values.bufferMinutes;
 
   return (
     <div className="px-6 py-8 max-w-5xl mx-auto">
@@ -90,31 +94,37 @@ const FlightForm: React.FC = () => {
 
             <div className="md:col-span-2">
               <label className="block text-white/90 font-medium mb-2">Aircraft *</label>
-              <select
-                name="aircraftId"
-                value={formik.values.aircraftId}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                disabled={isAvailLoading || !hasDepAndTime}
-                className={`${inputBaseClass} disabled:opacity-60 disabled:cursor-not-allowed ${
-                  formik.touched.aircraftId && formik.errors.aircraftId ? inputErrorClass : ""
-                }`}
-              >
-                <option value="">
-                  {isAvailLoading
-                    ? "Loading available aircraft..."
-                    : !hasDepAndTime
-                    ? "Select departure airport & time first"
-                    : availableAircrafts.length === 0
-                    ? "No aircraft available"
-                    : "Select aircraft"}
-                </option>
-                {availableAircrafts.map((aircraft) => (
-                  <option key={aircraft._id} value={aircraft._id}>
-                    {aircraft.aircraftName} ({aircraft.aircraftType})
-                  </option>
-                ))}
-              </select>
+           <select
+  name="aircraftId"
+  value={formik.values.aircraftId}
+  onChange={formik.handleChange}
+  onBlur={formik.handleBlur}
+  disabled={isAvailLoading || !hasDepAndTime}
+  className={`${inputBaseClass} disabled:opacity-60 disabled:cursor-not-allowed ${
+    formik.touched.aircraftId && formik.errors.aircraftId ? inputErrorClass : ""
+  }`}
+  style={{ color: 'white', backgroundColor: '#00001F' }}
+>
+  <option value="" style={{ backgroundColor: '#0a1628', color: 'white' }}>
+    {isAvailLoading
+      ? "Loading available aircraft..."
+      : !hasDepAndTime
+      ? "Select departure airport, time & duration first"
+      : availableAircrafts.length === 0
+      ? "No aircraft available"
+      : "Select aircraft"}
+  </option>
+
+  {availableAircrafts.map((aircraft) => (
+    <option
+      key={aircraft._id}
+      value={aircraft._id}
+      style={{ backgroundColor: '#0a1628', color: 'white' }}
+    >
+      {aircraft.aircraftName} ({aircraft.aircraftType})
+    </option>
+  ))}
+</select>
               {formik.touched.aircraftId && formik.errors.aircraftId && (
                 <p className="text-red-400 text-xs mt-2">⚠ {formik.errors.aircraftId}</p>
               )}
@@ -211,8 +221,6 @@ const FlightForm: React.FC = () => {
                 value={formik.values.durationMinutes}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                min="30"
-                max="1440"
                 placeholder="120"
                 className={`${inputBaseClass} ${formik.touched.durationMinutes && formik.errors.durationMinutes ? inputErrorClass : ""}`}
               />
@@ -220,6 +228,24 @@ const FlightForm: React.FC = () => {
                 <p className="text-red-400 text-xs mt-2">⚠ {formik.errors.durationMinutes}</p>
               )}
             </div>
+            <div>
+  <label className="block text-white/90 font-medium mb-2">Buffer Time (minutes) *</label>
+  <input
+    type="number"
+    name="bufferMinutes"
+    value={formik.values.bufferMinutes}
+    onChange={formik.handleChange}
+    onBlur={formik.handleBlur}
+    placeholder="120"
+    className={`${inputBaseClass} ${
+      formik.touched.bufferMinutes && formik.errors.bufferMinutes ? inputErrorClass : ""
+    }`}
+  />
+  <p className="text-white/50 text-xs mt-1">Minimum gap between outbound and return flight</p>
+  {formik.touched.bufferMinutes && formik.errors.bufferMinutes && (
+    <p className="text-red-400 text-xs mt-2">⚠ {formik.errors.bufferMinutes}</p>
+  )}
+</div>
 
             <div>
               <label className="block text-white/90 font-medium mb-2">Gate (optional)</label>
@@ -263,8 +289,8 @@ const FlightForm: React.FC = () => {
                 <label className="block text-white/80 text-sm mb-2">Premium Economy</label>
                 <input
                   type="number"
-                  name="baseFare.premiumEconomy"
-                  value={formik.values.baseFare.premiumEconomy || ""}
+                  name="baseFare.premium_economy"
+                  value={formik.values.baseFare.premium_economy || ""}
                   onChange={formik.handleChange}
                   placeholder="8000"
                   className={inputBaseClass}

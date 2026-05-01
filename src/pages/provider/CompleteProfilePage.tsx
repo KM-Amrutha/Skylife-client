@@ -1,4 +1,4 @@
-import useCompleteProviderProfile from "../../hooks/useCompleteProviderHook";
+import useCompleteProviderProfile from "../../hooks/provider/useCompleteProviderHook";
 import CompleteProfileForm from "../../components/provider/CompleteProfileFom";
 
 const CompleteProviderProfilePage = () => {

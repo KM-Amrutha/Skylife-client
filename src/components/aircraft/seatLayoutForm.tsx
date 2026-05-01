@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import useSeatLayout from "../../hooks/useSeatLayout";
+import useSeatLayout from "../../hooks/provider/useSeatLayout";
 
 const SeatLayoutForm: React.FC = () => {
   const {
@@ -8,6 +8,7 @@ const SeatLayoutForm: React.FC = () => {
     isLoading,
     error,
     formik,
+    aircraftCapacity,
     totalPlannedSeats,
     canGenerateSeats,
     generatedSeatsCount,
@@ -74,39 +75,25 @@ const SeatLayoutForm: React.FC = () => {
           )}
         </div>
 
-        {/* Start Row */}
-        <div>
-          <label className="block text-white mb-1">Start Row *</label>
-          <input
-            type="number"
-            name="startRow"
-            value={formik.values.startRow}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="w-full px-3 py-2 rounded border border-gray-400 bg-white text-black"
-            min={1}
-          />
-          {formik.touched.startRow && formik.errors.startRow && (
-            <p className="text-red-500 text-sm">{formik.errors.startRow}</p>
-          )}
-        </div>
+     {/* Start Row */}
+<input
+  type="number"
+  name="startRow"
+  value={formik.values.startRow}
+  onChange={formik.handleChange}
+  onBlur={formik.handleBlur}
+  className="w-full px-3 py-2 rounded border border-gray-400 bg-white text-black"
+/>
 
-        {/* End Row */}
-        <div>
-          <label className="block text-white mb-1">End Row *</label>
-          <input
-            type="number"
-            name="endRow"
-            value={formik.values.endRow}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="w-full px-3 py-2 rounded border border-gray-400 bg-white text-black"
-            min={formik.values.startRow || 1}
-          />
-          {formik.touched.endRow && formik.errors.endRow && (
-            <p className="text-red-500 text-sm">{formik.errors.endRow}</p>
-          )}
-        </div>
+{/* End Row */}
+<input
+  type="number"
+  name="endRow"
+  value={formik.values.endRow}
+  onChange={formik.handleChange}
+  onBlur={formik.handleBlur}
+  className="w-full px-3 py-2 rounded border border-gray-400 bg-white text-black"
+/>
 
         {/* Submit Button */}
         <button
@@ -142,16 +129,36 @@ const SeatLayoutForm: React.FC = () => {
       </div>
 
       {/* Seat Generation */}
-      <div className="mt-6 text-white text-center">
-        <p className="mb-2">Total Planned Seats: {totalPlannedSeats}</p>
-        <p className="mb-4">Generated Seats: {generatedSeatsCount}</p>
+            {/* Seat Generation */}
+      <div className="mt-6 text-white text-center space-y-4">
+        <div>
+          <p className="text-gray-400 text-sm">Aircraft Maximum Capacity</p>
+          <p className="text-3xl font-bold text-blue-300">{aircraftCapacity}</p>
+        </div>
+
+        <div>
+          <p className="text-gray-400 text-sm">Total Planned Seats</p>
+          <p className="text-2xl font-bold">{totalPlannedSeats}</p>
+        </div>
+
+        <div>
+          <p className="text-gray-400 text-sm">Generated Seats</p>
+          <p className="text-2xl font-bold text-green-300">{generatedSeatsCount}</p>
+        </div>
+
         <button
           onClick={handleGenerateSeats}
-          disabled={!canGenerateSeats || isLoading}
-          className="py-3 px-6 bg-green-600 rounded text-white font-semibold hover:bg-green-700 disabled:opacity-50 cursor-pointer transition"
+          disabled={!canGenerateSeats || isLoading || totalPlannedSeats > aircraftCapacity}
+          className="py-3 px-8 bg-green-600 rounded text-white font-bold hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
         >
-          Generate Seats
+          {isLoading ? "Generating..." : "Generate Seats"}
         </button>
+
+        {totalPlannedSeats > aircraftCapacity && (
+          <p className="text-red-400 text-sm mt-3">
+            Cannot generate: exceeds aircraft capacity ({aircraftCapacity} seats)
+          </p>
+        )}
       </div>
     </div>
   );

@@ -30,16 +30,23 @@ export interface Aircraft {
   updatedAt: Date;
 }
 
+
+export interface AircraftPagination {
+  totalPages: number;
+  currentPage: number;
+}
+
+
 export interface CreateAircraftDTO {
   providerId: string;
   aircraftType: string;
   aircraftName: string;
   manufacturer: string;
-  buildYear: number;
-  seatCapacity: number;
-  flyingRangeKm: number;
-  engineCount: number;
-  lavatoryCount: number;
+  buildYear: number|'';
+  seatCapacity: number|'';
+  flyingRangeKm: number|'';
+  engineCount: number|'';
+  lavatoryCount: number|'';
   baseStationId: string;
   currentLocationId: string;
   availableFrom: Date;

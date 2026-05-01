@@ -1,6 +1,6 @@
 import React from "react";
-import AdminDashboard from "../../components/dashboard/AdminDashboard";
-import useAdminDashboard from "../../hooks/useAdminDashboard";
+import AdminDashboard from "../../components/admin/AdminDashboard";
+import useAdminDashboard from "../../hooks/admin/useAdminDashboard";
 
 const AdminDashboardPage: React.FC = () => {
   const {

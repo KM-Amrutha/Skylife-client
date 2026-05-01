@@ -1,6 +1,6 @@
 import React from 'react';
 import ProviderMainLayout from '../../layouts/ProviderMainLayout';
-import AircraftList from '../../components/aircraft/aircraftListForm';
+import AircraftList from '../../components/aircraft/AircraftListForm';
 
 const AircraftListPage: React.FC = () => {
   return (

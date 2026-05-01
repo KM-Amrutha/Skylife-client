@@ -26,6 +26,7 @@ const store = configureStore({
         destinations:destinationsReducer,
         seat:seatReducer,
         flight:flightReudcer,
+        
 
     },
      middleware: (getDefaultMiddleware) =>
