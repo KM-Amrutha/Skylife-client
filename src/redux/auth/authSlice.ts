@@ -10,13 +10,14 @@ import {
     forgotPassword,
     updatePassword,
     signupProvider,
-    updateUserProfile,
     updateProviderProfile,
-    signOutUser,
     getProviderProfile,
     completeProviderProfile,
     getAdminProfile,
-    googleAuth
+    googleAuth,
+    getUserProfile,
+    updateUserProfile,
+     signOutUser,
 
 } from "./authThunk";
 
@@ -85,25 +86,34 @@ const authSlice = createSlice({
             state.error = null;
         })
     .addCase(signinUser.fulfilled, (state, action) => {
+   
   state.isLoading = false;
   state.error = null;
-  const loggedInUser = action.payload.data?.user;
-  if (!loggedInUser) return;
+  const data = action.payload.data;
+  const loggedInData = data?.userData ?? data?.providerData ?? null;
 
-  if (loggedInUser.role === "admin") {
-    state.admin = loggedInUser;
+  if (!loggedInData) return;
+
+  if (loggedInData.role === "admin") {
+    state.admin = loggedInData;
     state.user = null;
     state.provider = null;
-  } else if (loggedInUser.role === "user") {
-    state.user = loggedInUser;
+  } else if (loggedInData.role === "user") {
+    state.user = loggedInData;
     state.admin = null;
     state.provider = null;
-  } else if (loggedInUser.role === "provider") {
-    state.provider = loggedInUser;
+  } else if (loggedInData.role === "provider") {
+    state.provider = loggedInData;
     state.admin = null;
     state.user = null;
   }
 })
+    .addCase(signinUser.rejected,(state,action)=>{
+            state.isLoading = false;
+            state.error = action.payload === "string"
+            ? action.payload: "Failed to signin";
+
+        })
 
 
 
@@ -124,12 +134,7 @@ builder
   })
 
 
-        .addCase(signinUser.rejected,(state,action)=>{
-            state.isLoading = false;
-            state.error = action.payload === "string"
-            ? action.payload: "Failed to signin";
-
-        })
+    
     
       .addCase(signupProvider.pending, (state) => {
         state.isLoading = true;
@@ -206,22 +211,6 @@ builder
             ? action.payload
             : "Failed to update password of the user";
       })
-
-    
-        .addCase(updateUserProfile.pending,(state)=>{
-            state.isLoading = true;
-            state.error = null;
-        })
-        .addCase(updateUserProfile.fulfilled,(state)=>{
-            state.isLoading = false;
-            state.error = null; 
-        })
-        .addCase(updateUserProfile.rejected,(state,action)=>{
-            state.isLoading = false;
-            state.error = action.payload === "string"
-            ? action.payload: "Failed to update user profile";   
-        })
-
       
           .addCase(updateProviderProfile.pending, (state) => {
         state.isLoading = true;
@@ -237,27 +226,14 @@ builder
             ? action.payload
             : "Failed to update provider profile";
       })
-    
-      .addCase(signOutUser.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(signOutUser.fulfilled, (state) => {
-        state.isLoading = false;
-        state.error = null;
-      })
-      .addCase(signOutUser.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error =
-          typeof action.payload === "string"
-            ? action.payload
-            : "Failed to sign out user";
-      })
       // Get provider profile
 .addCase(getProviderProfile.pending, (state) => {
   state.isLoading = true;
   state.error = null;
 })
 .addCase(getProviderProfile.fulfilled, (state, action) => {
+    console.log("getProviderProfile payload:", JSON.stringify(action.payload.data));
+  
   state.isLoading = false;
   state.provider = action.payload.data;
   state.error = null;
@@ -306,7 +282,59 @@ builder
           typeof action.payload === "string"
             ? action.payload
             : "Failed to signin with google";
-      });
+      })
+
+        .addCase(updateUserProfile.pending,(state)=>{
+            state.isLoading = true;
+            state.error = null;
+        })
+        .addCase(updateUserProfile.fulfilled,(state,action)=>{
+            state.isLoading = false;
+            state.user = action.payload.data
+            state.error = null; 
+        })
+        .addCase(updateUserProfile.rejected,(state,action)=>{
+            state.isLoading = false;
+            state.error = action.payload === "string"
+            ? action.payload: "Failed to update user profile";   
+        })
+
+        .addCase(getUserProfile.pending, (state) => {
+             state.isLoading = true;
+            state.error = null;
+               })
+       .addCase(getUserProfile.fulfilled, (state, action) => {
+           state.isLoading = false;
+             state.user = action.payload.data;
+          state.error = null;
+              })
+
+                .addCase(getUserProfile.rejected, (state, action) => {
+                   state.isLoading = false;
+                      state.error = typeof action.payload === "string"
+                      ? action.payload
+                       : "Failed to fetch user profile";
+                    })
+        
+      .addCase(signOutUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(signOutUser.fulfilled, (state) => {
+        state.isLoading = false;
+        state.user = null;
+        state.provider = null;
+        state.admin = null; 
+        state.otp = null;
+        state.error = null;
+      })
+      .addCase(signOutUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error =
+          typeof action.payload === "string"
+            ? action.payload
+            : "Failed to sign out user";
+      })
+
     }
 
 })

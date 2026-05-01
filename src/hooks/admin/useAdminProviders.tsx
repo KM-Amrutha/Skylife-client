@@ -1,27 +1,27 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../redux/store";
-import {
-  getAllProviders,
-  updateProviderStatus,
-} from "../redux/admin/adminThunk";
-import { UpdateProviderStatusRequest } from "../redux/admin/adminTypes";
-import { showSuccessToast, showErrorToast } from "../utils/toast";
-import { clearError } from "../redux/admin/adminSlice"; // assuming you have this
+import { AppDispatch, RootState } from "../../redux/store";
+import { getAllProviders, updateProviderStatus } from "../../redux/admin/adminThunk";
+import { UpdateProviderStatusRequest } from "../../redux/admin/adminTypes";
+import { showSuccessToast, showErrorToast } from "../../utils/toast";
+import { clearError } from "../../redux/admin/adminSlice";
+import usePagination from "../sharedHooks/usePagination";
+
+const LIMIT = 3;
 
 const useAdminProviders = () => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const { providers, isLoading, error } = useSelector(
+  const { providers, isLoading, error, pagination } = useSelector(
     (state: RootState) => state.admin
   );
 
-  // Fetch all providers on mount
-  useEffect(() => {
-    dispatch(getAllProviders());
-  }, [dispatch]);
+  const { currentPage, handlePageChange } = usePagination();
 
-  // Show error toast when error changes
+  useEffect(() => {
+    dispatch(getAllProviders({ page: currentPage, limit: LIMIT }));
+  }, [dispatch, currentPage]);
+
   useEffect(() => {
     if (error) {
       showErrorToast(error);
@@ -29,7 +29,6 @@ const useAdminProviders = () => {
     }
   }, [error, dispatch]);
 
-  // Handler to update provider status (activate/block)
   const handleUpdateProviderStatus = async (
     providerId: string,
     isActive: boolean
@@ -40,6 +39,7 @@ const useAdminProviders = () => {
       showSuccessToast(
         `Provider has been ${isActive ? "activated" : "blocked"} successfully`
       );
+      dispatch(getAllProviders({ page: currentPage, limit: LIMIT }));
     } catch (err: any) {
       showErrorToast(err || "Failed to update provider status");
     }
@@ -49,6 +49,9 @@ const useAdminProviders = () => {
     providers,
     isLoading,
     error,
+    pagination,
+    currentPage,
+    handlePageChange,
     handleUpdateProviderStatus,
   };
 };

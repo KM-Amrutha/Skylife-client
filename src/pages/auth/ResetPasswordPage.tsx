@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ResetPasswordForm from "../../components/user-authentication/ResetPasswordForm";
-import useResetPasswordForm from "../../hooks/useResetPasswordForm";
+import useResetPasswordForm from "../../hooks/sharedHooks/useResetPasswordForm";
 import BackGroundLayout from "../../layouts/BackGroundLayout";
 
 const ResetPasswordPage: React.FC = () => {

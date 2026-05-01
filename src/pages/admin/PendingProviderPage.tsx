@@ -1,6 +1,6 @@
 import React from "react";
 import PendingProvider from "../../components/admin/PendingProvider";
-import useAdminDashboard from "../../hooks/useAdminDashboard"; 
+import useAdminDashboard from "../../hooks/admin/useAdminDashboard"; 
 
 const PendingProvidersPage: React.FC = () => {
   const {

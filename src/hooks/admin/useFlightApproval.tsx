@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../redux/store";
+import { AppDispatch, RootState } from "../../redux/store";
 import {
   getPendingFlights,
   approveFlight,
-} from "../redux/flight/flightThunk";
-import { clearFlightError } from "../redux/flight/flightSlice";
-import { showSuccessToast, showErrorToast } from "../utils/toast";
+} from "../../redux/flight/flightThunk";
+import { clearFlightError } from "../../redux/flight/flightSlice";
+import { showSuccessToast, showErrorToast } from "../../utils/toast";
 
 const useFlightApproval = () => {
   const dispatch = useDispatch<AppDispatch>();

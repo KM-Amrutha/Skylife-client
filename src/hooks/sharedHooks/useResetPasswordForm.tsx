@@ -1,8 +1,8 @@
 import { useFormik, FormikProps } from "formik";
 import * as Yup from "yup";
 import { useNavigate, useParams } from "react-router-dom";
-import { showSuccessToast, showErrorToast } from "../utils/toast";
-import axiosInstance from "../config/axios";
+import { showSuccessToast, showErrorToast } from "../../utils/toast";
+import axiosInstance from "../../config/axios";
 
 interface ResetPasswordFormData {
   password: string;

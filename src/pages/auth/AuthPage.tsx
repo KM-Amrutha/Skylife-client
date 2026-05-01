@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import useAuthForm from "../../hooks/userAuthForm";
-import useGoogleAuth from "../../hooks/useGoogleAuth";
+import useAuthForm from "../../hooks/user/userAuthForm";
+import useGoogleAuth from "../../hooks/user/useGoogleAuth";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { useNavigate, useLocation } from "react-router-dom";

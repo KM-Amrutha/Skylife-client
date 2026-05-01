@@ -2,10 +2,10 @@ import { useFormik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { completeProviderProfile, getProviderProfile } from '../redux/auth/authThunk';
-import { showSuccessToast, showErrorToast } from '../utils/toast';
-import { AppDispatch, RootState } from '../redux/store';
-import { completeProviderProfile as CompleteProviderProfileInterface } from '../redux/auth/authTypes';
+import { completeProviderProfile, getProviderProfile } from '../../redux/auth/authThunk';
+import { showSuccessToast, showErrorToast } from '../../utils/toast';
+import { AppDispatch, RootState } from '../../redux/store';
+import { completeProviderProfile as CompleteProviderProfileInterface } from '../../redux/auth/authTypes';
 import { useEffect } from 'react';
 
 interface UseCompleteProviderProfileReturn {
@@ -139,7 +139,9 @@ const useCompleteProviderProfile = (): UseCompleteProviderProfileReturn => {
           await dispatch(getProviderProfile()).unwrap();
         }
       } catch (error) {
+        if(!provider){
         showErrorToast('Failed to fetch provider data');
+        }
       }
     };
 

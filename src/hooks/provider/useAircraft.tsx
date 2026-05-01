@@ -3,16 +3,16 @@ import { useFormik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { AppDispatch, RootState } from '../redux/store';
+import { AppDispatch, RootState } from '../../redux/store';
 import {
   getProviderAircrafts,
   createAircraft,
-} from '../redux/aircraft/aircraftThunk';
-import { searchDestinations } from '../redux/destination/destinationThunk';
-import { Aircraft, CreateAircraftDTO } from '../redux/aircraft/aircraftTypes';
-import { Destination } from '../redux/destination/destinationType';
-import { showSuccessToast, showErrorToast } from '../utils/toast';
-import { debounce } from '../utils/debounce';
+} from '../../redux/aircraft/aircraftThunk';
+import { searchDestinations } from '../../redux/destination/destinationThunk';
+import { Aircraft, CreateAircraftDTO } from '../../redux/aircraft/aircraftTypes';
+import { Destination } from '../../redux/destination/destinationType';
+import { showSuccessToast, showErrorToast } from '../../utils/toast';
+import { debounce } from '../../utils/debounce';
 
 interface UseAircraftReturn {
   aircrafts: Aircraft[];
@@ -72,7 +72,7 @@ const useAircraft = (): UseAircraftReturn => {
   const providerId = useSelector((state: RootState) => state.auth.provider?._id);
 
   useEffect(() => {
-    dispatch(getProviderAircrafts());
+    dispatch(getProviderAircrafts({}));
   }, [dispatch]);
 
   const formik = useFormik<CreateAircraftDTO>({
@@ -81,11 +81,11 @@ const useAircraft = (): UseAircraftReturn => {
       aircraftType: '',
       aircraftName: '',
       manufacturer: '',
-      buildYear: new Date().getFullYear(),
-      seatCapacity: 1,
-      flyingRangeKm: 0,
-      engineCount: 1,
-      lavatoryCount: 0,
+      buildYear: '',
+      seatCapacity: '',
+      flyingRangeKm: '',
+      engineCount: '',
+      lavatoryCount: '',
       baseStationId: '',
       currentLocationId: '',
       availableFrom: new Date(),

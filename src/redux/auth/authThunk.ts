@@ -110,11 +110,14 @@ export const updatePassword = createAsyncThunk(
     { password, newPassword }: RequestUpdatePassword,
     { rejectWithValue }
   ) => {
+    console.log('ibde ethiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
     try {
       const response = await axiosInstance.patch(`auth/password/change`, {
+      
         password,
         newPassword,
       });
+      console.log("response from update password api", response.data);
       return response.data;
     } catch (error: any) {
       console.log(error);
@@ -146,25 +149,6 @@ export const signupProvider = createAsyncThunk(
   }
 );
 
-export const updateUserProfile = createAsyncThunk(
-  "auth/updateUserProfile",
-  async ({ userData }: { userData: User }, { rejectWithValue }) => {
-    try {
-      const response = await axiosInstance.put(
-        `user/profile/`,
-        userData
-      );
-      return response.data;
-    } catch (error: any) {
-      console.log(error);
-      if (error.response && error.response.data.message) {
-        return rejectWithValue(error.response.data.message);
-      } else {
-        return rejectWithValue("Failed to update user profile ");
-      }
-    }
-  }
-);
 
 export const updateProviderProfile = createAsyncThunk(
   "auth/updateProviderProfile",
@@ -182,23 +166,6 @@ export const updateProviderProfile = createAsyncThunk(
         return rejectWithValue(error.response.data.message);
       } else {
         return rejectWithValue("Failed to update Provider profile ");
-      }
-    }
-  }
-);
-
-export const signOutUser = createAsyncThunk(
-  "auth/signOutUser",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await axiosInstance.post(`auth/sign-out/`);
-      return response.data;
-    } catch (error: any) {
-      console.log(error);
-      if (error.response && error.response.data.message) {
-        return rejectWithValue(error.response.data.message);
-      } else {
-        return rejectWithValue("Failed to signout");
       }
     }
   }
@@ -275,7 +242,6 @@ export const googleAuth = createAsyncThunk(
   }
 );
 
-// Add this to src/redux/auth/authThunk.ts
 export const getUserProfile = createAsyncThunk(
   "auth/getUserProfile",
   async (_, { rejectWithValue }) => {
@@ -288,6 +254,43 @@ export const getUserProfile = createAsyncThunk(
         return rejectWithValue(error.response.data.message);
       } else {
         return rejectWithValue("Failed to fetch user profile");
+      }
+    }
+  }
+);
+
+export const updateUserProfile = createAsyncThunk(
+  "auth/updateUserProfile",
+  async ({ userData }: { userData: User }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.put(
+        `user/profile/`,
+        userData
+      );
+      return response.data;
+    } catch (error: any) {
+      console.log(error);
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue("Failed to update user profile ");
+      }
+    }
+  }
+);
+
+export const signOutUser = createAsyncThunk(
+  "auth/signOutUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(`auth/sign-out/`);
+      return response.data;
+    } catch (error: any) {
+      console.log(error);
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue("Failed to signout");
       }
     }
   }

@@ -1,5 +1,5 @@
 import { createSlice} from "@reduxjs/toolkit";
-import { Aircraft } from "./aircraftTypes";
+import { Aircraft,AircraftPagination } from "./aircraftTypes";
 import {
   getProviderAircrafts,
   createAircraft,
@@ -13,6 +13,7 @@ interface AircraftState {
   aircrafts: Aircraft[];
   isLoading: boolean;
   error: string | null;
+    pagination: AircraftPagination | null,
 
     availableForSchedule: Aircraft[];
   isLoadingAvailableForSchedule: boolean;
@@ -23,6 +24,8 @@ const initialState: AircraftState = {
   aircrafts: [],
   isLoading: false,
   error: null,
+  pagination: null,
+ 
 
    availableForSchedule: [],
   isLoadingAvailableForSchedule: false,
@@ -35,6 +38,7 @@ const aircraftSlice = createSlice({
   reducers: {
     clearAircraftError: (state) => {
       state.error = null;
+
     },
   },
   extraReducers: (builder) => {
@@ -45,8 +49,9 @@ const aircraftSlice = createSlice({
       })
       .addCase(getProviderAircrafts.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.aircrafts = action.payload.data || [];
-        state.error = null;
+       state.aircrafts = action.payload.aircrafts || [];
+       state.pagination = action.payload.pagination || null; 
+       state.error = null;
       })
       .addCase(getProviderAircrafts.rejected, (state, action) => {
         state.isLoading = false;

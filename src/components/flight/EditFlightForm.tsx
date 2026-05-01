@@ -1,7 +1,7 @@
 import React from "react";
 // import { FormikHelpers } from "formik";
 import { Plane, MapPin, Clock, DollarSign, Luggage,Armchair } from "lucide-react";
-import useEditFlight from "../../hooks/useEditFlight";
+import useEditFlight from "../../hooks/provider/useEditFlight";
 import { Destination } from "../../redux/destination/destinationType";
 
 const EditFlightForm: React.FC = () => {
@@ -15,6 +15,8 @@ const EditFlightForm: React.FC = () => {
     handleArrivalSearch,
     selectArrival,
     clearArrivalResults,
+    isRecurringOrReturn,
+
   } = useEditFlight();
 
   if (isLoading) {
@@ -70,6 +72,12 @@ const EditFlightForm: React.FC = () => {
         </div>
       )}
 
+      {(flight.flightType === "recurring" || flight.flightType === "return") && (
+  <div className="mb-6 px-4 py-3 rounded-xl bg-purple-500/10 border border-purple-400/30 text-purple-300 text-sm font-medium text-center">
+    {flight.flightType === "recurring" ? "🔁 Recurring Flight — duration and arrival airport are locked" : "↩️ Return Flight — duration and arrival airport are locked"}
+  </div>
+)}
+
       <form onSubmit={formik.handleSubmit} className="space-y-8">
         {/* Flight Info Section */}
         <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-8">
@@ -118,40 +126,43 @@ const EditFlightForm: React.FC = () => {
               <p className="text-slate-400 text-xs mt-2">Departure airport cannot be changed</p>
             </div>
 
-            <div>
-              <label className="block text-slate-300 text-sm font-medium mb-2">
-                Arrival Airport</label>
-              <div className="relative">
-                <input
-                  type="text"
-                  value={arrivalDisplayName}
-                  onChange={(e) => handleArrivalSearch(e.target.value)}
-                  onFocus={() => arrivalDisplayName && handleArrivalSearch(arrivalDisplayName)}
-                  className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-blue-400"
-                  placeholder="Search arrival airport..."
-                />
-                {arrivalSearchResults.length > 0 && (
-                  <div className="absolute z-20 w-full mt-2 bg-slate-800/90 backdrop-blur border border-white/20 rounded-xl shadow-2xl max-h-60 overflow-y-auto">
-                    {arrivalSearchResults.map((dest: Destination) => (
-                      <button
-                        key={dest._id}
-                        type="button"
-                        onClick={() => {
-                          selectArrival(dest);
-                          clearArrivalResults();
-                        }}
-                        className="w-full px-5 py-3 text-left text-slate-200 hover:bg-white/10 transition"
-                      >
-                        {dest.name} ({dest.iataCode || dest.ident})
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-              {formik.touched.arrivalDestinationId && formik.errors.arrivalDestinationId && (
-                <p className="text-red-400 text-sm mt-2">{formik.errors.arrivalDestinationId}</p>
-              )}
-            </div>
+           {!isRecurringOrReturn ? (
+  <div>
+    <label className="block text-slate-300 text-sm font-medium mb-2">Arrival Airport</label>
+    <div className="relative">
+      <input
+        type="text"
+        value={arrivalDisplayName}
+        onChange={(e) => handleArrivalSearch(e.target.value)}
+        className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-blue-400"
+        placeholder="Search arrival airport..."
+      />
+      {arrivalSearchResults.length > 0 && (
+        <div className="absolute z-20 w-full mt-2 bg-slate-800/90 backdrop-blur border border-white/20 rounded-xl shadow-2xl max-h-60 overflow-y-auto">
+          {arrivalSearchResults.map((dest: Destination) => (
+            <button
+              key={dest._id}
+              type="button"
+              onClick={() => { selectArrival(dest); clearArrivalResults(); }}
+              className="w-full px-5 py-3 text-left text-slate-200 hover:bg-white/10 transition"
+            >
+              {dest.name} ({dest.iataCode || dest.ident})
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+) : (
+  <div>
+    <label className="block text-slate-300 text-sm font-medium mb-2">Arrival Airport</label>
+    <div className="px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-slate-300 flex items-center gap-3">
+      <MapPin className="w-5 h-5" />
+      {flight.arrivalDestination?.name || flight.arrivalDestinationId}
+    </div>
+    <p className="text-slate-400 text-xs mt-2">Cannot be changed for recurring or return flights</p>
+  </div>
+)}
 
             <div>
               <label className="block text-slate-300 text-sm font-medium mb-2">
@@ -164,24 +175,22 @@ const EditFlightForm: React.FC = () => {
               <p className="text-slate-400 text-xs mt-2">Departure time cannot be changed</p>
             </div>
 
-            <div>
-              <label className="block text-slate-300 text-sm font-medium mb-2">
-                Duration (minutes)
-              </label>
-              <input
-                type="number"
-                name="durationMinutes"
-                value={formik.values.durationMinutes || ""}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-400"
-                min="30"
-                max="1440"
-              />
-              {formik.touched.durationMinutes && formik.errors.durationMinutes && (
-                <p className="text-red-400 text-sm mt-2">{formik.errors.durationMinutes}</p>
-              )}
-            </div>
+          {!isRecurringOrReturn && (
+  <div>
+    <label className="block text-slate-300 text-sm font-medium mb-2">Duration (minutes)</label>
+    <input
+      type="number"
+      name="durationMinutes"
+      value={formik.values.durationMinutes || ""}
+      onChange={formik.handleChange}
+      onBlur={formik.handleBlur}
+      className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-400"
+    />
+    {formik.touched.durationMinutes && formik.errors.durationMinutes && (
+      <p className="text-red-400 text-sm mt-2">{formik.errors.durationMinutes}</p>
+    )}
+  </div>
+)}
 
             <div>
               <label className="block text-slate-300 text-sm font-medium mb-2">
@@ -217,7 +226,6 @@ const EditFlightForm: React.FC = () => {
                 value={formik.values.baseFare?.economy || ""}
                 onChange={formik.handleChange}
                 className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-400"
-                min="1"
               />
             </div>
 
@@ -227,11 +235,10 @@ const EditFlightForm: React.FC = () => {
               </label>
               <input
                 type="number"
-                name="baseFare.premiumEconomy"
-                value={formik.values.baseFare?.premiumEconomy || ""}
+                name="baseFare.premium_economy"
+                value={formik.values.baseFare?.premium_economy || ""}
                 onChange={formik.handleChange}
                 className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-400"
-                min="0"
               />
             </div>
 
@@ -245,7 +252,6 @@ const EditFlightForm: React.FC = () => {
                 value={formik.values.baseFare?.business || ""}
                 onChange={formik.handleChange}
                 className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-400"
-                min="0"
               />
             </div>
 
@@ -259,7 +265,6 @@ const EditFlightForm: React.FC = () => {
                 value={formik.values.baseFare?.first || ""}
                 onChange={formik.handleChange}
                 className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-400"
-                min="0"
               />
             </div>
           </div>
@@ -278,7 +283,6 @@ const EditFlightForm: React.FC = () => {
                   value={formik.values.seatSurcharge?.window || ""}
                   onChange={formik.handleChange}
                   className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-400"
-                  min="0"
                 />
               </div>
               <div>
@@ -289,7 +293,6 @@ const EditFlightForm: React.FC = () => {
                   value={formik.values.seatSurcharge?.aisle || ""}
                   onChange={formik.handleChange}
                   className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-400"
-                  min="0"
                 />
               </div>
               <div>
@@ -300,7 +303,6 @@ const EditFlightForm: React.FC = () => {
                   value={formik.values.seatSurcharge?.extraLegroom || ""}
                   onChange={formik.handleChange}
                   className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-400"
-                  min="0"
                 />
               </div>
             </div>
@@ -325,7 +327,6 @@ const EditFlightForm: React.FC = () => {
                 value={formik.values.baggageRules?.freeCabinKg || ""}
                 onChange={formik.handleChange}
                 className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-400"
-                min="0"
               />
             </div>
 
@@ -339,7 +340,6 @@ const EditFlightForm: React.FC = () => {
                 value={formik.values.baggageRules?.extraChargePerKg || ""}
                 onChange={formik.handleChange}
                 className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-400"
-                min="1"
               />
             </div>
 
@@ -353,7 +353,6 @@ const EditFlightForm: React.FC = () => {
                 value={formik.values.baggageRules?.maxExtraKg || ""}
                 onChange={formik.handleChange}
                 className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-400"
-                min="0"
               />
             </div>
           </div>

@@ -11,7 +11,7 @@ interface SignInFormProps {
   setShowPassword: (show: boolean) => void;
   formik: FormikProps<UserAuthFormData>;
   onToggleAuth: () => void;
-  handleGoogleAuthSuccess?: (credentialResponse: CredentialResponse) => Promise<void> | void;  // ← EXACT MATCH
+  handleGoogleAuthSuccess?: (credentialResponse: CredentialResponse) => Promise<void> | void;
 }
 
 const SignInForm: React.FC<SignInFormProps> = ({
@@ -114,7 +114,8 @@ const SignInForm: React.FC<SignInFormProps> = ({
             type="submit"
           
             disabled={formik.isSubmitting}
-            className="w-full bg-slate-900 text-white py-3 px-4 rounded-lg font-semibold text-base hover:bg-slate-800 focus:outline-none focus:ring-4 focus:ring-slate-900/50 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 mt-6"
+            className="w-full bg-slate-900 text-white py-3 px-4 rounded-lg font-semibold text-base hover:bg-slate-800 focus:outline-none 
+            focus:ring-4 focus:ring-slate-900/50 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 mt-6"
           >
             {formik.isSubmitting ? (
               <div className="flex items-center justify-center">

@@ -42,9 +42,6 @@ const ProtectedProvider: React.FC = () => {
     return <Navigate to="/" replace />;
   }
 
-  console.log('Provider role:', provider.role);
-  console.log('Full provider:', provider);
-
   if (provider.role !== "provider") {
     return <Navigate to="/" replace />;
   }

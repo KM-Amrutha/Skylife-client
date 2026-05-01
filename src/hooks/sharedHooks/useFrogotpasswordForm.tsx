@@ -2,8 +2,8 @@
 import { useFormik, FormikProps } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
-import { showSuccessToast, showErrorToast } from "../utils/toast";
-import axiosInstance from "../config/axios";
+import { showSuccessToast, showErrorToast } from "../../utils/toast";
+import axiosInstance from "../../config/axios";
 
 interface ForgotPasswordFormData {
   email: string;

@@ -1,14 +1,24 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../config/axios";
-import { CreateFlightDTO } from "./flightTypes";
+import { CreateFlightDTO ,
+  CreateRecurringFlightDTO,
+  SearchFlightsRequest } from "./flightTypes";
+
 
 // Provider: get all flights
 export const getProviderFlights = createAsyncThunk(
   "flight/getProviderFlights",
-  async (_, { rejectWithValue }) => {
+  async (
+    { page = 1, limit = 4 }: { page?: number; limit?: number } = {},
+    { rejectWithValue }
+  ) => {
     try {
-      const res = await axiosInstance.get("/provider/flights");
-      return res.data;
+      const response = await axiosInstance.get(
+        `/provider/flights?page=${page}&limit=${limit}`);
+      return {
+         flights: response.data?.data?.data || [],
+        pagination: response.data?.data?.pagination || null,
+      }
     } catch (error: any) {
       if (error.response?.data?.message) {
         return rejectWithValue(error.response.data.message);
@@ -17,6 +27,7 @@ export const getProviderFlights = createAsyncThunk(
     }
   }
 );
+
 
 // Provider: create flight
 export const createFlight = createAsyncThunk(
@@ -34,16 +45,17 @@ export const createFlight = createAsyncThunk(
   }
 );
 
-export const getAvailableAircraftsForSchedule = createAsyncThunk(
-  "aircraft/getAvailableAircraftsForSchedule",
-  async ({ departureDestinationId, departureTime }: { departureDestinationId: string; departureTime: string }, { rejectWithValue }) => {
+export const createRecurringFlight = createAsyncThunk(
+  "flight/createRecurringFlight",
+  async (flightData: CreateRecurringFlightDTO, { rejectWithValue }) => {
     try {
-      const res = await axiosInstance.get(`/provider/aircrafts/available`, {
-        params: { departureDestinationId, departureTime }
-      });
+      const res = await axiosInstance.post("/provider/flights/recurring", flightData);
       return res.data;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || "Failed to fetch available aircrafts");
+      if (error.response?.data?.message) {
+        return rejectWithValue(error.response.data.message);
+      }
+      return rejectWithValue("Failed to create recurring flights");
     }
   }
 );
@@ -55,6 +67,7 @@ export const getPendingFlights = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const res = await axiosInstance.get("/admin/flights/pending-approval");
+      console.log('Pending flights from get pending flights:', res.data);
       return res.data;
     } catch (error: any) {
       if (error.response?.data?.message) {
@@ -81,12 +94,50 @@ export const approveFlight = createAsyncThunk(
         `/admin/flights/${flightId}/approval`,
         { status, reason }
       );
+      console.log('Pending flights from approve flights:', res.data);
       return res.data;
     } catch (error: any) {
       if (error.response?.data?.message) {
         return rejectWithValue(error.response.data.message);
       }
       return rejectWithValue("Failed to update flight approval");
+    }
+  }
+);
+
+// admin get flight details for approval
+export const getAdminFlights = createAsyncThunk(
+  "flight/getAdminFlights",
+  async (
+    { page = 1, limit = 10 }: { page?: number; limit?: number } = {},
+    { rejectWithValue }
+  ) => {
+    try {
+      const res = await axiosInstance.get(`/admin/flights?page=${page}&limit=${limit}`);
+      return {
+        flights: res.data?.data?.data || [],
+        pagination: res.data?.data?.pagination || null,
+      };
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || "Failed to fetch flights");
+    }
+  }
+);
+
+export const rejectSingleFlight = createAsyncThunk(
+  "flight/rejectSingleFlight",
+  async (
+    { flightId, reason }: { flightId: string; reason: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const res = await axiosInstance.patch(
+        `/admin/flights/${flightId}/reject`,
+        { reason }
+      );
+      return res.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || "Failed to reject flight");
     }
   }
 );
@@ -111,3 +162,95 @@ export const updateFlight = createAsyncThunk(
     }
   }
 );
+
+export const getFlightById = createAsyncThunk(
+  "flight/getFlightById",
+  async (flightId: string, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.get(`/provider/flights/${flightId}`);
+      return res.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || "Failed to fetch flight");
+    }
+  }
+);
+
+
+export const searchFlights = createAsyncThunk(
+  "flight/searchFlights",
+  async (searchData: SearchFlightsRequest, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.get("/user/flights/search", {
+        params: {
+          from: searchData.from,
+          to: searchData.to,
+          departureDate: searchData.departureDate,
+          passengers: searchData.passengers,
+          tripType: searchData.tripType,
+          ...(searchData.returnDate && { returnDate: searchData.returnDate }),
+          page: searchData.page ?? 1,
+          limit: searchData.limit ?? 6,
+        },
+      });
+      console.log('Search flights result:', res.data);
+      return res.data;
+    } catch (error: any) {
+      if (error.response?.data?.message) {
+        return rejectWithValue(error.response.data.message);
+      }
+      return rejectWithValue("Failed to search flights");
+    }
+  }
+);
+
+export const searchDestinationsUser = createAsyncThunk(
+  "destinations/searchDestinationsUser",
+  async (query: { q?: string } = {}, { rejectWithValue }) => {
+    try {
+      const params = new URLSearchParams();
+      if (query.q) params.append("q", query.q);
+      
+      const response = await axiosInstance.get(`/user/destinations/search?${params}`);
+    
+      return response.data;
+    } catch (error: any) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      }
+      return rejectWithValue("Failed to search destinations");
+    }
+  }
+);
+
+export const deleteFlight = createAsyncThunk(
+  "flight/deleteFlight",
+  async (flightId: string, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.delete(`/provider/flights/${flightId}`);
+      return res.data;
+    } catch (error: any) {
+      if (error.response?.data?.message) {
+        return rejectWithValue(error.response.data.message);
+      }
+      return rejectWithValue("Failed to delete flight");
+    }
+  }
+);
+
+export const getFlightSeats = createAsyncThunk(
+  "flight/getFlightSeats",
+  async (flightId: string, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.get(`/provider/flights/${flightId}/seats`);
+      console.log('Seats data:', res.data);
+      return res.data?.data || [];
+    } catch (error: any) {
+      if (error.response?.data?.message) {
+        return rejectWithValue(error.response.data.message);
+      }
+      return rejectWithValue("Failed to fetch flight seats");
+    }
+  }
+);
+// Get all destinations (empty search)
+export const getDestinations = () => searchDestinationsUser({ q: "" });

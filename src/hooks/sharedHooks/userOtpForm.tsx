@@ -2,10 +2,10 @@ import { useFormik, FormikProps } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
-import { AppDispatch, RootState } from "../redux/store";
-import { verifyOtp, resendOtp } from "../redux/auth/authThunk";
-import { clearOtpDetails } from "../redux/auth/authSlice";
-import { showSuccessToast, showErrorToast } from "../utils/toast";
+import { AppDispatch, RootState } from "../../redux/store";
+import { verifyOtp, resendOtp } from "../../redux/auth/authThunk";
+import { clearOtpDetails } from "../../redux/auth/authSlice";
+import { showSuccessToast, showErrorToast } from "../../utils/toast";
 
 interface OtpFormData {
   otp: string[];

@@ -8,10 +8,13 @@ import ProviderSignUpPage from "./pages/auth/AuthPage";
 import OtpVerificationPage from "./pages/auth/OtpVerificationPage";
 
 
+import UserHomePage from "./pages/user/UserHomePage";
 import UserDashboardPage from "./pages/user/UserDashboardPage";
+
 
 import ForgotPasswordPage from "./pages/auth/ForgetPasswordPage";
 import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
+import EditAircraftPage from "./pages/provider/EditAircraftPage";
 
 // PROVIDER SIDE
 
@@ -33,7 +36,8 @@ import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
 import PendingProviderPage from "./pages/admin/PendingProviderPage";
 import PendingFlightPage from "./pages/admin/PendingFlightPage";
 import AllProvidersTablePage from "./pages/admin/AllProvidersPage";
-
+import AllUsersTablePage from "./pages/admin/AllUsersPage";
+import AdminFlights from "./components/admin/AdminFlights";
 
 import HomePage from "./pages/HomePage";
 
@@ -42,6 +46,7 @@ import HomePage from "./pages/HomePage";
 import ProtectedUser from "./components/protected/ProtectedUser";
 import ProtectedAdmin from "./components/protected/ProtectedAdmin";
 import ProtectedProvider from "./components/protected/ProtectedProvider";
+
 
 // LOADING SPINNER
 const LoadingSpinner = () => (
@@ -78,7 +83,8 @@ const App = () => {
 
         {/* Protected User Routes */}
         <Route element={<ProtectedUser />}>
-          <Route path="/user/dashboard" element={<UserDashboardPage />} />
+          <Route path="/user/userhome" element={<UserHomePage />} />
+           <Route path="/user/userdashboard" element={<UserDashboardPage />} />
         </Route>
 
         {/* Protected Admin Routes */}
@@ -87,6 +93,8 @@ const App = () => {
           <Route path="/admin/pending-providers" element={<PendingProviderPage />} />
          <Route path="/admin/pending-flights" element={<PendingFlightPage />} />
          <Route path="/admin/providers" element={<AllProvidersTablePage />} />
+         <Route path="/admin/users" element={<AllUsersTablePage />} />
+         <Route path="/admin/flights" element={<AdminFlights />} />
 
         </Route>
 
@@ -97,6 +105,7 @@ const App = () => {
 
           <Route path="/provider/add-aircraft" element={<AddAircraftPage />} />
           < Route path="/provider/aircraft-list" element={<AircraftListPage />} />
+          <Route path="/provider/aircraft/:aircraftId/edit" element={<EditAircraftPage />} />
 
          <Route path="/provider/aircraft/:aircraftId/seat-layout" element={<AircraftSeatLayoutPage />} />
 

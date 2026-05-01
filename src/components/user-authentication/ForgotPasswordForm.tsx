@@ -1,4 +1,3 @@
-// components/user-authentication/ForgotPasswordForm.tsx
 import React from 'react';
 import { FormikProps } from 'formik';
 

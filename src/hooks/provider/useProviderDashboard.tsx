@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../redux/store';
-import { getProviderProfile } from '../redux/auth/authThunk';
-import { showErrorToast } from '../utils/toast';
-import { Provider } from '../redux/auth/authTypes';
+import { RootState, AppDispatch } from '../../redux/store';
+import { getProviderProfile } from '../../redux/auth/authThunk';
+import { showErrorToast } from '../../utils/toast';
+import { Provider } from '../../redux/auth/authTypes';
 
 interface UseProviderDashboardReturn {
   provider: Provider | null;

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../redux/store";
+import { AppDispatch, RootState } from "../../redux/store";
 import {
   getPendingProviders,
   verifyProvider,
   rejectProvider,
-} from "../redux/admin/adminThunk";
-import { showSuccessToast, showErrorToast } from "../utils/toast";
+} from "../../redux/admin/adminThunk";
+import { showSuccessToast, showErrorToast } from "../../utils/toast";
 
 const useAdminDashboard = () => {
   const dispatch = useDispatch<AppDispatch>();

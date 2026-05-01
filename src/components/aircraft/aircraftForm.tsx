@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import useAircraft from '../../hooks/useAircraft';
+import useAircraft from '../../hooks/provider/useAircraft';
 
 const AircraftForm: React.FC = () => {
   const {
@@ -124,8 +124,6 @@ const AircraftForm: React.FC = () => {
             value={formik.values.buildYear || ''}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            min={1950}
-            max={new Date().getFullYear()}
             placeholder="e.g., 2020"
             className={`${inputBaseClass} ${
               formik.touched.buildYear && formik.errors.buildYear ? inputErrorClass : ''
@@ -148,7 +146,6 @@ const AircraftForm: React.FC = () => {
             value={formik.values.seatCapacity || ''}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            min={1}
             placeholder="Total seats"
             className={`${inputBaseClass} ${
               formik.touched.seatCapacity && formik.errors.seatCapacity ? inputErrorClass : ''
@@ -171,7 +168,6 @@ const AircraftForm: React.FC = () => {
             value={formik.values.flyingRangeKm || ''}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            min={1}
             placeholder="Range in kilometers"
             className={`${inputBaseClass} ${
               formik.touched.flyingRangeKm && formik.errors.flyingRangeKm ? inputErrorClass : ''
@@ -194,7 +190,6 @@ const AircraftForm: React.FC = () => {
             value={formik.values.engineCount || ''}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            min={1}
             placeholder="Number of engines"
             className={`${inputBaseClass} ${
               formik.touched.engineCount && formik.errors.engineCount ? inputErrorClass : ''
@@ -217,7 +212,6 @@ const AircraftForm: React.FC = () => {
             value={formik.values.lavatoryCount || ''}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            min={0}
             placeholder="Number of lavatories"
             className={`${inputBaseClass} ${
               formik.touched.lavatoryCount && formik.errors.lavatoryCount ? inputErrorClass : ''

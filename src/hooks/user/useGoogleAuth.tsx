@@ -1,9 +1,9 @@
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "../redux/store";
+import { AppDispatch } from "../../redux/store";
 import { NavigateFunction, useNavigate } from "react-router-dom";
-import { googleAuth } from "../redux/auth/authThunk";
-import { setUser } from "../redux/auth/authSlice";
-import { showErrorToast, showSuccessToast } from "../utils/toast";
+import { googleAuth } from "../../redux/auth/authThunk";
+import { setUser } from "../../redux/auth/authSlice";
+import { showErrorToast, showSuccessToast } from "../../utils/toast";
 import { CredentialResponse } from "@react-oauth/google";
 
 
@@ -30,7 +30,7 @@ const useGoogleAuth = () => {
     showSuccessToast(`Welcome back${response.data.user.firstName ? " " + response.data.user.firstName : ""}!`);
 
     const role = response.data.user.role;
-    if (role === "user") navigate("/user/dashboard");
+    if (role === "user") navigate("/user/userhome");
     else if (role === "provider") navigate("/provider/dashboard");
     else if (role === "admin") navigate("/admin/dashboard");
 

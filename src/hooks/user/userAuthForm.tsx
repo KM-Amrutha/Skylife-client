@@ -2,12 +2,12 @@ import { useFormik, FormikProps } from "formik";
 import {
   userAuthValidationSchema,
   providerAuthValidationSchema
-} from "../utils/validationSchema";
+} from "../../utils/validationSchema";
 import {
   UserAuthFormData,
   ProviderAuthFormData,
   SignState
-} from "../types/authTypes";
+} from "../../types/authTypes";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -15,15 +15,15 @@ import {
   signinUser,
   signupUser,
   signupProvider
-} from "../redux/auth/authThunk";
-import { showSuccessToast, showErrorToast } from "../utils/toast";
-import { AppDispatch } from "../redux/store";
+} from "../../redux/auth/authThunk";
+import { showSuccessToast, showErrorToast } from "../../utils/toast";
+import { AppDispatch } from "../../redux/store";
 import {
   setUser,
   setAdmin,
   setProvider,
   setOtp
-} from "../redux/auth/authSlice";
+} from "../../redux/auth/authSlice";
 
 interface UseAuthFormReturn {
   handleUserAuth: FormikProps<UserAuthFormData>;
@@ -64,32 +64,28 @@ const useAuthForm = (formState: SignState = "sign in"): UseAuthFormReturn => {
             signinUser({ email: values.email, password: values.password })
           ).unwrap();
           localStorage.setItem("accessToken", response.data.accessToken);
-          const role = response.data.userData.role;
-          console.log('Provider role:', role, 'Full user data:', response.data.userData);
+
+          const userData = response.data.userData
+          const providerData = response.data.providerData
+          const role = userData?.role?? providerData?.role
           
           if (role === "user")  {
-            dispatch(setUser(response.data.userData)) 
-          showSuccessToast(`Welcome back ${response.data.userData.firstName}`);
+            dispatch(setUser(userData)) 
+          showSuccessToast(`Welcome back ${userData.firstName}`);
         }
           else if (role === "admin") {
-            dispatch(setAdmin(response.data.userData));
-            showSuccessToast(`Welcome back ${response.data.userData.firstName}`)
+            dispatch(setAdmin(userData));
+            showSuccessToast(`Welcome back ${userData.firstName}`)
           }
            else if (role === "provider"){
-             dispatch(setProvider(response.data.userData));
-          showSuccessToast(`Welcome back ${response.data.userData.companyName}`);
+             dispatch(setProvider(providerData));
+          showSuccessToast(`Welcome back ${providerData.companyName}`);
            }
           handleUserAuth.resetForm();
 
-           console.log('About to navigate to welcome...');
-
-           
           navigate(
-            role === "user"  ? "/user/dashboard" : role === "admin" ? "/admin/dashboard" : "/provider/dashboard"
+            role === "user"  ? "/user/userhome" : role === "admin" ? "/admin/dashboard" : "/provider/dashboard"
           );
-          // navigate("/welcome")
-
-           console.log(' Navigation called');
         }
       } catch (error:any) {
 

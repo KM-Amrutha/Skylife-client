@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import useAdminProviders from "../../hooks/useAdminProviders";
+import useAdminProviders from "../../hooks/admin/useAdminProviders";
 import { Provider } from "../../redux/auth/authTypes";
+import Pagination from '../../layouts/Pagination';
 import {
   Building2,
   Mail,
@@ -15,6 +16,8 @@ import {
   FileText,
   X,
   Plane,
+  CheckCircle,
+  XCircle
 } from "lucide-react";
 
 interface ProviderDetailModalProps {
@@ -65,7 +68,7 @@ const ProviderDetailModal: React.FC<ProviderDetailModalProps> = ({
           </div>
 
           {/* Details Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2  gap-6 mb-8">
             {/* Left Column */}
             <div className="space-y-5">
               <div className="flex items-start gap-4">
@@ -238,8 +241,8 @@ const ProviderDetailModal: React.FC<ProviderDetailModalProps> = ({
 };
 
 const AllProvidersTable: React.FC = () => {
-  const { providers, isLoading, handleUpdateProviderStatus } =
-    useAdminProviders();
+ const { providers, isLoading, pagination, currentPage, handlePageChange, handleUpdateProviderStatus } =
+  useAdminProviders();
   const [selectedProvider, setSelectedProvider] = useState<Provider | null>(
     null
   );
@@ -255,7 +258,8 @@ const AllProvidersTable: React.FC = () => {
     );
   }
 
-  if (providers.length === 0) {
+  // Safe guard — never crash if providers is undefined
+  if (!providers || providers.length === 0) {
     return (
       <div className="px-8 py-6">
         <div className="bg-white/5 border border-dashed border-slate-500/40 rounded-2xl p-10 text-center">
@@ -274,104 +278,157 @@ const AllProvidersTable: React.FC = () => {
   return (
     <>
       <div className="px-8 py-6">
-        <div className="flex items-center justify-between mb-8">
+        {/* Top header: title + current count (exactly like users) */}
+        <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
           <h2 className="text-white text-3xl font-bold">All Providers</h2>
-          <div className="px-5 py-2 bg-blue-500/20 border border-blue-400/30 rounded-lg text-blue-300 text-base font-semibold">
-            {providers.length} {providers.length === 1 ? "Provider" : "Providers"}
-          </div>
+
+          <div className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-400/20 rounded-xl">
+           <span className="text-xs text-blue-300 tracking-widest font-semibold">
+            {providers.length} Providers
+           </span>
+                  </div>
         </div>
 
+        {/* Provider cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {providers.map((provider) => (
-            <div
-              key={provider._id}
-              className="bg-white/5 border border-white/10 rounded-2xl p-6 shadow-lg shadow-black/30 hover:border-blue-400/60 hover:shadow-blue-500/20 transition duration-300"
-            >
-              {/* Header */}
-              <div className="flex items-center gap-4 mb-4">
-                {provider.logoUrl ? (
-                  <img
-                    src={provider.logoUrl}
-                    alt={provider.companyName}
-                    className="w-14 h-14 rounded-xl object-cover border-2 border-blue-400/30"
-                  />
-                ) : (
-                  <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center border-2 border-blue-400/30">
-                    <Building2 className="w-7 h-7 text-white" />
-                  </div>
-                )}
-                <div className="flex-1 min-w-0">
-                  <button
-                    onClick={() => openModal(provider)}
-                    className="text-left w-full"
-                  >
-                    <h3 className="text-xl font-bold text-white mb-1 hover:text-cyan-300 transition truncate">
-                      {provider.companyName}
-                    </h3>
-                  </button>
-                  <div className="flex items-center gap-2">
-                    <Hash className="w-4 h-4 text-slate-400" />
-                    <p className="text-base text-cyan-300 font-medium">
-                      {provider.airlineCode}
-                    </p>
-                  </div>
-                </div>
-              </div>
+{providers.map((provider) => (
+  <div
+    key={provider._id}
+    className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 hover:border-blue-400/40 transition duration-300 group"
+  >
+    
 
-              {/* Details */}
-              <div className="space-y-3 mb-5">
-                <div className="flex items-center gap-3">
-                  <Mail className="w-5 h-5 text-slate-400" />
-                  <p className="text-slate-200 text-sm truncate">
-                    {provider.email}
-                  </p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Calendar className="w-5 h-5 text-slate-400" />
-                  <p className="text-slate-300 text-sm">
-                    Joined {new Date(provider.createdAt).toLocaleDateString()}
-                  </p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-slate-400 text-sm">Status:</span>
-                  <span
-                    className={`px-2 py-1 rounded text-xs font-semibold ${
-                      provider.isActive
-                        ? "bg-green-500/20 text-green-300"
-                        : "bg-red-500/20 text-red-300"
-                    }`}
-                  >
-                    {provider.isActive ? "Active" : "Blocked"}
-                  </span>
-                </div>
-              </div>
+    <div className="p-5">
+      {/* Header */}
+      <div className="flex items-center gap-4 mb-5">
+        {provider.logoUrl ? (
+          <img
+            src={provider.logoUrl}
+            alt={provider.companyName}
+            className="w-16 h-16 rounded-2xl object-cover border-2 border-white/20 shadow-lg"
+          />
+        ) : (
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 via-cyan-500 to-teal-500 flex items-center justify-center shadow-lg border-2 border-white/10 shrink-0">
+            <Building2 className="w-8 h-8 text-white" />
+          </div>
+        )}
 
-              {/* Action Button */}
-              <button
-                onClick={() =>
-                  handleUpdateProviderStatus(provider._id, !provider.isActive)
-                }
-                className={`w-full py-3 font-bold rounded-xl transition-all shadow-lg hover:scale-105 flex items-center justify-center gap-2 ${
-                  provider.isActive
-                    ? "bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white hover:shadow-red-500/50"
-                    : "bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white hover:shadow-green-500/50"
-                }`}
-              >
-                {provider.isActive ? (
-                  <>
-                    <ShieldOff className="w-5 h-5" />
-                    Block Provider
-                  </>
-                ) : (
-                  <>
-                    <Shield className="w-5 h-5" />
-                    Activate Provider
-                  </>
-                )}
-              </button>
-            </div>
-          ))}
+        <div className="flex-1 min-w-0">
+          <button onClick={() => openModal(provider)} className="text-left w-full">
+            <h3 className="text-white font-bold text-lg truncate hover:text-cyan-300 transition">
+              {provider.companyName}
+            </h3>
+          </button>
+          <p className="text-cyan-400 text-xs truncate">{provider.email}</p>
+          <span className={`inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider
+            ${provider.isActive
+              ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-400/30'
+              : 'bg-red-500/15 text-red-300 border border-red-400/30'
+            }`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${provider.isActive ? 'bg-emerald-400' : 'bg-red-400'}`} />
+            {provider.isActive ? 'Active' : 'Blocked'}
+          </span>
         </div>
+      </div>
+
+      {/* Divider */}
+      <div className="border-t border-white/5 mb-4" />
+
+      {/* Details Grid */}
+      <div className="grid grid-cols-2 gap-2.5 mb-4">
+        <div className="bg-white/5 rounded-xl p-3">
+          <div className="flex items-center gap-2 mb-1">
+            <Hash className="w-3 h-3 text-slate-400" />
+            <p className="text-slate-400 text-[10px] uppercase tracking-wider">Airline Code</p>
+          </div>
+          <p className="text-white text-xs font-medium truncate">{provider.airlineCode || '—'}</p>
+        </div>
+
+        <div className="bg-white/5 rounded-xl p-3">
+          <div className="flex items-center gap-2 mb-1">
+            <Calendar className="w-3 h-3 text-slate-400" />
+            <p className="text-slate-400 text-[10px] uppercase tracking-wider">Joined</p>
+          </div>
+          <p className="text-white text-xs font-medium">
+            {provider.createdAt
+              ? new Date(provider.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+              : '—'}
+          </p>
+        </div>
+
+        <div className="bg-white/5 rounded-xl p-3">
+          <div className="flex items-center gap-2 mb-1">
+            <Globe className="w-3 h-3 text-slate-400" />
+            <p className="text-slate-400 text-[10px] uppercase tracking-wider">Country</p>
+          </div>
+          <p className="text-white text-xs font-medium capitalize truncate">{provider.countryOfOperation || '—'}</p>
+        </div>
+
+        <div className="bg-white/5 rounded-xl p-3">
+          <div className="flex items-center gap-2 mb-1">
+            <Plane className="w-3 h-3 text-slate-400" />
+            <p className="text-slate-400 text-[10px] uppercase tracking-wider">Operation</p>
+          </div>
+          <p className="text-white text-xs font-medium capitalize truncate">{provider.typeOfOperation || '—'}</p>
+        </div>
+
+        <div className="bg-white/5 rounded-xl p-3 col-span-2">
+          <div className="flex items-center gap-2 mb-1">
+            <MapPin className="w-3 h-3 text-slate-400" />
+            <p className="text-slate-400 text-[10px] uppercase tracking-wider">Headquarters</p>
+          </div>
+          <p className="text-white text-xs font-medium truncate">{provider.headquartersAddress || '—'}</p>
+        </div>
+      </div>
+
+      {/* Verification badge */}
+      <div className="flex items-center gap-2 mb-4">
+        <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-semibold
+          ${provider.isVerified ? 'bg-blue-500/15 text-blue-300 border border-blue-400/20' : 'bg-slate-700/50 text-slate-500 border border-slate-600/30'}`}>
+          {provider.isVerified
+            ? <CheckCircle className="w-3 h-3" />
+            : <XCircle className="w-3 h-3" />}
+          Verified
+        </div>
+        <button
+          onClick={() => openModal(provider)}
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-semibold bg-white/5 text-slate-300 border border-white/10 hover:bg-white/10 transition"
+        >
+          <FileText className="w-3 h-3" />
+          View Details
+        </button>
+      </div>
+
+      {/* Action Button */}
+      <button
+        onClick={() => handleUpdateProviderStatus(provider._id, !provider.isActive)}
+        className={`w-full py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-lg
+          ${provider.isActive
+            ? 'bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-400/30 hover:border-red-400/50'
+            : 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-400/30 hover:border-emerald-400/50'
+          }`}
+      >
+        {provider.isActive ? (
+          <><ShieldOff className="w-4 h-4" /> Block Provider</>
+        ) : (
+          <><Shield className="w-4 h-4" /> Activate Provider</>
+        )}
+      </button>
+    </div>
+  </div>
+))}
+         
+        </div>
+
+        {/* Bottom: page number + small Prev/Next buttons (exactly like users) */}
+        {/* <div className="mt-12 flex flex-col items-center gap-6">
+        </div> */}
+        <Pagination
+  currentPage={currentPage}
+  totalPages={pagination?.totalPages ?? 1}
+  isLoading={isLoading}
+  onPageChange={handlePageChange}
+/>
       </div>
 
       {/* Detail Modal */}

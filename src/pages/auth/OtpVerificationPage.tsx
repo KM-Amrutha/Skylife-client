@@ -5,7 +5,7 @@ import { RootState, AppDispatch } from "../../redux/store";
 import { useNavigate } from "react-router-dom";
 import { updateCountDown } from "../../redux/auth/authSlice";
 import OtpForm from "../../components/user-authentication/OtpForm";
-import useOtpForm from "../../hooks/userOtpForm";
+import useOtpForm from "../../hooks/sharedHooks/userOtpForm";
 import BackGroundLayout from "../../layouts/BackGroundLayout";
 
 const OtpVerificationPage: React.FC = () => {

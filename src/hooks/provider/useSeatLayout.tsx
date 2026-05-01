@@ -1,19 +1,20 @@
-// hooks/useSeatLayout.ts
 import { useEffect, useState } from 'react';
 import { useFormik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { AppDispatch, RootState } from '../redux/store';
+import { AppDispatch, RootState } from '../../redux/store';
 import {
   getAllSeatTypes,
   createSeatLayout,
   generateSeats,
   getSeatLayoutsByAircraft,
   deleteSeatLayout,
-} from '../redux/seat/seatThunk';
-import { CreateSeatLayoutDTO, SeatType, SeatLayout } from '../redux/seat/seatType';
-import { showSuccessToast, showErrorToast } from '../utils/toast';
+} from '../../redux/seat/seatThunk';
+import { getProviderAircrafts } from '../../redux/aircraft/aircraftThunk'; // ← add
+import { clearGeneratedSeatsCount,clearSeatError } from '../../redux/seat/seatSlice';     // ← add
+import { CreateSeatLayoutDTO, SeatType, SeatLayout } from '../../redux/seat/seatType';
+import { showSuccessToast, showErrorToast } from '../../utils/toast';
 
 interface UseSeatLayoutReturn {
   seatTypes: SeatType[];
@@ -46,11 +47,15 @@ const useSeatLayout = (): UseSeatLayoutReturn => {
   const dispatch = useDispatch<AppDispatch>();
   const { aircraftId } = useParams<{ aircraftId: string }>();
 
-  const aircraft = useSelector((state: RootState) => 
-  state.aircraft.aircrafts.find(a => a._id === aircraftId)
-);
+  if (!aircraftId) {
+    throw new Error('Aircraft ID is required');
+  }
 
-const aircraftCapacity = aircraft?.seatCapacity || 0;
+  const aircraft = useSelector((state: RootState) =>
+    state.aircraft.aircrafts.find(a => a._id === aircraftId)
+  );
+
+  const aircraftCapacity = aircraft?.seatCapacity || 0;
 
   const {
     seatTypes,
@@ -62,13 +67,16 @@ const aircraftCapacity = aircraft?.seatCapacity || 0;
 
   const [totalPlannedSeats, setTotalPlannedSeats] = useState(0);
 
-  if (!aircraftId) {
-    throw new Error('Aircraft ID is required');
-  }
-
+  // Fix 1 — clear stale generatedSeatsCount on mount, refetch aircraft if not in Redux
   useEffect(() => {
+    dispatch(clearGeneratedSeatsCount());         // ← clears 285 stale count
     dispatch(getAllSeatTypes());
     dispatch(getSeatLayoutsByAircraft(aircraftId));
+
+    // Fix 2 — if aircraft not in Redux yet (just created), fetch the list
+    if (!aircraft) {
+      dispatch(getProviderAircrafts());
+    }
   }, [dispatch, aircraftId]);
 
   // Calculate total planned seats
@@ -96,7 +104,7 @@ const aircraftCapacity = aircraft?.seatCapacity || 0;
     validationSchema: seatLayoutValidationSchema,
     onSubmit: async (values) => {
       try {
-        await dispatch(createSeatLayout(values)); // ✅ No .unwrap() needed
+        await dispatch(createSeatLayout(values));
         showSuccessToast('Seat layout created successfully!');
         formik.resetForm();
         dispatch(getSeatLayoutsByAircraft(aircraftId));
@@ -110,7 +118,7 @@ const aircraftCapacity = aircraft?.seatCapacity || 0;
 
   const handleGenerateSeats = async () => {
     try {
-      await dispatch(generateSeats(aircraftId));
+      await dispatch(generateSeats(aircraftId)).unwrap(); // ← unwrap to catch errors
       showSuccessToast('Seats generated successfully!');
       dispatch(getSeatLayoutsByAircraft(aircraftId));
     } catch (err: any) {
@@ -119,18 +127,19 @@ const aircraftCapacity = aircraft?.seatCapacity || 0;
   };
 
   const clearError = () => {
-    dispatch({ type: 'seat/clearSeatError' });
+    dispatch(clearSeatError());
   };
+
   const handleDeleteLayout = async (layoutId: string) => {
-  if (window.confirm('Are you sure you want to delete this seat layout?')) {
-    try {
-      await dispatch(deleteSeatLayout(layoutId));
-      showSuccessToast('Seat layout deleted successfully!');
-    } catch (err: any) {
-      showErrorToast(err || 'Failed to delete seat layout');
+    if (window.confirm('Are you sure you want to delete this seat layout?')) {
+      try {
+        await dispatch(deleteSeatLayout(layoutId)).unwrap(); // ← unwrap to catch errors
+        showSuccessToast('Seat layout deleted successfully!');
+      } catch (err: any) {
+        showErrorToast(err || 'Failed to delete seat layout');
+      }
     }
-  }
-};
+  };
 
   return {
     seatTypes,

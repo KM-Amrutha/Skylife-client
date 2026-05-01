@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { FormikProps } from "formik";
-import { AppDispatch } from "../redux/store";
-import { searchDestinations } from "../redux/destination/destinationThunk";
-import { Destination } from "../redux/destination/destinationType";
-import { CreateFlightDTO } from "../redux/flight/flightTypes";
+import { AppDispatch } from "../../redux/store";
+import { searchDestinations } from "../../redux/destination/destinationThunk";
+import { Destination } from "../../redux/destination/destinationType";
+import { CreateFlightDTO } from "../../redux/flight/flightTypes";
 
 interface UseFlightDestinationsReturn {
   departureSearchResults: Destination[];

@@ -3,15 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { useFormik, FormikProps } from "formik";
 import * as Yup from "yup";
-import { AppDispatch, RootState } from "../redux/store";
-import { updateFlight } from "../redux/flight/flightThunk";
-import { searchDestinations } from "../redux/destination/destinationThunk";
-import { FlightDetails } from "../redux/flight/flightTypes";
-import { showSuccessToast, showErrorToast } from "../utils/toast";
-import { debounce } from "../utils/debounce";
-import { Destination } from "../redux/destination/destinationType";
+import { AppDispatch, RootState } from "../../redux/store";
+import { updateFlight, getFlightById } from "../../redux/flight/flightThunk";
+import {clearSelectedFlight } from "../../redux/flight/flightSlice";
+import { searchDestinations } from "../../redux/destination/destinationThunk";
+import { FlightDetails } from "../../redux/flight/flightTypes";
+import { showSuccessToast, showErrorToast } from "../../utils/toast";
+import { debounce } from "../../utils/debounce";
+import { Destination } from "../../redux/destination/destinationType";
 
-// Validation schema — partial, same rules as create but optional fields
 const editFlightValidationSchema = Yup.object().shape({
   flightNumber: Yup.string()
     .trim()
@@ -26,7 +26,7 @@ const editFlightValidationSchema = Yup.object().shape({
   arrivalDestinationId: Yup.string().optional(),
   baseFare: Yup.object({
     economy: Yup.number().min(1, "Must be > 0").optional(),
-    premiumEconomy: Yup.number().min(0).nullable().optional(),
+    premium_economy: Yup.number().min(0).nullable().optional(),
     business: Yup.number().min(0).nullable().optional(),
     first: Yup.number().min(0).nullable().optional(),
   }).optional(),
@@ -52,6 +52,7 @@ interface UseEditFlightReturn {
   handleArrivalSearch: (value: string) => void;
   selectArrival: (destination: Destination) => void;
   clearArrivalResults: () => void;
+  isRecurringOrReturn: boolean;
 }
 
 const useEditFlight = (): UseEditFlightReturn => {
@@ -59,20 +60,38 @@ const useEditFlight = (): UseEditFlightReturn => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const { providerFlights, isLoading, error } = useSelector(
-    (state: RootState) => state.flight
-  );
+  const {
+    selectedFlight,
+    isLoadingSelectedFlight,
+    selectedFlightError,
+  } = useSelector((state: RootState) => state.flight);
 
-  const flight = providerFlights.find((f) => f._id === flightId) || null;
+  const flight = selectedFlight;
+  const isLoading = isLoadingSelectedFlight;
+  const error = selectedFlightError;
+
+  // fetch flight on mount, clear on unmount
+  useEffect(() => {
+    if (flightId) {
+      dispatch(getFlightById(flightId));
+    }
+    return () => {
+      dispatch(clearSelectedFlight());
+    };
+  }, [flightId, dispatch]);
+
+  const isRecurringOrReturn =
+    flight?.flightType === "recurring" || flight?.flightType === "return";
 
   const [arrivalDisplayName, setArrivalDisplayName] = useState<string>("");
   const [arrivalSearchResults, setArrivalSearchResults] = useState<Destination[]>([]);
 
-  // Set initial display name when flight loads
+  // set arrival display name once flight loads
   useEffect(() => {
     if (flight) {
-      // You can improve this later by joining with destination data if needed
-      setArrivalDisplayName(flight.arrivalDestinationId); // placeholder, replace with name + code if you have lookup
+      const name = flight.arrivalDestination?.name ?? "";
+      const code = flight.arrivalDestination?.iataCode ?? "";
+      setArrivalDisplayName(name && code ? `${name} (${code})` : flight.arrivalDestinationId);
     }
   }, [flight]);
 
@@ -87,29 +106,37 @@ const useEditFlight = (): UseEditFlightReturn => {
       baggageRules: flight?.baggageRules || { extraChargePerKg: 0 },
     },
     validationSchema: editFlightValidationSchema,
-    enableReinitialize: true, // Important: update form when flight loads
+    enableReinitialize: true,
     onSubmit: async (values, { setSubmitting }) => {
       if (!flightId || !flight) return;
 
+      // check departed
+      if (new Date(flight.departureTime) <= new Date()) {
+        showErrorToast("Cannot edit a flight that has already departed");
+        setSubmitting(false);
+        return;
+      }
+
       try {
-        // Clean values — only send changed fields
         const updateData: Partial<FlightDetails> = {
           flightNumber: values.flightNumber?.trim() || undefined,
           gate: values.gate?.trim() || undefined,
-          durationMinutes: values.durationMinutes,
-          arrivalDestinationId:
-            values.arrivalDestinationId === flight.arrivalDestinationId
-              ? undefined
-              : values.arrivalDestinationId,
+          // only send duration/arrival for outbound flights
+          ...(!isRecurringOrReturn && {
+            durationMinutes: values.durationMinutes,
+            arrivalDestinationId:
+              values.arrivalDestinationId === flight.arrivalDestinationId
+                ? undefined
+                : values.arrivalDestinationId,
+          }),
           baseFare: values.baseFare,
           seatSurcharge: values.seatSurcharge,
           baggageRules: values.baggageRules,
         };
 
         await dispatch(updateFlight({ flightId, data: updateData })).unwrap();
-
         showSuccessToast("Flight updated successfully! Awaiting admin approval.");
-        navigate("/provider/flight-list"); // Go back to list
+        navigate("/provider/flight-list");
       } catch (err: any) {
         showErrorToast(err || "Failed to update flight");
       } finally {
@@ -118,7 +145,6 @@ const useEditFlight = (): UseEditFlightReturn => {
     },
   });
 
-  // Arrival destination search
   const searchArrival = useCallback(async (query: string) => {
     if (query.trim().length < 3) {
       setArrivalSearchResults([]);
@@ -134,28 +160,19 @@ const useEditFlight = (): UseEditFlightReturn => {
 
   const debouncedSearchArrival = useMemo(() => debounce(searchArrival, 300), [searchArrival]);
 
-  const handleArrivalSearch = useCallback(
-    (value: string) => {
-      setArrivalDisplayName(value);
-      formik.setFieldValue("arrivalDestinationId", "");
-      debouncedSearchArrival(value);
-    },
-    [debouncedSearchArrival, formik]
-  );
+  const handleArrivalSearch = useCallback((value: string) => {
+    setArrivalDisplayName(value);
+    formik.setFieldValue("arrivalDestinationId", "");
+    debouncedSearchArrival(value);
+  }, [debouncedSearchArrival, formik]);
 
-  const selectArrival = useCallback(
-    (destination: Destination) => {
-      const display = `${destination.name} (${destination.iataCode || destination.ident})`;
-      setArrivalDisplayName(display);
-      formik.setFieldValue("arrivalDestinationId", destination._id);
-      setArrivalSearchResults([]);
-    },
-    [formik]
-  );
-
-  const clearArrivalResults = useCallback(() => {
+  const selectArrival = useCallback((destination: Destination) => {
+    setArrivalDisplayName(`${destination.name} (${destination.iataCode || destination.ident})`);
+    formik.setFieldValue("arrivalDestinationId", destination._id);
     setArrivalSearchResults([]);
-  }, []);
+  }, [formik]);
+
+  const clearArrivalResults = useCallback(() => setArrivalSearchResults([]), []);
 
   return {
     flight,
@@ -167,6 +184,7 @@ const useEditFlight = (): UseEditFlightReturn => {
     handleArrivalSearch,
     selectArrival,
     clearArrivalResults,
+    isRecurringOrReturn,
   };
 };
 

@@ -11,6 +11,7 @@ const Sidebar: React.FC = () => {
     { name: "Dashboard", path: "/admin/dashboard", icon: "📊" },
     { name: "Pending Providers", path: "/admin/pending-providers", icon: "✈️" },
     { name: "Pending Flights", path: "/admin/pending-flights", icon: "🛫" },
+    { name: "Flights", path: "/admin/flights", icon: "🛬" },
     { name: "Providers", path: "/admin/providers", icon: "✈️" },
     { name: "Users", path: "/admin/users", icon: "👥" },
     { name: "Sign out", path: "/admin/signout" },

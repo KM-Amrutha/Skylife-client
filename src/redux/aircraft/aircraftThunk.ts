@@ -6,10 +6,18 @@ import {  CreateAircraftDTO } from "./aircraftTypes";
 // Get all aircrafts for the provider
 export const getProviderAircrafts = createAsyncThunk(
   "aircraft/getProviderAircrafts",
-  async (_, { rejectWithValue }) => {
+  async (
+    { page = 1, limit = 4 }: { page?: number; limit?: number } = {},
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await axiosInstance.get("/provider/aircrafts");
-      return response.data;
+      const response = await axiosInstance.get(
+        `/provider/aircrafts?page=${page}&limit=${limit}`
+      );
+      return {
+        aircrafts: response.data?.data?.data || [],
+        pagination: response.data?.data?.pagination || null,
+      };
     } catch (error: any) {
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message);
@@ -73,18 +81,30 @@ export const deleteAircraft = createAsyncThunk(
     }
   }
 )
-
 export const getAvailableAircraftsForSchedule = createAsyncThunk(
   "aircraft/getAvailableAircraftsForSchedule",
-  async ({ departureDestinationId, departureTime }: { departureDestinationId: string; departureTime: string }, { rejectWithValue }) => {
+  async (
+    {
+      departureDestinationId,
+      departureTime,
+      durationMinutes,
+      bufferMinutes,
+    }: {
+      departureDestinationId: string;
+      departureTime: string;
+      durationMinutes: number;
+      bufferMinutes: number;
+    },
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await axiosInstance.get("/provider/aircraft/available-aircrafts", {
-        params: { departureDestinationId, departureTime }
+      const response = await axiosInstance.get("/provider/aircraft/available", {
+        params: { departureDestinationId, departureTime, durationMinutes, bufferMinutes },
       });
+      console.log("front data is :", response.data);
       return response.data;
     } catch (error: any) {
-      console.log(error);
-      if (error.response && error.response.data.message) {
+      if (error.response?.data?.message) {
         return rejectWithValue(error.response.data.message);
       }
       return rejectWithValue("Failed to fetch available aircrafts");

@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
-import { User } from '../redux/auth/authTypes';
+import { RootState } from '../../redux/store';
+import { User } from '../../redux/auth/authTypes';
 
 const useUserHome = () => {
   const { user, isLoading } = useSelector((state: RootState) => state.auth);

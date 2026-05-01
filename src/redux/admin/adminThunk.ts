@@ -2,13 +2,16 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../config/axios";
 import { RequestVerifyProvider,
    RequestRejectProvider,
-   UpdateProviderStatusRequest } from "./adminTypes";
+   UpdateProviderStatusRequest,
+  UpdateUserStatusRequest
+  } from "./adminTypes";
 
 export const getPendingProviders = createAsyncThunk(
   "admin/getPendingProviders",
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get("/admin/providers/pending");
+      console.log("Fetched pending providers:", response.data);
       return response.data;
     } catch (error: any) {
       console.log(error);
@@ -59,22 +62,29 @@ export const rejectProvider = createAsyncThunk(
     }
   }
 );
+
 export const getAllProviders = createAsyncThunk(
   "admin/getAllProviders",
-  async (_, { rejectWithValue }) => {
+  async (
+    { page = 1, limit = 9 }: { page?: number; limit?: number } = {},
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await axiosInstance.get("/admin/providers");
-      return response.data; 
+      const response = await axiosInstance.get(
+        `/admin/providers?page=${page}&limit=${limit}`
+      );
+      return {
+        providers: response.data?.data?.data || [],
+        pagination: response.data?.data?.pagination || null,
+      };
     } catch (error: any) {
-      console.log("Get all providers error:", error);
-      if (error.response && error.response.data.message) {
-        return rejectWithValue(error.response.data.message);
-      } else {
-        return rejectWithValue("Failed to fetch all providers");
-      }
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch all providers"
+      );
     }
   }
 );
+
 export const updateProviderStatus = createAsyncThunk(
   "admin/updateProviderStatus",
   async ({ providerId, isActive }: UpdateProviderStatusRequest, { rejectWithValue }) => {
@@ -90,6 +100,52 @@ export const updateProviderStatus = createAsyncThunk(
         return rejectWithValue(error.response.data.message);
       } else {
         return rejectWithValue("Failed to update provider status");
+      }
+    }
+  }
+);
+
+export const getAllUsers = createAsyncThunk(
+  "admin/getAllUsers",
+  async (
+    { page = 1, limit = 9 }: { page?: number; limit?: number } = {},
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.get(
+        `/admin/users?page=${page}&limit=${limit}`
+      );
+      console.log("Fetched users:", response.data);
+      return {
+        users: response.data?.data?.data || [],
+        
+        pagination: response.data?.data?.pagination || null,
+      };
+    } catch (error: any) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      }
+      return rejectWithValue("Failed to fetch all users");
+    }
+  }
+);
+
+
+export const updateUsersStatus = createAsyncThunk(
+  "admin/updateUsersStatus",
+  async({userId, isActive}: UpdateUserStatusRequest, {rejectWithValue})=>{
+    try{
+      const response = await axiosInstance.patch(
+        `/admin/users/${userId}/status`,
+        {isActive}
+      );
+      return response.data;
+    } catch(error:any){
+      console.log("Update user status error:", error);
+      if(error.response && error.response.data.message){
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue("Failed to update user status");
       }
     }
   }
