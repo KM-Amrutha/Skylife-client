@@ -12,10 +12,10 @@ const ProviderSidebarLayout: React.FC = () => {
     { name: 'Aircraft List', path: '/provider/aircraft-list', icon: '✈️' }, 
     { name: 'Schedule Aircraft', path: '/provider/add-flight', icon: '✈️' },
      { name: 'Flight List', path: '/provider/flight-list', icon: '✈️' }, 
-    { name: 'Food & Beverages', path: '/provider/food-beverages', icon: '🍔' },
-    { name: 'Offers', path: '/provider/offers', icon: '🎁' },
-    { name: 'Orders', path: '/provider/orders', icon: '📦' },
-    { name: 'Wallets', path: '/provider/wallets', icon: '💳' }
+    { name: 'Food & Beverages', path: '/provider/food-list', icon: '🍔' },
+    { name: 'Offers', path: '/provider/offer-list', icon: '🎁' },
+    { name: 'Bookings', path: '/provider/bookings', icon: '📦' },
+    { name: 'Wallets', path: '/provider/wallet', icon: '💳' }
   ];
 
   const isActive = (path: string) => location.pathname === path;

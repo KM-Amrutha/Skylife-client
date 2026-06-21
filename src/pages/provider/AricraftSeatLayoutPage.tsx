@@ -1,6 +1,6 @@
 import React from "react";
 import ProviderMainLayout from "../../layouts/ProviderMainLayout";
-import SeatLayoutForm from "../../components/aircraft/SeatLayoutForm";
+import SeatLayoutForm from "../../components/aircraft/seatLayoutForm";
 
 const AircraftSeatLayoutPage: React.FC = () => {
   return (

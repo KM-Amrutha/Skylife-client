@@ -15,6 +15,7 @@ export const getProviderFlights = createAsyncThunk(
     try {
       const response = await axiosInstance.get(
         `/provider/flights?page=${page}&limit=${limit}`);
+    
       return {
          flights: response.data?.data?.data || [],
         pagination: response.data?.data?.pagination || null,
@@ -35,6 +36,7 @@ export const createFlight = createAsyncThunk(
   async (flightData: CreateFlightDTO, { rejectWithValue }) => {
     try {
       const res = await axiosInstance.post("/provider/flights", flightData);
+      console.log("createFlight payload:", res.data);
       return res.data;
     } catch (error: any) {
       if (error.response?.data?.message) {
@@ -67,7 +69,6 @@ export const getPendingFlights = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const res = await axiosInstance.get("/admin/flights/pending-approval");
-      console.log('Pending flights from get pending flights:', res.data);
       return res.data;
     } catch (error: any) {
       if (error.response?.data?.message) {
@@ -90,11 +91,11 @@ export const approveFlight = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
+    
       const res = await axiosInstance.patch(
         `/admin/flights/${flightId}/approval`,
         { status, reason }
       );
-      console.log('Pending flights from approve flights:', res.data);
       return res.data;
     } catch (error: any) {
       if (error.response?.data?.message) {
@@ -114,10 +115,12 @@ export const getAdminFlights = createAsyncThunk(
   ) => {
     try {
       const res = await axiosInstance.get(`/admin/flights?page=${page}&limit=${limit}`);
+      console.log("Admin Flights Response:", res.data);
       return {
         flights: res.data?.data?.data || [],
         pagination: res.data?.data?.pagination || null,
       };
+
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || "Failed to fetch flights");
     }
@@ -149,11 +152,13 @@ export const updateFlight = createAsyncThunk(
     { flightId, data }: { flightId: string; data: Partial<CreateFlightDTO> },
     { rejectWithValue }
   ) => {
+    console.log("updateFlight thunk flightId:", flightId);
     try {
       const res = await axiosInstance.put(
         `/provider/update-flights/${flightId}`,
         data
       );
+      
       return res.data; // { message, data: FlightDetails }
     } catch (error: any) {
       const message =
@@ -191,8 +196,8 @@ export const searchFlights = createAsyncThunk(
           page: searchData.page ?? 1,
           limit: searchData.limit ?? 6,
         },
+        
       });
-      console.log('Search flights result:', res.data);
       return res.data;
     } catch (error: any) {
       if (error.response?.data?.message) {
@@ -242,7 +247,6 @@ export const getFlightSeats = createAsyncThunk(
   async (flightId: string, { rejectWithValue }) => {
     try {
       const res = await axiosInstance.get(`/provider/flights/${flightId}/seats`);
-      console.log('Seats data:', res.data);
       return res.data?.data || [];
     } catch (error: any) {
       if (error.response?.data?.message) {

@@ -1,18 +1,12 @@
 import React from 'react';
-import { FormikProps } from 'formik';
-import { completeProviderProfile } from '../../redux/auth/authTypes';
+import useCompleteProviderProfile from "../../hooks/provider/useCompleteProviderHook";
 
-interface CompleteProfileFormProps {
-  formik: FormikProps<completeProviderProfile>;
-  handleImageUpload: (e: React.ChangeEvent<HTMLInputElement>, fieldName: string) => Promise<void>;
-  handlePdfUpload: (e: React.ChangeEvent<HTMLInputElement>, fieldName: string) => Promise<void>;
-}
 
-const CompleteProfileForm: React.FC<CompleteProfileFormProps> = ({ 
-  formik, 
-  handleImageUpload, 
-  handlePdfUpload 
-}) => {
+const CompleteProfileForm: React.FC = ()=>{ 
+   const { formik,
+     handleImageUpload,
+      handlePdfUpload } = useCompleteProviderProfile();
+
   return (
     <div 
       className="relative rounded-2xl overflow-hidden p-8 md:p-12"

@@ -38,10 +38,12 @@ const useAircraftList = (): UseAircraftListReturn => {
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [selectedAircraft, setSelectedAircraft] = useState<Aircraft | null>(null);
 
-  useEffect(() => {
-    dispatch(getProviderAircrafts({ page: currentPage, limit: LIMIT }));
-  }, [dispatch, currentPage]);
+const providerId = useSelector((state: RootState) => state.auth.provider?.id ?? '');
 
+useEffect(() => {
+  if (!providerId) return;
+  dispatch(getProviderAircrafts({ page: currentPage, limit: LIMIT }));
+}, [dispatch, providerId, currentPage]);
   const handleEditClick = (aircraftId: string) => {
     navigate(`/provider/aircraft/${aircraftId}/edit`);
   };

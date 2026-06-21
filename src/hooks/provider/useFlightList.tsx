@@ -41,19 +41,19 @@ const useFlightList = (): UseFlightListReturn => {
   const { providerFlights: flights, isLoading, error, pagination, flightSeats, isLoadingSeats, seatsError  } = useSelector(
     (state: RootState) => state.flight
   );
-  const providerId = useSelector((state: RootState) => state.auth.provider?._id ?? '');
+  // const providerId = useSelector((state: RootState) => state.auth.provider?._id ?? '');
 
   const { currentPage, handlePageChange, resetPage } = usePagination();
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [selectedFlight, setSelectedFlight] = useState<FlightDetails | null>(null);
   const [selectedSeatFlightId, setSelectedSeatFlightId] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (providerId) {
-      dispatch(getProviderFlights({ page: currentPage, limit: LIMIT }));
-    }
-  }, [dispatch, providerId, currentPage]);
+const providerId = useSelector((state: RootState) => state.auth.provider?.id ?? '');
 
+useEffect(() => {
+  if (!providerId) return; 
+  dispatch(getProviderFlights({ page: currentPage, limit: LIMIT }));
+}, [dispatch, providerId, currentPage]);
   const handleEditClick = (flightId: string) => {
     navigate(`/provider/update-flights/${flightId}`);
   };

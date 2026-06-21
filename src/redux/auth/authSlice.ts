@@ -232,8 +232,6 @@ builder
   state.error = null;
 })
 .addCase(getProviderProfile.fulfilled, (state, action) => {
-    console.log("getProviderProfile payload:", JSON.stringify(action.payload.data));
-  
   state.isLoading = false;
   state.provider = action.payload.data;
   state.error = null;

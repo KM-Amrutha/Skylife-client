@@ -14,6 +14,8 @@ interface UseUserDashboardReturn {
   toggleDropdown: () => void;
   handleSignOut: () => Promise<void>;
   goToDashboard: () => void;
+  goToBookings: () => void;
+  goToWallet: () => void;
 }
 
 const useUserDashboard = (): UseUserDashboardReturn => {
@@ -42,20 +44,29 @@ const useUserDashboard = (): UseUserDashboardReturn => {
 
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
 
-  const handleSignOut = async () => {
-    try {
-      await dispatch(signOutUser()).unwrap();
-      showSuccessToast('Signed out successfully');
-      navigate('/');
-    } catch (error: any) {
-      showErrorToast(error || 'Failed to sign out');
-    }
-  };
+ const handleSignOut = async () => {
+  try {
+    await dispatch(signOutUser()).unwrap();
+    localStorage.removeItem("accessToken");
+    showSuccessToast("Signed out successfully");
+    navigate("/");
+  } catch (error: any) {
+    showErrorToast(error || "Failed to sign out");
+  }
+};
 
   const goToDashboard = () => {
     setIsDropdownOpen(false);
     navigate('/user/userdashboard');
   };
+
+  const goToBookings = () => {
+  navigate("/user/bookings");
+};
+
+const goToWallet = () => {
+  navigate("/user/wallet");
+};
 
   return {
     user,
@@ -65,6 +76,8 @@ const useUserDashboard = (): UseUserDashboardReturn => {
     toggleDropdown,
     handleSignOut,
     goToDashboard,
+    goToBookings,
+    goToWallet,
   };
 };
 

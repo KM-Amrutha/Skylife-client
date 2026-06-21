@@ -22,13 +22,16 @@ export interface FlightBaggageRules {
 
 
 export interface FlightDetails {
-  _id: string;
+  id: string;
   flightId: string;
   flightNumber: string;
   aircraftName: string;
   providerId: string;
   providerName: string,
+  providerLogo?: string;
+  manufacturer?: string;
   aircraftId: string;
+  aircraftType?: string; 
   seatLayoutId?: string;
     flightType: "outbound" | "return" | "recurring";
   parentFlightId?: string;                     
@@ -51,6 +54,7 @@ export interface FlightDetails {
   departureTime: string;
   arrivalTime: string;
   durationMinutes: number;
+  bufferMinutes: number;
   gate?: string;
 
   baseFare: FlightBaseFare;
@@ -59,6 +63,7 @@ export interface FlightDetails {
 
   luggageRuleId?: string;
   foodMenuId?: string[];
+  amenities?: string[];
 
   flightStatus: "scheduled" | "cancelled" | "completed";
   
@@ -96,7 +101,7 @@ export interface CreateFlightDTO {
     aisle?: number;
     extraLegroom?: number;
   };
-
+ amenities?: string[];
   baggageRules: {
     freeCabinKg?: number;
     extraChargePerKg: number;
@@ -125,10 +130,12 @@ export interface SearchFlightPagination {
 }
 
 export interface SearchFlightResult {
-  _id: string;
+  id: string;
   flightId: string;
   flightNumber: string;
   aircraftName: string;
+  providerName?: string;
+  providerLogo?: string;
 
   departure: {
     destinationId: string;
@@ -148,6 +155,7 @@ export interface SearchFlightResult {
   gate?: string;
 
   baseFare: FlightBaseFare;
+  amenities?: string[];
   baggageRules: FlightBaggageRules;
 
   flightStatus: "scheduled" | "cancelled" | "completed";
@@ -155,7 +163,7 @@ export interface SearchFlightResult {
 }
 
 export interface FlightSeatDTO {
-  _id: string;
+  id: string;
   flightId: string;
   aircraftId: string;
   seatId: string;
@@ -226,6 +234,7 @@ export interface CreateRecurringFlightDTO {
     aisle?: number;
     extraLegroom?: number;
   };
+  amenities?: string[];
   baggageRules: {
     freeCabinKg?: number;
     extraChargePerKg: number;

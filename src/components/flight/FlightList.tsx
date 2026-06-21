@@ -89,7 +89,7 @@ const FlightList: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {flights.map((flight) => (
             <div
-              key={flight._id}
+              key={flight.id}
               className={`bg-white/5 border rounded-2xl p-5 shadow-lg shadow-black/30 transition duration-150 flex flex-col justify-between ${
                 flight.adminApproval.status === 'rejected'
                   ? 'border-red-400/30 hover:border-red-400/60'
@@ -166,19 +166,19 @@ const FlightList: React.FC = () => {
                     View
                   </button>
                   <button
-                    onClick={() => handleViewSeats(flight._id)}
+                    onClick={() => handleViewSeats(flight.id)}
                     className="text-xs px-3 py-1.5 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 hover:bg-indigo-500/30 transition font-medium"
                     >
                     Seats
                    </button>
                   <button
-                    onClick={() => handleEditClick(flight._id)}
+                    onClick={() => handleEditClick(flight.id)}
                     className="text-xs px-3 py-1.5 rounded-lg bg-blue-500/20 text-blue-300 border border-blue-400/30 hover:bg-blue-500/30 transition font-medium"
                   >
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDeleteClick(flight._id)}
+                    onClick={() => handleDeleteClick(flight.id)}
                     className="text-xs px-3 py-1.5 rounded-lg bg-red-500/20 text-red-300 border border-red-400/30 hover:bg-red-500/30 transition font-medium"
                   >
                     Delete

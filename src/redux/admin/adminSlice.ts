@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { AdminState } from "./adminTypes";
+import { AdminState} from "./adminTypes";
 import {
   getPendingProviders,
   verifyProvider,
@@ -7,8 +7,12 @@ import {
   getAllProviders,
   updateProviderStatus,
   updateUsersStatus,
-  getAllUsers
+  getAllUsers,
+  getAdminDashboard,
+  getAdminWallet,
+  setProviderCommission
 } from "./adminThunk";
+
 
 const initialState: AdminState = {
   users: [],
@@ -19,6 +23,14 @@ const initialState: AdminState = {
   pagination  : null,
   userDetails: {},
   providerDetails: {},
+  dashboardStats: null,
+isLoadingDashboard: false,
+dashboardError: null,
+adminWallet: null,
+isLoadingAdminWallet: false,
+adminWalletError: null,
+isSettingCommission: false,
+commissionError: null,
 };
 
 const adminSlice = createSlice({
@@ -54,10 +66,10 @@ const adminSlice = createSlice({
       })
       .addCase(verifyProvider.fulfilled, (state, action) => {
         state.isLoading = false;
-        const verifiedProviderId = action.payload.data?._id;
+        const verifiedProviderId = action.payload.data?.id;
         
         state.pendingProviders = state.pendingProviders.filter(
-          (provider) => provider._id !== verifiedProviderId
+          (provider) => provider.id !== verifiedProviderId
         );
         state.error = null;
       })
@@ -75,10 +87,10 @@ const adminSlice = createSlice({
       })
       .addCase(rejectProvider.fulfilled, (state, action) => {
         state.isLoading = false;
-        const rejectedProviderId = action.payload.data?._id;
+        const rejectedProviderId = action.payload.data?.id;
     
         state.pendingProviders = state.pendingProviders.filter(
-          (provider) => provider._id !== rejectedProviderId
+          (provider) => provider.id !== rejectedProviderId
         );
         state.error = null;
       })
@@ -120,7 +132,7 @@ const adminSlice = createSlice({
   // Optimistically update the provider in the list
   const { providerId, isActive } = action.meta.arg;
   state.providers = state.providers.map((provider) =>
-    provider._id === providerId
+    provider.id === providerId
       ? { ...provider, isActive }
       : provider
   );
@@ -142,7 +154,7 @@ const adminSlice = createSlice({
     // Optimistically update the user in the list
     const { userId, isActive } = action.meta.arg;
     state.users = state.users.map((user) =>
-      user._id === userId
+      user.id === userId
         ? { ...user, isActive }
         : user
     );
@@ -175,7 +187,44 @@ const adminSlice = createSlice({
 })
   
   
-
+.addCase(getAdminDashboard.pending, (state) => {
+  state.isLoadingDashboard = true;
+  state.dashboardError = null;
+})
+.addCase(getAdminDashboard.fulfilled, (state, action) => {
+  state.isLoadingDashboard = false;
+  state.dashboardStats = action.payload;
+})
+.addCase(getAdminDashboard.rejected, (state, action) => {
+  state.isLoadingDashboard = false;
+  state.dashboardError =
+    typeof action.payload === "string" ? action.payload : "Failed to fetch dashboard";
+})
+.addCase(getAdminWallet.pending, (state) => {
+  state.isLoadingAdminWallet = true;
+  state.adminWalletError = null;
+})
+.addCase(getAdminWallet.fulfilled, (state, action) => {
+  state.isLoadingAdminWallet = false;
+  state.adminWallet = action.payload;
+})
+.addCase(getAdminWallet.rejected, (state, action) => {
+  state.isLoadingAdminWallet = false;
+  state.adminWalletError =
+    typeof action.payload === "string" ? action.payload : "Failed to fetch wallet";
+})
+.addCase(setProviderCommission.pending, (state) => {
+  state.isSettingCommission = true;
+  state.commissionError = null;
+})
+.addCase(setProviderCommission.fulfilled, (state) => {
+  state.isSettingCommission = false;
+})
+.addCase(setProviderCommission.rejected, (state, action) => {
+  state.isSettingCommission = false;
+  state.commissionError =
+    typeof action.payload === "string" ? action.payload : "Failed to update commission";
+})
 
 }
 

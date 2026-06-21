@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Plane,
   CheckCircle,
@@ -23,6 +23,10 @@ const PendingFlight: React.FC = () => {
     handleApproveFlight,
     handleRejectFlight,
   } = useFlightApproval();
+  
+  useEffect(() => {
+  console.log("Pending Flights:", pendingFlights);
+}, [pendingFlights]);
 
   const [expandedFlight, setExpandedFlight] = useState<string | null>(null);
   const [rejectFlightId, setRejectFlightId] = useState<string | null>(null);
@@ -68,19 +72,23 @@ const PendingFlight: React.FC = () => {
         {!flightsLoading && pendingFlights.length > 0 && (
           <div className="space-y-4">
             {pendingFlights.map((flight) => {
-              const isExpanded = expandedFlight === flight._id;
+              const isExpanded = expandedFlight === flight.id;
               return (
                 <div
-                  key={flight._id}
+                  key={flight.id}
                   className="rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 shadow-xl overflow-hidden transition-all duration-300 hover:border-blue-400/30"
                 >
                   {/* Card Header — always visible */}
                   <div className="p-5 flex items-center justify-between gap-4">
   <div className="flex items-center gap-4 flex-1">
     {/* Icon */}
-    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-indigo-500 via-blue-500 to-cyan-500 flex items-center justify-center border-2 border-white/10 shrink-0">
-      <Plane className="w-7 h-7 text-white" />
-    </div>
+   <div className="w-14 h-14 rounded-xl overflow-hidden border-2 border-white/10 shrink-0 bg-white">
+  <img
+    src={flight.providerLogo}
+    alt={flight.providerName}
+    className="w-full h-full object-cover"
+  />
+</div>
 
     {/* Left — Flight number + ID */}
     <div className="min-w-0">
@@ -88,9 +96,17 @@ const PendingFlight: React.FC = () => {
         <span className="text-slate-400 text-[10px] uppercase tracking-wider">Flight No.</span>
         <span className="text-white font-bold text-xl">{flight.flightNumber}</span>
       </div>
-      <p className="text-slate-500 text-xs mt-0.5">
-        Provider: <span className="text-green-300 font-bold text-xl">{flight.providerName}</span>
-      </p>
+   
+
+  <div>
+    <p className="text-slate-500 text-xs">
+      Provider
+    </p>
+    <p className="text-green-300 font-bold text-lg">
+      {flight.providerName}
+    </p>
+  </div>
+
     </div>
 
     {/* Centre — Route */}
@@ -126,7 +142,7 @@ const PendingFlight: React.FC = () => {
   </div>
 
   <button
-    onClick={() => toggleExpand(flight._id)}
+    onClick={() => toggleExpand(flight.id)}
     className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-slate-300 hover:bg-white/10 hover:text-white transition text-sm font-medium shrink-0"
   >
     <Eye className="w-4 h-4" />
@@ -186,12 +202,23 @@ const PendingFlight: React.FC = () => {
                           </div>
                           <p className="text-white text-xs font-medium">{flight.durationMinutes} min</p>
                         </div>
-                        <div className="bg-white/5 rounded-xl p-3">
+  <div className="bg-white/5 rounded-xl p-3">
   <div className="flex items-center gap-2 mb-1">
     <Plane className="w-3 h-3 text-slate-400" />
-    <p className="text-slate-400 text-[10px] uppercase tracking-wider">Aircraft</p>
+    <p className="text-slate-400 text-[10px] uppercase tracking-wider">
+      Aircraft
+    </p>
   </div>
-  <p className="text-white text-xs font-medium">{flight.aircraftName}</p>
+
+  <p className="text-white text-xs font-medium">
+    {flight.aircraftName}
+  </p>
+
+  {flight.manufacturer && (
+    <p className="text-cyan-300 text-xs mt-1">
+      Manufacturer: {flight.manufacturer}
+    </p>
+  )}
 </div>
 
 
@@ -286,14 +313,14 @@ const PendingFlight: React.FC = () => {
                       {/* Action Buttons */}
                       <div className="flex gap-3 pt-2 border-t border-white/10">
                         <button
-                          onClick={() => handleApproveFlight(flight._id)}
+                          onClick={() => handleApproveFlight(flight.id)}
                           disabled={flightsLoading}
                           className="flex-1 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-400/30 hover:border-emerald-400/50 disabled:opacity-50"
                         >
                           <CheckCircle className="w-4 h-4" /> Approve Flight
                         </button>
                         <button
-                          onClick={() => { setRejectFlightId(flight._id); setRejectReason(""); }}
+                          onClick={() => { setRejectFlightId(flight.id); setRejectReason(""); }}
                           disabled={flightsLoading}
                           className="flex-1 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-400/30 hover:border-red-400/50 disabled:opacity-50"
                         >

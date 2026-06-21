@@ -41,7 +41,12 @@ const seatSlice = createSlice({
     },
     clearGeneratedSeatsCount: (state) => {
       state.generatedSeatsCount = 0;
-    }
+    },
+    resetSeatState: (state) => {
+  state.seatLayouts = [];
+  state.generatedSeatsCount = 0;
+  state.error = null;
+}
   },
   extraReducers: (builder) => {
     builder
@@ -67,7 +72,9 @@ const seatSlice = createSlice({
       })
       .addCase(createSeatLayout.fulfilled, (state, action: PayloadAction<ApiResponse<SeatLayout>>) => {
         state.isLoading = false;
+          console.log("createSeatLayout fulfilled:", action.payload);
         state.seatLayouts.push(action.payload.data);
+         console.log("seatLayouts after push:", state.seatLayouts);
         state.error = null;
       })
       .addCase(createSeatLayout.rejected, (state, action) => {
@@ -116,7 +123,7 @@ const seatSlice = createSlice({
   state.isLoading = false;
   // Remove the deleted layout from the array
   state.seatLayouts = state.seatLayouts.filter(
-    layout => layout._id !== action.payload.layoutId
+    layout => layout.id !== action.payload.layoutId
   );
   state.error = null;
 })
@@ -128,5 +135,5 @@ const seatSlice = createSlice({
   }
 });
 
-export const { clearSeatError, clearGeneratedSeatsCount } = seatSlice.actions;
+export const { clearSeatError, clearGeneratedSeatsCount, resetSeatState } = seatSlice.actions;
 export default seatSlice.reducer;

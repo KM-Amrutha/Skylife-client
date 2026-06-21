@@ -111,7 +111,7 @@ interface UseRecurringFlightReturn {
 
 const useRecurringFlight = (): UseRecurringFlightReturn => {
   const dispatch = useDispatch<AppDispatch>();
-  const providerId = useSelector((state: RootState) => state.auth.provider?._id ?? "");
+  const providerId = useSelector((state: RootState) => state.auth.provider?.id ?? "");
   const { availableForSchedule: availableAircrafts, isLoadingAvailableForSchedule: isLoadingAircrafts } =
     useSelector((state: RootState) => state.aircraft);
   const { isCreatingRecurring } = useSelector((state: RootState) => state.flight);
@@ -302,7 +302,7 @@ const useRecurringFlight = (): UseRecurringFlightReturn => {
   const selectDeparture = useCallback(
     (destination: Destination) => {
       setDepartureDisplayName(`${destination.name} (${destination.iataCode || destination.ident})`);
-      formik.setFieldValue("departureDestinationId", destination._id);
+      formik.setFieldValue("departureDestinationId", destination.id);
       formik.setFieldTouched("departureDestinationId", true);
       setDepartureSearchResults([]);
     },
@@ -312,7 +312,7 @@ const useRecurringFlight = (): UseRecurringFlightReturn => {
   const selectArrival = useCallback(
     (destination: Destination) => {
       setArrivalDisplayName(`${destination.name} (${destination.iataCode || destination.ident})`);
-      formik.setFieldValue("arrivalDestinationId", destination._id);
+      formik.setFieldValue("arrivalDestinationId", destination.id);
       formik.setFieldTouched("arrivalDestinationId", true);
       setArrivalSearchResults([]);
     },

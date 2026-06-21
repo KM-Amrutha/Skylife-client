@@ -1,31 +1,35 @@
 import React, { useRef, KeyboardEvent, ChangeEvent, useEffect } from 'react';
-import { FormikProps } from 'formik';
+import useOtpVerification from "../../hooks/sharedHooks/useOtpVerification";
 
-interface OtpFormData {
-  otp: string[];
-}
+const OtpForm: React.FC = ()=>{
 
-interface OtpFormProps {
-  formik: FormikProps<OtpFormData>;
-  email: string;
-  countDown: number;
-  isResending: boolean;
-  onResendOtp: () => void;
-  onGoBack: () => void;
-  otpType?: 'signup' | 'forgotPassword'; 
-}
+const {
+    otp,
+    handleOtpForm,
+    isResending,
+    handleResendOtp,
+    handleGoBack,
+    otpType,
+  } = useOtpVerification();
+    const formik = handleOtpForm;
 
-const OtpForm: React.FC<OtpFormProps> = ({
-  formik,
-  email,
-  countDown,
-  isResending,
-  onResendOtp,
-  onGoBack,
-  otpType = 'signup' 
-}) => {
   const inputRefs = useRef<HTMLInputElement[]>([]);
 
+  useEffect(() => {
+    inputRefs.current[0]?.focus();
+  }, []);
+
+  
+
+  if (!otp) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+      </div>
+    );
+  }
+    const email = otp.email;
+  const countDown = otp.countDown;
   // DYNAMIC TEXT BASED ON CONTEXT
   const getTexts = () => {
     if (otpType === 'forgotPassword') {
@@ -70,10 +74,6 @@ const OtpForm: React.FC<OtpFormProps> = ({
     return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
-  // Auto-focus first input on mount
-  useEffect(() => {
-    inputRefs.current[0]?.focus();
-  }, []);
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
@@ -185,7 +185,7 @@ const OtpForm: React.FC<OtpFormProps> = ({
             Didn't receive the code?{' '}
             <button
               type="button"
-              onClick={onResendOtp}
+              onClick={handleResendOtp}
               disabled={isResending || countDown > 0}
               className={`font-semibold transition-colors ${
                 countDown > 0 || isResending
@@ -205,7 +205,7 @@ const OtpForm: React.FC<OtpFormProps> = ({
           
           <button 
             type="button"
-            onClick={onGoBack}
+            onClick={handleGoBack}
             className="text-slate-900 font-semibold hover:underline transition-colors text-sm"
           >
             {texts.backButtonText}

@@ -33,7 +33,6 @@ export const createAircraft = createAsyncThunk(
   async (aircraftData: CreateAircraftDTO, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post("/provider/aircrafts", aircraftData);
-      console.log(response.data)
       return response.data;
     } catch (error: any) {
       if (error.response && error.response.data.message) {
@@ -101,7 +100,6 @@ export const getAvailableAircraftsForSchedule = createAsyncThunk(
       const response = await axiosInstance.get("/provider/aircraft/available", {
         params: { departureDestinationId, departureTime, durationMinutes, bufferMinutes },
       });
-      console.log("front data is :", response.data);
       return response.data;
     } catch (error: any) {
       if (error.response?.data?.message) {

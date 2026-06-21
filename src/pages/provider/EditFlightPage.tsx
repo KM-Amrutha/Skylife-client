@@ -5,15 +5,7 @@ import EditFlightForm from "../../components/flight/EditFlightForm";
 const EditFlightPage: React.FC = () => {
   return (
     <ProviderMainLayout>
-      <div
-        className="relative rounded-2xl overflow-hidden p-8"
-        style={{
-          backgroundImage: "url(/image/airplane-sunset.jpg)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          minHeight: "100vh"
-        }}
-      >
+      
         {/* Overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-purple-900/70 to-blue-900/70" />
 
@@ -23,7 +15,6 @@ const EditFlightPage: React.FC = () => {
             <EditFlightForm />
           </div>
         </div>
-      </div>
     </ProviderMainLayout>
   );
 };

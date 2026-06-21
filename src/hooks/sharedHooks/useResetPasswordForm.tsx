@@ -1,4 +1,5 @@
 import { useFormik, FormikProps } from "formik";
+import { useEffect } from "react";
 import * as Yup from "yup";
 import { useNavigate, useParams } from "react-router-dom";
 import { showSuccessToast, showErrorToast } from "../../utils/toast";
@@ -10,6 +11,7 @@ interface ResetPasswordFormData {
 }
 
 interface UseResetPasswordFormReturn {
+  token?: string;
   handleResetPasswordForm: FormikProps<ResetPasswordFormData>;
   handleGoBack: () => void;
 }
@@ -17,6 +19,12 @@ interface UseResetPasswordFormReturn {
 const useResetPasswordForm = (): UseResetPasswordFormReturn => {
   const navigate = useNavigate();
   const { token } = useParams<{ token: string }>();
+
+  useEffect(() => {
+  if (!token) {
+    navigate("/forgot-password");
+  }
+}, [token, navigate]);
 
   const validationSchema = Yup.object({
     password: Yup.string()
@@ -66,10 +74,11 @@ const useResetPasswordForm = (): UseResetPasswordFormReturn => {
     navigate('/sign-in');
   };
 
-  return {
-    handleResetPasswordForm,
-    handleGoBack
-  };
+ return {
+  token,
+  handleResetPasswordForm,
+  handleGoBack,
+};
 };
 
 export default useResetPasswordForm;

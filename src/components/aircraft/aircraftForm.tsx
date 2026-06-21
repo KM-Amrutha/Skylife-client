@@ -243,7 +243,7 @@ const AircraftForm: React.FC = () => {
             <ul className="absolute z-50 w-full bg-white text-black rounded-b-lg max-h-60 overflow-auto shadow-lg mt-1">
               {baseStationSearchResults.map((dest) => (
                 <li
-                  key={dest._id}
+                  key={dest.id}
                   className="p-3 cursor-pointer hover:bg-gray-200 border-b last:border-b-0"
                   onMouseDown={(e) => {
                     e.preventDefault();
@@ -284,7 +284,7 @@ const AircraftForm: React.FC = () => {
             <ul className="absolute z-50 w-full bg-white text-black rounded-b-lg max-h-60 overflow-auto shadow-lg mt-1">
               {currentLocationSearchResults.map((dest) => (
                 <li
-                  key={dest._id}
+                  key={dest.id}
                   className="p-3 cursor-pointer hover:bg-gray-200 border-b last:border-b-0"
                   onMouseDown={(e) => {
                     e.preventDefault();

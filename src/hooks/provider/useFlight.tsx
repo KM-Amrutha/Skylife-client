@@ -74,7 +74,7 @@ const flightValidationSchema = Yup.object().shape({
 
 const useFlights = (): UseFlightsReturn => {
   const dispatch = useDispatch<AppDispatch>();
-  const providerId = useSelector((state: RootState) => state.auth.provider?._id ?? "");
+  const providerId = useSelector((state: RootState) => state.auth.provider?.id ?? "");
 
   const [departureSearchResults, setDepartureSearchResults] = useState<Destination[]>([]);
   const [arrivalSearchResults, setArrivalSearchResults] = useState<Destination[]>([]);
@@ -99,6 +99,7 @@ const useFlights = (): UseFlightsReturn => {
       aircraftName: undefined,
       luggageRuleId: undefined,
       foodMenuId: [],
+      amenities: [],
     },
     validationSchema: flightValidationSchema,
     enableReinitialize: true,
@@ -118,6 +119,7 @@ const useFlights = (): UseFlightsReturn => {
             ...(values.seatSurcharge.aisle! > 0 && { aisle: values.seatSurcharge.aisle }),
             ...(values.seatSurcharge.extraLegroom! > 0 && { extraLegroom: values.seatSurcharge.extraLegroom }),
           },
+          amenities: values.amenities ?? [],
           baggageRules: {
             freeCabinKg: values.baggageRules.freeCabinKg!,
             extraChargePerKg: values.baggageRules.extraChargePerKg!,
@@ -172,14 +174,14 @@ const useFlights = (): UseFlightsReturn => {
 
   const selectDeparture = useCallback((destination: Destination) => {
     setDepartureDisplayName(`${destination.name} (${destination.iataCode || destination.ident})`);
-    formik.setFieldValue("departureDestinationId", destination._id);
+    formik.setFieldValue("departureDestinationId", destination.id);
     formik.setFieldTouched("departureDestinationId", true);
     setDepartureSearchResults([]);
   }, [formik]);
 
   const selectArrival = useCallback((destination: Destination) => {
     setArrivalDisplayName(`${destination.name} (${destination.iataCode || destination.ident})`);
-    formik.setFieldValue("arrivalDestinationId", destination._id);
+    formik.setFieldValue("arrivalDestinationId", destination.id);
     formik.setFieldTouched("arrivalDestinationId", true);
     setArrivalSearchResults([]);
   }, [formik]);

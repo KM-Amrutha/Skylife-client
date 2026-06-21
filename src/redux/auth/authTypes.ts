@@ -1,7 +1,7 @@
 export type Role = "user"|"admin"|"provider";
 
 export interface User {
-    _id?: string;
+    id?: string;
     userId?: string;
     firstName: string;
     lastName: string;
@@ -24,7 +24,7 @@ export interface User {
 }
 
 export interface Admin {
-    _id: string;
+    id: string;
     firstName: string;
     lastName: string;
     email: string;
@@ -53,7 +53,7 @@ export interface   SignupUser{
 } 
 
 export interface Provider {
-    _id: string;
+    id: string;
   companyName: string;
   email: string;
   mobile: string;
@@ -61,6 +61,7 @@ export interface Provider {
   airlineCode: string;
   logoUrl?: string;  
     role: Role;
+    commissionRate?: number;
   registrationCertificateUrl?: string;
   insuranceProofUrl?: string;
   establishmentYear?: number;

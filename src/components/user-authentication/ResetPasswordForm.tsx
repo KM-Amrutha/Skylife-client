@@ -1,20 +1,22 @@
 import React from 'react';
-import { FormikProps } from 'formik';
+import useResetPasswordForm from "../../hooks/sharedHooks/useResetPasswordForm";
 
-interface ResetPasswordFormData {
-  password: string;
-  confirmPassword: string;
-}
+const ResetPasswordForm: React.FC=()=>{
+   const {
+    token,
+    handleResetPasswordForm,
+    handleGoBack,
+  } = useResetPasswordForm();
 
-interface ResetPasswordFormProps {
-  formik: FormikProps<ResetPasswordFormData>;
-  onGoBack: () => void;
-}
+  const formik = handleResetPasswordForm;
 
-const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
-  formik,
-  onGoBack
-}) => {
+  if (!token) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+      </div>
+    );
+  }
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
       <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md max-h-screen overflow-y-auto">
@@ -113,7 +115,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
         <div className="text-center mt-4">
           <button 
             type="button"
-            onClick={onGoBack}
+            onClick={handleGoBack}
             className="text-slate-900 font-semibold hover:underline transition-colors text-sm"
           >
             ← Back to Sign In

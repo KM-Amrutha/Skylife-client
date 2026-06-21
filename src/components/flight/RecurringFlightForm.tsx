@@ -127,8 +127,8 @@ const RecurringFlightForm: React.FC = () => {
   </option>
   {availableAircrafts.map((aircraft) => (
     <option
-      key={aircraft._id}
-      value={aircraft._id}
+      key={aircraft.id}
+      value={aircraft.id}
       style={{ backgroundColor: '#0a1628', color: 'white' }}
     >
       {aircraft.aircraftName} ({aircraft.aircraftType})
@@ -174,7 +174,7 @@ const RecurringFlightForm: React.FC = () => {
                 <ul className="absolute z-50 w-full mt-2 bg-white/95 backdrop-blur-lg rounded-xl shadow-2xl max-h-60 overflow-y-auto border border-white/30">
                   {departureSearchResults.map((dest) => (
                     <li
-                      key={dest._id}
+                      key={dest.id}
                       onMouseDown={() => selectDeparture(dest)}
                       className="px-4 py-3 cursor-pointer hover:bg-blue-500 hover:text-white transition-colors"
                     >
@@ -204,7 +204,7 @@ const RecurringFlightForm: React.FC = () => {
                 <ul className="absolute z-50 w-full mt-2 bg-white/95 backdrop-blur-lg rounded-xl shadow-2xl max-h-60 overflow-y-auto border border-white/30">
                   {arrivalSearchResults.map((dest) => (
                     <li
-                      key={dest._id}
+                      key={dest.id}
                       onMouseDown={() => selectArrival(dest)}
                       className="px-4 py-3 cursor-pointer hover:bg-purple-500 hover:text-white transition-colors"
                     >

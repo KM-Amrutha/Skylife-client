@@ -90,7 +90,7 @@ const aircraftSlice = createSlice({
         state.isLoading = false;
         const updatedAircraft = action.payload.data;
         state.aircrafts = state.aircrafts.map((ac) =>
-          ac._id === updatedAircraft._id ? updatedAircraft : ac
+          ac.id === updatedAircraft.id ? updatedAircraft : ac
         );
         state.error = null;
       })
@@ -109,7 +109,7 @@ const aircraftSlice = createSlice({
       .addCase(deleteAircraft.fulfilled, (state, action) => {
         state.isLoading = false;
         const deletedId = action.meta.arg;
-        state.aircrafts = state.aircrafts.filter(ac => ac._id !== deletedId);
+        state.aircrafts = state.aircrafts.filter(ac => ac.id !== deletedId);
         state.error = null;
       })
       .addCase(deleteAircraft.rejected, (state, action) => {

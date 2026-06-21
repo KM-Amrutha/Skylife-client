@@ -1,6 +1,6 @@
 
 export interface Aircraft {
-  _id: string;
+  id: string;
   providerId: string;
   aircraftType: string;
   aircraftName: string;
@@ -12,14 +12,14 @@ export interface Aircraft {
   engineCount: number;
   lavatoryCount: number;
   baseStation?: {
-    _id: string;
+    id: string;
     name: string;
     city?: string;
     country?: string;
   };
 
   currentLocation?: {
-    _id: string;
+    id: string;
     name: string;
     city?: string;
     country?: string;

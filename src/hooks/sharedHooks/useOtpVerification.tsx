@@ -1,35 +1,65 @@
+import { useEffect } from "react";
 import { useFormik, FormikProps } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import { AppDispatch, RootState } from "../../redux/store";
 import { verifyOtp, resendOtp } from "../../redux/auth/authThunk";
-import { clearOtpDetails } from "../../redux/auth/authSlice";
+import { clearOtpDetails,updateCountDown } from "../../redux/auth/authSlice";
 import { showSuccessToast, showErrorToast } from "../../utils/toast";
+
+
 
 interface OtpFormData {
   otp: string[];
 }
-
 interface UseOtpFormReturn {
+  otp: RootState["auth"]["otp"];
+
   handleOtpForm: FormikProps<OtpFormData>;
   isResending: boolean;
   handleResendOtp: () => void;
   handleGoBack: () => void;
-  otpType: 'signup' | 'forgotPassword';
+  otpType: "signup" | "forgotPassword";
 }
 
-const useOtpForm = (): UseOtpFormReturn => {
+const useOtpVerification = (): UseOtpFormReturn => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const location = useLocation();
   const { otp, isLoading } = useSelector((state: RootState) => state.auth);
-
-  // DETECT OTP TYPE FROM URL OR STATE
+   // DETECT OTP TYPE FROM URL OR STATE
   const otpType: 'signup' | 'forgotPassword' = location.pathname.includes('forgot-password') || 
                                                location.state?.otpType === 'forgotPassword' ? 
                                                'forgotPassword' : 'signup';
 
+
+   useEffect(() => {
+  if (!otp || !otp.email) {
+    if (otpType === "forgotPassword") {
+      navigate("/forgot-password");
+    } else {
+      navigate("/sign-up");
+    }
+  }
+}, [otp, otpType, navigate]);
+
+   useEffect(() => {
+  let interval: NodeJS.Timeout;
+
+  if (otp && otp.countDown > 0) {
+    interval = setInterval(() => {
+      dispatch(updateCountDown(otp.countDown - 1));
+    }, 1000);
+  }
+
+  return () => {
+    if (interval) clearInterval(interval);
+  };
+}, [otp?.countDown, dispatch, otp]);
+
+
+ 
   const validationSchema = Yup.object({
     otp: Yup.array()
       .of(Yup.string().matches(/^[0-9]$/, 'Must be a digit'))
@@ -102,6 +132,7 @@ const useOtpForm = (): UseOtpFormReturn => {
   };
 
   return { 
+    otp,
     handleOtpForm, 
     isResending: isLoading,
     handleResendOtp,
@@ -110,4 +141,4 @@ const useOtpForm = (): UseOtpFormReturn => {
   };
 };
 
-export default useOtpForm;
+export default useOtpVerification;

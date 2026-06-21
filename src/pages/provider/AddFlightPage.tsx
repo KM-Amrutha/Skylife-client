@@ -10,15 +10,7 @@ const AddFlightPage: React.FC = () => {
 
   return (
     <ProviderMainLayout>
-      <div
-        className="relative rounded-2xl p-8"
-        style={{
-          backgroundImage: "url(/image/airplane-sunset.jpg)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          minHeight: "100vh",
-        }}
-      >
+     
         <div className="absolute inset-0 bg-gradient-to-r from-purple-900/70 to-blue-900/70" />
 
         <div className="relative z-10 flex flex-col gap-10 items-center justify-start">
@@ -48,7 +40,7 @@ const AddFlightPage: React.FC = () => {
             {activeTab === "single" ? <FlightForm /> : <RecurringFlightForm />}
           </div>
         </div>
-      </div>
+      
     </ProviderMainLayout>
   );
 };

@@ -60,14 +60,14 @@ const useFlightDestinations = (
   const selectDeparture = (destination: Destination) => {
     const displayName = `${destination.name} (${destination.iataCode || destination.ident})`;
     setDepartureDisplayName(displayName);
-    formik.setFieldValue("departureDestinationId", destination._id);
+    formik.setFieldValue("departureDestinationId", destination.id);
     setDepartureSearchResults([]);
   };
 
   const selectArrival = (destination: Destination) => {
     const displayName = `${destination.name} (${destination.iataCode || destination.ident})`;
     setArrivalDisplayName(displayName);
-    formik.setFieldValue("arrivalDestinationId", destination._id);
+    formik.setFieldValue("arrivalDestinationId", destination.id);
     setArrivalSearchResults([]);
   };
 

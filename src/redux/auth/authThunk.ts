@@ -110,14 +110,13 @@ export const updatePassword = createAsyncThunk(
     { password, newPassword }: RequestUpdatePassword,
     { rejectWithValue }
   ) => {
-    console.log('ibde ethiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
+
     try {
       const response = await axiosInstance.patch(`auth/password/change`, {
       
         password,
         newPassword,
       });
-      console.log("response from update password api", response.data);
       return response.data;
     } catch (error: any) {
       console.log(error);
@@ -153,7 +152,7 @@ export const signupProvider = createAsyncThunk(
 export const updateProviderProfile = createAsyncThunk(
   "auth/updateProviderProfile",
   async ({ ProviderData }: { ProviderData: Provider }, { rejectWithValue }) => {
-    console.log("provider data for updating the profile", ProviderData);
+  
     try {
       const response = await axiosInstance.put(
         `provider/profile/`,

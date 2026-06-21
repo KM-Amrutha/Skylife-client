@@ -11,7 +11,7 @@ export const getPendingProviders = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get("/admin/providers/pending");
-      console.log("Fetched pending providers:", response.data);
+    
       return response.data;
     } catch (error: any) {
       console.log(error);
@@ -115,7 +115,6 @@ export const getAllUsers = createAsyncThunk(
       const response = await axiosInstance.get(
         `/admin/users?page=${page}&limit=${limit}`
       );
-      console.log("Fetched users:", response.data);
       return {
         users: response.data?.data?.data || [],
         
@@ -147,6 +146,53 @@ export const updateUsersStatus = createAsyncThunk(
       } else {
         return rejectWithValue("Failed to update user status");
       }
+    }
+  }
+);
+export const getAdminDashboard = createAsyncThunk(
+  "admin/getAdminDashboard",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.get("/admin/dashboard");
+      return res.data?.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch dashboard"
+      );
+    }
+  }
+);
+
+export const getAdminWallet = createAsyncThunk(
+  "admin/getAdminWallet",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.get("/admin/wallet");
+      return res.data?.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch admin wallet"
+      );
+    }
+  }
+);
+
+export const setProviderCommission = createAsyncThunk(
+  "admin/setProviderCommission",
+  async (
+    { providerId, commissionRate }: { providerId: string; commissionRate: number },
+    { rejectWithValue }
+  ) => {
+    try {
+      const res = await axiosInstance.patch(
+        `/admin/providers/${providerId}/commission`,
+        { commissionRate }
+      );
+      return res.data?.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to update commission"
+      );
     }
   }
 );

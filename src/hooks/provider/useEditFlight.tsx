@@ -14,15 +14,30 @@ import { Destination } from "../../redux/destination/destinationType";
 
 const editFlightValidationSchema = Yup.object().shape({
   flightNumber: Yup.string()
-    .trim()
-    .matches(/^[A-Z0-9]{2,6}$/, "Invalid flight number (e.g., AI101)")
-    .optional(),
+  .trim()
+  .optional()
+  .test("valid-flight-number", "Invalid flight number (e.g., AI101)", function(value) {
+    if (!value) return true; // optional — skip if empty
+    // only validate format if it actually changed from original
+    return /^[A-Z0-9-]{2,10}$/.test(value);
+  }),
   gate: Yup.string().trim().max(10, "Gate too long").optional(),
   durationMinutes: Yup.number()
     .min(30, "Minimum 30 minutes")
     .max(1440, "Maximum 24 hours")
     .integer("Must be whole number")
     .optional(),
+    departureTime: Yup.string()
+  .optional()
+  .test("is-future", "Departure time must be in the future", (value) => {
+    if (!value) return true; // optional
+    return new Date(value) > new Date();
+  }),
+  bufferMinutes: Yup.number()
+  .min(30, "Minimum 30 minutes")
+  .max(720, "Maximum 720 minutes")
+  .integer("Must be whole number")
+  .optional(),
   arrivalDestinationId: Yup.string().optional(),
   baseFare: Yup.object({
     economy: Yup.number().min(1, "Must be > 0").optional(),
@@ -53,6 +68,7 @@ interface UseEditFlightReturn {
   selectArrival: (destination: Destination) => void;
   clearArrivalResults: () => void;
   isRecurringOrReturn: boolean;
+  isReturn:boolean
 }
 
 const useEditFlight = (): UseEditFlightReturn => {
@@ -69,7 +85,6 @@ const useEditFlight = (): UseEditFlightReturn => {
   const flight = selectedFlight;
   const isLoading = isLoadingSelectedFlight;
   const error = selectedFlightError;
-
   // fetch flight on mount, clear on unmount
   useEffect(() => {
     if (flightId) {
@@ -82,6 +97,8 @@ const useEditFlight = (): UseEditFlightReturn => {
 
   const isRecurringOrReturn =
     flight?.flightType === "recurring" || flight?.flightType === "return";
+    const isReturn =
+  flight?.flightType === "return";
 
   const [arrivalDisplayName, setArrivalDisplayName] = useState<string>("");
   const [arrivalSearchResults, setArrivalSearchResults] = useState<Destination[]>([]);
@@ -100,49 +117,94 @@ const useEditFlight = (): UseEditFlightReturn => {
       flightNumber: flight?.flightNumber || "",
       gate: flight?.gate || "",
       durationMinutes: flight?.durationMinutes,
+      bufferMinutes: flight?.bufferMinutes?? 60,
+      departureTime: flight?.departureTime
+  ? new Date(new Date(flight.departureTime).getTime() - 
+      new Date().getTimezoneOffset() * 60000)
+      .toISOString().slice(0, 16)
+  : "",
+        
       arrivalDestinationId: flight?.arrivalDestinationId || "",
       baseFare: flight?.baseFare || { economy: 0 },
       seatSurcharge: flight?.seatSurcharge || {},
       baggageRules: flight?.baggageRules || { extraChargePerKg: 0 },
+      amenities: flight?.amenities ?? [],
     },
     validationSchema: editFlightValidationSchema,
     enableReinitialize: true,
-    onSubmit: async (values, { setSubmitting }) => {
-      if (!flightId || !flight) return;
 
-      // check departed
-      if (new Date(flight.departureTime) <= new Date()) {
-        showErrorToast("Cannot edit a flight that has already departed");
-        setSubmitting(false);
-        return;
+onSubmit: async (values, { setSubmitting }) => {
+  if (!flightId || !flight) return;
+
+  if (new Date(flight.departureTime) <= new Date()) {
+    showErrorToast("Cannot edit a flight that has already departed");
+    setSubmitting(false);
+    return;
+  }
+
+  try {
+    const updateData: Partial<FlightDetails> = {};
+
+    // ── allowed for ALL flight types ──────────────────────────────────
+    if (values.flightNumber?.trim() && values.flightNumber.trim() !== flight.flightNumber) {
+      updateData.flightNumber = values.flightNumber.trim();
+    }
+
+    if (values.gate?.trim() !== (flight.gate ?? "")) {
+      updateData.gate = values.gate?.trim() || undefined;
+    }
+
+    if (values.baseFare) updateData.baseFare = values.baseFare;
+    if (values.seatSurcharge) updateData.seatSurcharge = values.seatSurcharge;
+    if (values.baggageRules) updateData.baggageRules = values.baggageRules;
+    if (values.amenities !== undefined) {
+  updateData.amenities = values.amenities;
+}
+
+    // ── blocked for return flights ────────────────────────────────────
+    if (!isReturn) {
+      if (
+        values.departureTime &&
+        values.departureTime !== new Date(
+          new Date(flight.departureTime).getTime() -
+          new Date().getTimezoneOffset() * 60000
+        ).toISOString().slice(0, 16)
+      ) {
+        updateData.departureTime = new Date(values.departureTime).toISOString();
       }
 
-      try {
-        const updateData: Partial<FlightDetails> = {
-          flightNumber: values.flightNumber?.trim() || undefined,
-          gate: values.gate?.trim() || undefined,
-          // only send duration/arrival for outbound flights
-          ...(!isRecurringOrReturn && {
-            durationMinutes: values.durationMinutes,
-            arrivalDestinationId:
-              values.arrivalDestinationId === flight.arrivalDestinationId
-                ? undefined
-                : values.arrivalDestinationId,
-          }),
-          baseFare: values.baseFare,
-          seatSurcharge: values.seatSurcharge,
-          baggageRules: values.baggageRules,
-        };
-
-        await dispatch(updateFlight({ flightId, data: updateData })).unwrap();
-        showSuccessToast("Flight updated successfully! Awaiting admin approval.");
-        navigate("/provider/flight-list");
-      } catch (err: any) {
-        showErrorToast(err || "Failed to update flight");
-      } finally {
-        setSubmitting(false);
+      if (
+        values.bufferMinutes !== undefined &&
+        values.bufferMinutes !== (flight.bufferMinutes ?? 60)
+      ) {
+        updateData.bufferMinutes = values.bufferMinutes;
       }
-    },
+    }
+
+    // ── blocked for return AND recurring flights ───────────────────────
+    if (!isRecurringOrReturn) {
+      if (values.durationMinutes !== flight.durationMinutes) {
+        updateData.durationMinutes = values.durationMinutes;
+      }
+
+      if (
+        values.arrivalDestinationId &&
+        values.arrivalDestinationId !== flight.arrivalDestinationId
+      ) {
+        updateData.arrivalDestinationId = values.arrivalDestinationId;
+      }
+    }
+
+    await dispatch(updateFlight({ flightId, data: updateData })).unwrap();
+    showSuccessToast("Flight updated successfully! Awaiting admin approval.");
+    navigate("/provider/flight-list");
+  } catch (err: any) {
+    showErrorToast(err || "Failed to update flight");
+  } finally {
+    setSubmitting(false);
+  }
+},
+
   });
 
   const searchArrival = useCallback(async (query: string) => {
@@ -168,7 +230,7 @@ const useEditFlight = (): UseEditFlightReturn => {
 
   const selectArrival = useCallback((destination: Destination) => {
     setArrivalDisplayName(`${destination.name} (${destination.iataCode || destination.ident})`);
-    formik.setFieldValue("arrivalDestinationId", destination._id);
+    formik.setFieldValue("arrivalDestinationId", destination.id);
     setArrivalSearchResults([]);
   }, [formik]);
 
@@ -185,6 +247,8 @@ const useEditFlight = (): UseEditFlightReturn => {
     selectArrival,
     clearArrivalResults,
     isRecurringOrReturn,
+    isReturn: flight?.flightType === "return",
+    
   };
 };
 

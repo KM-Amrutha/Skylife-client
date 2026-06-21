@@ -16,7 +16,7 @@ const EditFlightForm: React.FC = () => {
     selectArrival,
     clearArrivalResults,
     isRecurringOrReturn,
-
+    isReturn,
   } = useEditFlight();
 
   if (isLoading) {
@@ -141,7 +141,7 @@ const EditFlightForm: React.FC = () => {
         <div className="absolute z-20 w-full mt-2 bg-slate-800/90 backdrop-blur border border-white/20 rounded-xl shadow-2xl max-h-60 overflow-y-auto">
           {arrivalSearchResults.map((dest: Destination) => (
             <button
-              key={dest._id}
+              key={dest.id}
               type="button"
               onClick={() => { selectArrival(dest); clearArrivalResults(); }}
               className="w-full px-5 py-3 text-left text-slate-200 hover:bg-white/10 transition"
@@ -164,16 +164,44 @@ const EditFlightForm: React.FC = () => {
   </div>
 )}
 
-            <div>
-              <label className="block text-slate-300 text-sm font-medium mb-2">
-                Departure Time
-              </label>
-              <div className="px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-slate-300 flex items-center gap-3">
-                <Clock className="w-5 h-5" />
-                {new Date(flight.departureTime).toLocaleString()}
-              </div>
-              <p className="text-slate-400 text-xs mt-2">Departure time cannot be changed</p>
-            </div>
+
+{!isReturn ? (
+  <div>
+    <label className="block text-slate-300 text-sm font-medium mb-2">
+      Departure Time
+    </label>
+    <input
+      type="datetime-local"
+      name="departureTime"
+      value={formik.values.departureTime || ""}
+      onChange={formik.handleChange}
+      onBlur={formik.handleBlur}
+      min={new Date().toISOString().slice(0, 16)}
+      className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-400 transition"
+    />
+    {formik.touched.departureTime && formik.errors.departureTime && (
+      <p className="text-red-400 text-sm mt-2">
+        {formik.errors.departureTime}
+      </p>
+    )}
+    <p className="text-slate-400 text-xs mt-2">
+      Changing departure time will auto-update the paired return flight
+    </p>
+  </div>
+) : (
+  <div>
+    <label className="block text-slate-300 text-sm font-medium mb-2">
+      Departure Time
+    </label>
+    <div className="px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-slate-300 flex items-center gap-3">
+      <Clock className="w-5 h-5" />
+      {new Date(flight.departureTime).toLocaleString()}
+    </div>
+    <p className="text-slate-400 text-xs mt-2">
+      Return flight departure time is auto-calculated
+    </p>
+  </div>
+)}
 
           {!isRecurringOrReturn && (
   <div>
@@ -189,6 +217,39 @@ const EditFlightForm: React.FC = () => {
     {formik.touched.durationMinutes && formik.errors.durationMinutes && (
       <p className="text-red-400 text-sm mt-2">{formik.errors.durationMinutes}</p>
     )}
+  </div>
+)}
+{!isReturn ? (
+  <div>
+    <label className="block text-slate-300 text-sm font-medium mb-2">
+      Buffer Time (minutes)
+    </label>
+    <input
+      type="number"
+      name="bufferMinutes"
+      value={formik.values.bufferMinutes || ""}
+      onChange={formik.handleChange}
+      onBlur={formik.handleBlur}
+      className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-400"
+    />
+    <p className="text-slate-400 text-xs mt-2">
+      Changing buffer time will auto-update the paired return flight
+    </p>
+    {formik.touched.bufferMinutes && formik.errors.bufferMinutes && (
+      <p className="text-red-400 text-sm mt-2">{formik.errors.bufferMinutes as string}</p>
+    )}
+  </div>
+) : (
+  <div>
+    <label className="block text-slate-300 text-sm font-medium mb-2">
+      Buffer Time (minutes)
+    </label>
+    <div className="px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-slate-300">
+      {flight.bufferMinutes ?? "—"}
+    </div>
+    <p className="text-slate-400 text-xs mt-2">
+      Buffer time is auto-calculated for return flights
+    </p>
   </div>
 )}
 

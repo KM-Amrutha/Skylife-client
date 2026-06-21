@@ -1,5 +1,5 @@
 export interface SeatType {
-  _id: string;
+  id: string;
   seatTypeName: string;
   cabinClass: string;
   basePriceMultiplier: number;
@@ -11,7 +11,7 @@ export interface SeatType {
 }
 
 export interface SeatLayout {
-  _id: string;
+  id: string;
   aircraftId: string;
   cabinClass: string;
   layout: string;
@@ -43,7 +43,7 @@ export interface CreateSeatLayoutDTO {
 }
 
 export interface Seat {
-  _id: string;
+  id: string;
   aircraftId: string;
   seatTypeId: string;
   seatTypeName: string;

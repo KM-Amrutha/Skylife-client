@@ -25,25 +25,27 @@ const useFlightApproval = () => {
     }
   }, [error, dispatch]);
 
-  const handleApproveFlight = async (flightId: string) => {
-    try {
-      await dispatch(approveFlight({ flightId, status: "approved" })).unwrap();
-      showSuccessToast("Flight approved successfully");
-    } catch (err) {
-      showErrorToast("Failed to approve flight");
-    }
-  };
+const handleApproveFlight = async (flightId: string) => {
+  try {
+    await dispatch(approveFlight({ flightId, status: "approved" })).unwrap();
+    showSuccessToast("Flight approved successfully");
+    dispatch(getPendingFlights());
+  } catch (err) {
+    showErrorToast("Failed to approve flight");
+  }
+};
 
-  const handleRejectFlight = async (flightId: string, reason: string) => {
-    try {
-      await dispatch(
-        approveFlight({ flightId, status: "rejected", reason })
-      ).unwrap();
-      showSuccessToast("Flight rejected");
-    } catch (err) {
-      showErrorToast("Failed to reject flight");
-    }
-  };
+const handleRejectFlight = async (flightId: string, reason: string) => {
+  try {
+    await dispatch(
+      approveFlight({ flightId, status: "rejected", reason })
+    ).unwrap();
+    showSuccessToast("Flight rejected");
+    dispatch(getPendingFlights());
+  } catch (err) {
+    showErrorToast("Failed to reject flight");
+  }
+};
 
   return {
     pendingFlights,

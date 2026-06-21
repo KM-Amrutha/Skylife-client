@@ -69,7 +69,7 @@ const useAircraft = (): UseAircraftReturn => {
   const [currentLocationDisplayName, setCurrentLocationDisplayName] = useState('');
 
   const { aircrafts, isLoading, error } = useSelector((state: RootState) => state.aircraft);
-  const providerId = useSelector((state: RootState) => state.auth.provider?._id);
+  const providerId = useSelector((state: RootState) => state.auth.provider?.id);
 
   useEffect(() => {
     dispatch(getProviderAircrafts({}));
@@ -99,7 +99,7 @@ const useAircraft = (): UseAircraftReturn => {
         resetForm();
         setBaseStationDisplayName('');
         setCurrentLocationDisplayName('');
-        navigate(`/provider/aircraft/${response.data._id}/seat-layout`);
+        navigate(`/provider/aircraft/${response.data.id}/seat-layout`);
       } catch (err: any) {
         showErrorToast(err || 'Failed to create aircraft');
       }
@@ -161,7 +161,7 @@ const useAircraft = (): UseAircraftReturn => {
   const selectBaseStation = (destination: Destination) => {
     const displayName = `${destination.name} (${destination.iataCode || destination.ident})`;
     setBaseStationDisplayName(displayName);
-    formik.setFieldValue('baseStationId', destination._id);
+    formik.setFieldValue('baseStationId', destination.id);
     formik.setFieldTouched('baseStationId', true);
     setBaseStationSearchResults([]);
   };
@@ -169,7 +169,7 @@ const useAircraft = (): UseAircraftReturn => {
   const selectCurrentLocation = (destination: Destination) => {
     const displayName = `${destination.name} (${destination.iataCode || destination.ident})`;
     setCurrentLocationDisplayName(displayName);
-    formik.setFieldValue('currentLocationId', destination._id);
+    formik.setFieldValue('currentLocationId', destination.id);
     formik.setFieldTouched('currentLocationId', true);
     setCurrentLocationSearchResults([]);
   };

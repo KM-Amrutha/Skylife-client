@@ -111,6 +111,24 @@ const FlightDetailModal: React.FC<FlightDetailModalProps> = ({ flight, onClose }
             </div>
           </div>
 
+          {/* Buffer Time */}
+          <div className="grid grid-cols-2 gap-4">
+  <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+    <div className="flex items-center gap-2 mb-2">
+      <Clock className="w-4 h-4 text-slate-400" />
+      <span className="text-slate-400 text-xs uppercase tracking-wider">Duration</span>
+    </div>
+    <p className="text-white text-sm font-medium">{flight.durationMinutes} min</p>
+  </div>
+  <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+    <div className="flex items-center gap-2 mb-2">
+      <Clock className="w-4 h-4 text-slate-400" />
+      <span className="text-slate-400 text-xs uppercase tracking-wider">Buffer</span>
+    </div>
+    <p className="text-white text-sm font-medium">{flight.bufferMinutes ?? '—'} min</p>
+  </div>
+</div>
+
           {/* Fares */}
           <div className="bg-white/5 border border-white/10 rounded-xl p-4">
             <div className="flex items-center gap-2 mb-3">

@@ -1,19 +1,13 @@
 import React from 'react';
-import { FormikProps } from 'formik';
+import useForgotPasswordForm from "../../hooks/sharedHooks/useFrogotpasswordForm";
 
-interface ForgotPasswordFormData {
-  email: string;
-}
+const ForgotPasswordForm: React.FC = ()=>{
+  const {
+    handleForgotPasswordForm,
+    handleGoBack,
+  } = useForgotPasswordForm();
 
-interface ForgotPasswordFormProps {
-  formik: FormikProps<ForgotPasswordFormData>;
-  onGoBack: () => void;
-}
-
-const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
-  formik,
-  onGoBack
-}) => {
+  const formik = handleForgotPasswordForm;
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
       <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md max-h-screen overflow-y-auto">
@@ -91,7 +85,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
           </div>
           
           <button 
-            onClick={onGoBack}
+            onClick={handleGoBack}
             className="text-slate-900 font-semibold hover:underline transition-colors text-sm"
           >
             ← Back to Sign In

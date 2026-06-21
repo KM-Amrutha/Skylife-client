@@ -21,9 +21,6 @@ const useGoogleAuth = () => {
     }
 
     const response = await dispatch(googleAuth({ token: credential })).unwrap();
-
-    console.log("Google login success:", response);
-
     localStorage.setItem("accessToken", response.data.accessToken);
     dispatch(setUser(response.data.user));  // assuming your backend returns { user, accessToken }
 

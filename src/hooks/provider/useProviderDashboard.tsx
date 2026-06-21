@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { RootState, AppDispatch } from '../../redux/store';
 import { getProviderProfile } from '../../redux/auth/authThunk';
 import { showErrorToast } from '../../utils/toast';
@@ -9,10 +10,13 @@ interface UseProviderDashboardReturn {
   provider: Provider | null;
   isLoading: boolean;
   error: string | null;
+  goToBookings: () => void;
+  goToWallet: () => void;
 }
 
 const useProviderDashboard = (): UseProviderDashboardReturn => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const { provider, isLoading, error } = useSelector(
     (state: RootState) => state.auth
   );
@@ -26,13 +30,15 @@ const useProviderDashboard = (): UseProviderDashboardReturn => {
       }
     };
 
-    // Only fetch if provider data is not already loaded
-    if (!provider?._id) {
+    if (!provider?.id) {
       fetchProviderData();
     }
-  }, [dispatch, provider?._id]);
+  }, [dispatch, provider?.id]);
 
-  return { provider, isLoading, error };
+  const goToBookings = () => navigate('/provider/bookings');
+  const goToWallet = () => navigate('/provider/wallet');
+
+  return { provider, isLoading, error, goToBookings, goToWallet };
 };
 
 export default useProviderDashboard;

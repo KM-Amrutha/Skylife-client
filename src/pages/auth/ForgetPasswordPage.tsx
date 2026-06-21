@@ -1,15 +1,11 @@
 import React from "react";
 import ForgotPasswordForm from "../../components/user-authentication/ForgotPasswordForm";
-import useForgotPasswordForm from "../../hooks/sharedHooks/useFrogotpasswordForm";
 import BackGroundLayout from "../../layouts/BackGroundLayout";
-const ForgotPasswordPage: React.FC = () => {
-  const { handleForgotPasswordForm, handleGoBack } = useForgotPasswordForm();
 
+const ForgotPasswordPage: React.FC = () => {
   return (
     <BackGroundLayout>
     <ForgotPasswordForm
-      formik={handleForgotPasswordForm}
-      onGoBack={handleGoBack}
     />
      </BackGroundLayout>
   );

@@ -170,11 +170,11 @@ clearSelectedFlight: (state) => {
         const updated = action.payload.data as FlightDetails;
         // Remove from pending list
         state.pendingFlights = state.pendingFlights.filter(
-          (f) => f._id !== updated._id
+          (f) => f.id !== updated.id
         );
         // Update in providerFlights if present
         state.providerFlights = state.providerFlights.map((f) =>
-          f._id === updated._id ? updated : f
+          f.id === updated.id ? updated : f
         );
       })
       .addCase(approveFlight.rejected, (state, action) => {
@@ -208,7 +208,7 @@ clearSelectedFlight: (state) => {
   state.isLoading = false;
   const rejected = action.payload.data as FlightDetails;
   state.adminFlights = state.adminFlights.filter(
-    (f) => f._id !== rejected._id
+    (f) => f.id !== rejected.id
   );
 })
 .addCase(rejectSingleFlight.rejected, (state, action) => {
@@ -228,7 +228,7 @@ clearSelectedFlight: (state) => {
 
         // Replace in providerFlights array
         state.providerFlights = state.providerFlights.map((flight) =>
-          flight._id === updatedFlight._id ? updatedFlight : flight
+          flight.id === updatedFlight.id ? updatedFlight : flight
         );
       })
       .addCase(updateFlight.rejected, (state, action) => {
@@ -280,7 +280,7 @@ clearSelectedFlight: (state) => {
   state.isLoading = false;
   const deletedFlight = action.payload.data as FlightDetails;
   state.providerFlights = state.providerFlights.filter(
-    (f) => f._id !== deletedFlight._id
+    (f) => f.id !== deletedFlight.id
   );
 })
 .addCase(deleteFlight.rejected, (state, action) => {
@@ -299,7 +299,6 @@ clearSelectedFlight: (state) => {
 .addCase(getFlightSeats.fulfilled, (state, action) => {
   state.isLoadingSeats = false;
   state.flightSeats = action.payload;
-  console.log('Flight seats updated in state:', action.payload);
   
 })
 .addCase(getFlightSeats.rejected, (state, action) => {

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { useAircraftSchedule } from "../../hooks/provider/useAircraftSchedule";
 import useFlights from "../../hooks/provider/useFlight";
+import { AMENITY_ICONS,AMENITY_LABELS } from "../../types/amenities";
 
 const FlightForm: React.FC = () => {
   const {
@@ -117,8 +118,8 @@ const FlightForm: React.FC = () => {
 
   {availableAircrafts.map((aircraft) => (
     <option
-      key={aircraft._id}
-      value={aircraft._id}
+      key={aircraft.id}
+      value={aircraft.id}
       style={{ backgroundColor: '#0a1628', color: 'white' }}
     >
       {aircraft.aircraftName} ({aircraft.aircraftType})
@@ -154,7 +155,7 @@ const FlightForm: React.FC = () => {
                 <ul className="absolute z-50 w-full mt-2 bg-white/95 backdrop-blur-lg rounded-xl shadow-2xl max-h-60 overflow-y-auto border border-white/30">
                   {departureSearchResults.map((dest) => (
                     <li
-                      key={dest._id}
+                      key={dest.id}
                       onMouseDown={() => selectDeparture(dest)}
                       className="px-4 py-3 cursor-pointer hover:bg-blue-500 hover:text-white transition-colors"
                     >
@@ -183,7 +184,7 @@ const FlightForm: React.FC = () => {
                 <ul className="absolute z-50 w-full mt-2 bg-white/95 backdrop-blur-lg rounded-xl shadow-2xl max-h-60 overflow-y-auto border border-white/30">
                   {arrivalSearchResults.map((dest) => (
                     <li
-                      key={dest._id}
+                      key={dest.id}
                       onMouseDown={() => selectArrival(dest)}
                       className="px-4 py-3 cursor-pointer hover:bg-purple-500 hover:text-white transition-colors"
                     >
@@ -410,6 +411,40 @@ const FlightForm: React.FC = () => {
             </div>
           </div>
         </section>
+
+        {/* ===== 4. AMENITIES ===== */}
+<section className="p-8 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/20">
+  <h3 className="text-2xl font-semibold text-white mb-8 flex items-center gap-4">
+    <span className="w-10 h-10 bg-amber-500 rounded-full flex items-center justify-center text-lg font-bold">4</span>
+    Flight Amenities (optional)
+  </h3>
+  <div className="flex flex-wrap gap-3">
+    {Object.entries(AMENITY_LABELS).map(([key, label]) => {
+      const selected = (formik.values.amenities ?? []).includes(key);
+      return (
+        <button
+          key={key}
+          type="button"
+          onClick={() => {
+            const current = formik.values.amenities ?? [];
+            formik.setFieldValue(
+              "amenities",
+              selected ? current.filter((a) => a !== key) : [...current, key]
+            );
+          }}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border transition-all ${
+            selected
+              ? "bg-amber-500/20 border-amber-400/40 text-amber-300"
+              : "bg-white/5 border-white/15 text-white/60 hover:border-white/30"
+          }`}
+        >
+          <span>{AMENITY_ICONS[key]}</span>
+          <span>{label}</span>
+        </button>
+      );
+    })}
+  </div>
+</section>
 
         {/* ===== SUBMIT BUTTON ===== */}
         <div className="flex justify-center mt-12">

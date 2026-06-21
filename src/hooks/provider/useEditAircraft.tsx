@@ -50,7 +50,7 @@ const useEditAircraft = (): UseEditAircraftReturn => {
     (state: RootState) => state.aircraft
   );
 
-  const aircraft = aircrafts.find((a) => a._id === aircraftId) || null;
+  const aircraft = aircrafts.find((a) => a.id === aircraftId) || null;
 
   const [initialized, setInitialized] = useState(false);
   const [baseStationDisplayName, setBaseStationDisplayName] = useState("");
@@ -68,7 +68,7 @@ const useEditAircraft = (): UseEditAircraftReturn => {
       lavatoryCount: 0,
       baseStationId: "",
       currentLocationId: "",
-      availableFrom: "",
+      availableFrom:new Date(),
       status: "active",
     },
     validationSchema: editAircraftValidationSchema,
@@ -78,8 +78,8 @@ const useEditAircraft = (): UseEditAircraftReturn => {
       try {
         const cleanValues = {
           ...values,
-          baseStationId: values.baseStationId || aircraft.baseStation?._id || undefined,
-          currentLocationId: values.currentLocationId || aircraft.currentLocation?._id || undefined,
+          baseStationId: values.baseStationId || aircraft.baseStation?.id || undefined,
+          currentLocationId: values.currentLocationId || aircraft.currentLocation?.id || undefined,
         };
         await dispatch(updateAircraft({ aircraftId, update: cleanValues })).unwrap();
         showSuccessToast("Aircraft updated successfully");
@@ -93,27 +93,28 @@ const useEditAircraft = (): UseEditAircraftReturn => {
   });
 
   // initialize form only once when aircraft loads
-  useEffect(() => {
-    if (aircraft && !initialized) {
-      formik.setValues({
-        aircraftName: aircraft.aircraftName || "",
-        buildYear: aircraft.buildYear || 2000,
-        seatCapacity: aircraft.seatCapacity || 0,
-        flyingRangeKm: aircraft.flyingRangeKm || 0,
-        engineCount: aircraft.engineCount || 2,
-        lavatoryCount: aircraft.lavatoryCount || 0,
-        baseStationId: aircraft.baseStation?._id || "",
-        currentLocationId: aircraft.currentLocation?._id || "",
-        availableFrom: aircraft.availableFrom
-          ? new Date(aircraft.availableFrom).toISOString().split("T")[0]
-          : "",
-        status: aircraft.status || "active",
-      });
-      setBaseStationDisplayName(aircraft.baseStation?.name || "");
-      setCurrentLocationDisplayName(aircraft.currentLocation?.name || "");
-      setInitialized(true);
-    }
-  }, [aircraft, initialized]);
+ useEffect(() => {
+  if (aircraft && !initialized) {
+    formik.setValues({
+      aircraftName: aircraft.aircraftName || "",
+      buildYear: aircraft.buildYear || 2000,
+      seatCapacity: aircraft.seatCapacity || 0,
+      flyingRangeKm: aircraft.flyingRangeKm || 0,
+      engineCount: aircraft.engineCount || 2,
+      lavatoryCount: aircraft.lavatoryCount || 0,
+      baseStationId: aircraft.baseStation?.id || "",
+      currentLocationId: aircraft.currentLocation?.id || "",
+      availableFrom: aircraft.availableFrom
+        ? new Date(aircraft.availableFrom)  // ← Date, not string
+        : new Date(),
+      status: aircraft.status || "active",
+    });
+    setBaseStationDisplayName(aircraft.baseStation?.name || "");
+    setCurrentLocationDisplayName(aircraft.currentLocation?.name || "");
+    setInitialized(true);
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [aircraft, initialized]);
 
   // Base station search
   const searchBase = useCallback(async (query: string) => {
@@ -134,7 +135,7 @@ const useEditAircraft = (): UseEditAircraftReturn => {
 
   const selectBaseStation = useCallback((destination: Destination) => {
     setBaseStationDisplayName(`${destination.name} (${destination.iataCode || destination.ident})`);
-    formik.setFieldValue("baseStationId", destination._id);
+    formik.setFieldValue("baseStationId", destination.id);
     setBaseStationResults([]);
   }, [formik]);
 
@@ -157,7 +158,7 @@ const useEditAircraft = (): UseEditAircraftReturn => {
 
   const selectCurrentLocation = useCallback((destination: Destination) => {
     setCurrentLocationDisplayName(`${destination.name} (${destination.iataCode || destination.ident})`);
-    formik.setFieldValue("currentLocationId", destination._id);
+    formik.setFieldValue("currentLocationId", destination.id);
     setCurrentLocationResults([]);
   }, [formik]);
 

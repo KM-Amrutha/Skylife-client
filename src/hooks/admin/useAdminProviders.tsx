@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
-import { getAllProviders, updateProviderStatus } from "../../redux/admin/adminThunk";
+import { getAllProviders, updateProviderStatus,setProviderCommission } from "../../redux/admin/adminThunk";
 import { UpdateProviderStatusRequest } from "../../redux/admin/adminTypes";
 import { showSuccessToast, showErrorToast } from "../../utils/toast";
 import { clearError } from "../../redux/admin/adminSlice";
@@ -28,6 +28,16 @@ const useAdminProviders = () => {
       dispatch(clearError());
     }
   }, [error, dispatch]);
+  
+  const handleSetCommission = async (providerId: string, commissionRate: number) => {
+  try {
+    await dispatch(setProviderCommission({ providerId, commissionRate })).unwrap();
+    showSuccessToast("Commission rate updated successfully");
+    dispatch(getAllProviders({ page: currentPage, limit: LIMIT }));
+  } catch (err: any) {
+    showErrorToast(err || "Failed to update commission");
+  }
+};
 
   const handleUpdateProviderStatus = async (
     providerId: string,
@@ -53,6 +63,7 @@ const useAdminProviders = () => {
     currentPage,
     handlePageChange,
     handleUpdateProviderStatus,
+    handleSetCommission,
   };
 };
 

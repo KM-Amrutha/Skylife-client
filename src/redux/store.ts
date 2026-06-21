@@ -7,6 +7,11 @@ import aircraftReducer from './aircraft/aircraftSlice';
 import destinationsReducer from './destination/destinationSlice';
 import seatReducer from './seat/seatSlice';
 import flightReudcer from './flight/flightSlice';
+import bookingReducer from './booking/bookingSlice';
+import foodReducer from './food/foodSlice';
+import offerReducer from './offer/offerSlice';
+import providerBookingsReducer from './providerBooking/peoviderBookingSlice';
+import walletReducer from './wallet/walletSlice';
 
 const persistConfig = {
     key:"root",
@@ -26,6 +31,12 @@ const store = configureStore({
         destinations:destinationsReducer,
         seat:seatReducer,
         flight:flightReudcer,
+        booking:bookingReducer,
+        food:foodReducer,
+        offer:offerReducer,
+        providerBooking:providerBookingsReducer,
+        wallet:walletReducer
+
         
 
     },

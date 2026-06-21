@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
+import { Trash2 } from "lucide-react";
 import useSeatLayout from "../../hooks/provider/useSeatLayout";
 
 const SeatLayoutForm: React.FC = () => {
@@ -13,25 +14,57 @@ const SeatLayoutForm: React.FC = () => {
     canGenerateSeats,
     generatedSeatsCount,
     handleGenerateSeats,
-    handleDeleteLayout,
-    clearError
+    handleDeleteClick,
+    handleDeleteConfirm,
+    handleDeleteCancel,
+    deletingLayoutId,
+    clearError,
   } = useSeatLayout();
-
-  useEffect(() => {
-    if (error) {
-      alert(error);
-      clearError();
-    }
-  }, [error, clearError]);
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-[#00001F] rounded-xl">
+
+      {/* ── Delete Confirm Modal ── */}
+      {deletingLayoutId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+          <div className="bg-[#0a1628] border border-white/20 rounded-2xl w-full max-w-md shadow-2xl p-8 text-center">
+            <div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mx-auto mb-4">
+              <Trash2 className="w-8 h-8 text-red-400" />
+            </div>
+            <h2 className="text-white text-xl font-bold mb-2">Delete Seat Layout</h2>
+            <p className="text-slate-400 text-sm mb-8">
+              Are you sure you want to delete this seat layout? This action cannot be undone.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={handleDeleteCancel}
+                className="flex-1 py-3 rounded-full border border-white/20 text-white text-sm font-semibold hover:bg-white/10 transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteConfirm}
+                disabled={isLoading}
+                className="flex-1 py-3 rounded-full bg-red-500 hover:bg-red-600 text-white text-sm font-semibold transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {isLoading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Deleting...
+                  </>
+                ) : (
+                  "Delete"
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <h2 className="text-white text-2xl mb-6 font-semibold text-center">Configure Seat Layout</h2>
 
-      {/* Seat Layout Form */}
+      {/* ── Form ── */}
       <form onSubmit={formik.handleSubmit} className="space-y-5">
-
-        {/* Cabin Class */}
         <div>
           <label className="block text-white mb-1">Cabin Class *</label>
           <select
@@ -43,7 +76,7 @@ const SeatLayoutForm: React.FC = () => {
           >
             <option value="">Select cabin class</option>
             {seatTypes.map((type) => (
-              <option key={type._id} value={type.cabinClass}>
+              <option key={type.id} value={type.cabinClass}>
                 {type.seatTypeName}
               </option>
             ))}
@@ -53,7 +86,6 @@ const SeatLayoutForm: React.FC = () => {
           )}
         </div>
 
-        {/* Layout */}
         <div>
           <label className="block text-white mb-1">Layout *</label>
           <select
@@ -75,27 +107,23 @@ const SeatLayoutForm: React.FC = () => {
           )}
         </div>
 
-     {/* Start Row */}
-<input
-  type="number"
-  name="startRow"
-  value={formik.values.startRow}
-  onChange={formik.handleChange}
-  onBlur={formik.handleBlur}
-  className="w-full px-3 py-2 rounded border border-gray-400 bg-white text-black"
-/>
+        <input
+          type="number"
+          name="startRow"
+          value={formik.values.startRow}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          className="w-full px-3 py-2 rounded border border-gray-400 bg-white text-black"
+        />
+        <input
+          type="number"
+          name="endRow"
+          value={formik.values.endRow}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          className="w-full px-3 py-2 rounded border border-gray-400 bg-white text-black"
+        />
 
-{/* End Row */}
-<input
-  type="number"
-  name="endRow"
-  value={formik.values.endRow}
-  onChange={formik.handleChange}
-  onBlur={formik.handleBlur}
-  className="w-full px-3 py-2 rounded border border-gray-400 bg-white text-black"
-/>
-
-        {/* Submit Button */}
         <button
           type="submit"
           disabled={formik.isSubmitting || isLoading}
@@ -105,12 +133,12 @@ const SeatLayoutForm: React.FC = () => {
         </button>
       </form>
 
-      {/* Display Seat Layouts */}
+      {/* ── Layouts List ── */}
       <div className="mt-8 text-white">
         <h3 className="text-xl font-semibold mb-4">Current Seat Layouts ({seatLayouts.length})</h3>
         {seatLayouts.length === 0 && <p>No seat layouts yet. Create one above.</p>}
         {seatLayouts.map((layout) => (
-          <div key={layout._id} className="mb-3 p-3 bg-gray-800 rounded flex justify-between items-start">
+          <div key={layout.id} className="mb-3 p-3 bg-gray-800 rounded flex justify-between items-start">
             <div className="flex-1">
               <p><strong>Cabin Class:</strong> {layout.cabinClass}</p>
               <p><strong>Layout:</strong> {layout.layout}</p>
@@ -118,7 +146,7 @@ const SeatLayoutForm: React.FC = () => {
               <p><strong>Seats per Row:</strong> {layout.seatsPerRow}</p>
             </div>
             <button
-              onClick={() => handleDeleteLayout(layout._id)}
+              onClick={() => handleDeleteClick(layout.id)}
               disabled={isLoading}
               className="ml-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50 transition"
             >
@@ -128,19 +156,16 @@ const SeatLayoutForm: React.FC = () => {
         ))}
       </div>
 
-      {/* Seat Generation */}
-            {/* Seat Generation */}
+      {/* ── Seat Generation ── */}
       <div className="mt-6 text-white text-center space-y-4">
         <div>
           <p className="text-gray-400 text-sm">Aircraft Maximum Capacity</p>
           <p className="text-3xl font-bold text-blue-300">{aircraftCapacity}</p>
         </div>
-
         <div>
           <p className="text-gray-400 text-sm">Total Planned Seats</p>
           <p className="text-2xl font-bold">{totalPlannedSeats}</p>
         </div>
-
         <div>
           <p className="text-gray-400 text-sm">Generated Seats</p>
           <p className="text-2xl font-bold text-green-300">{generatedSeatsCount}</p>

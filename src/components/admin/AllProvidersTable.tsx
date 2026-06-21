@@ -241,11 +241,12 @@ const ProviderDetailModal: React.FC<ProviderDetailModalProps> = ({
 };
 
 const AllProvidersTable: React.FC = () => {
- const { providers, isLoading, pagination, currentPage, handlePageChange, handleUpdateProviderStatus } =
+ const { providers, isLoading, pagination, currentPage, handlePageChange, handleUpdateProviderStatus, handleSetCommission } =
   useAdminProviders();
   const [selectedProvider, setSelectedProvider] = useState<Provider | null>(
     null
   );
+  const [commissionEdit, setCommissionEdit] = useState<Record<string, string>>({});
 
   const openModal = (provider: Provider) => setSelectedProvider(provider);
   const closeModal = () => setSelectedProvider(null);
@@ -293,7 +294,7 @@ const AllProvidersTable: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 {providers.map((provider) => (
   <div
-    key={provider._id}
+    key={provider.id}
     className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 hover:border-blue-400/40 transition duration-300 group"
   >
     
@@ -399,9 +400,41 @@ const AllProvidersTable: React.FC = () => {
         </button>
       </div>
 
+      {/* Commission Rate */}
+<div className="flex items-center gap-2 mb-4">
+  <div className="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2 flex items-center gap-2">
+    <span className="text-white/40 text-xs">Commission</span>
+    <input
+      type="number"
+      min={0}
+      max={100}
+      value={commissionEdit[provider.id] ?? provider.commissionRate ?? 10}
+      onChange={(e) =>
+        setCommissionEdit((prev) => ({
+          ...prev,
+          [provider.id]: e.target.value,
+        }))
+      }
+      className="flex-1 bg-transparent text-white text-sm font-bold focus:outline-none w-12"
+    />
+    <span className="text-white/40 text-xs">%</span>
+  </div>
+  <button
+    onClick={() =>
+      handleSetCommission(
+        provider.id,
+        Number(commissionEdit[provider.id] ?? provider.commissionRate ?? 10)
+      )
+    }
+    className="px-3 py-2 rounded-xl bg-cyan-500/20 border border-cyan-400/30 text-cyan-300 text-xs font-bold hover:bg-cyan-500/30 transition"
+  >
+    Set
+  </button>
+</div>
+
       {/* Action Button */}
       <button
-        onClick={() => handleUpdateProviderStatus(provider._id, !provider.isActive)}
+        onClick={() => handleUpdateProviderStatus(provider.id, !provider.isActive)}
         className={`w-full py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-lg
           ${provider.isActive
             ? 'bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-400/30 hover:border-red-400/50'

@@ -75,7 +75,7 @@ const AircraftList: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {aircrafts.map((aircraft) => (
             <div
-              key={aircraft._id}
+              key={aircraft.id}
               className="bg-white/5 border border-white/10 rounded-2xl p-5 shadow-lg shadow-black/30 hover:border-blue-400/60 hover:shadow-blue-500/20 transition duration-150 flex flex-col justify-between"
             >
               {/* Title */}
@@ -148,14 +148,14 @@ const AircraftList: React.FC = () => {
                         View
                     </button>
                   <button
-                    onClick={() => handleEditClick(aircraft._id)}
+                    onClick={() => handleEditClick(aircraft.id)}
                     className="text-xs px-3 py-1.5 rounded-lg bg-blue-500/20 text-blue-300 border border-blue-400/30 hover:bg-blue-500/30 transition font-medium"
                   >
                     Edit
                   </button>
                   
                   <button
-                    onClick={() => handleDeleteClick(aircraft._id)}
+                    onClick={() => handleDeleteClick(aircraft.id)}
                     className="text-xs px-3 py-1.5 rounded-lg bg-red-500/20 text-red-300 border border-red-400/30 hover:bg-red-500/30 transition font-medium"
                   >
                     Delete

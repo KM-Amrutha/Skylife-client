@@ -1,8 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../config/axios";
 import {
-  SeatType,
-  SeatLayout,
   CreateSeatLayoutDTO,
 } from "./seatType";
 
@@ -29,9 +27,9 @@ export const createSeatLayout = createAsyncThunk(
   async (seatLayoutData: CreateSeatLayoutDTO, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post("/provider/seat-layouts", seatLayoutData);
+      console.log("createSeatLayout response:", response.data);
       return response.data;
     } catch (error: any) {
-      console.log("CREATE SEAT LAYOUT ERROR:", error.response?.data);
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message);
       }
@@ -39,6 +37,7 @@ export const createSeatLayout = createAsyncThunk(
     }
   }
 );
+
 
 // Generate seats for aircraft
 export const generateSeats = createAsyncThunk(
@@ -78,7 +77,9 @@ export const deleteSeatLayout = createAsyncThunk(
   async (layoutId: string, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.delete(`/provider/seat-layouts/${layoutId}`);
+      console.log("layoutId to delete:", layoutId);
       return { layoutId, ...response.data };
+      
     } catch (error: any) {
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message);

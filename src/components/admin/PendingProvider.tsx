@@ -4,7 +4,6 @@ import {
   XCircle,
   Eye,
   Building2,
-  Mail,
   Phone,
   Globe,
   Calendar,
@@ -16,40 +15,21 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import AdminLayout from "../../layouts/AdminLayout";
-import useAdminDashboard from "../../hooks/admin/useAdminDashboard";
-
-interface Provider {
-  _id: string;
-  companyName: string;
-  email: string;
-  airlineCode: string;
-  mobile: string;
-  logoUrl?: string;
-  registrationCertificateUrl?: string;
-  insuranceProofUrl?: string;
-  establishmentYear?: number;
-  licenseExpiryDate?: Date;
-  headquartersAddress?: string;
-  countryOfOperation?: string;
-  typeOfOperation?: string;
-  websiteUrl?: string;
-  ceoName?: string;
-  officeContactNumber?: string;
-  isProfileComplete?: boolean;
-}
+import useProviderVerification from "../../hooks/admin/useProviderVerification";
 
 const PendingProvider: React.FC = () => {
   const {
-    pendingProviders,
-    isLoading,
-    handleVerifyProvider,
-    rejectModalOpen,
-    openRejectModal,
-    closeRejectModal,
-    rejectionReason,
-    setRejectionReason,
-    handleConfirmReject,
-  } = useAdminDashboard();
+  pendingProviders,
+  isLoading,
+  handleVerifyProvider,
+  rejectModalOpen,
+  openRejectModal,
+  closeRejectModal,
+  rejectionReason,
+  setRejectionReason,
+  handleConfirmReject,
+} = useProviderVerification();
+  
 
   const [expandedProvider, setExpandedProvider] = useState<string | null>(null);
   const [viewingDocument, setViewingDocument] = useState<string | null>(null);
@@ -94,10 +74,10 @@ const PendingProvider: React.FC = () => {
         {!isLoading && pendingProviders.length > 0 && (
           <div className="space-y-4">
             {pendingProviders.map((provider) => {
-              const isExpanded = expandedProvider === provider._id;
+              const isExpanded = expandedProvider === provider.id;
               return (
                 <div
-                  key={provider._id}
+                  key={provider.id}
                   className="rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 shadow-xl overflow-hidden transition-all duration-300 hover:border-blue-400/30"
                 >
                   {/* Card Header — always visible */}
@@ -167,7 +147,7 @@ const PendingProvider: React.FC = () => {
   </div>
 
   <button
-    onClick={() => toggleExpand(provider._id)}
+    onClick={() => toggleExpand(provider.id)}
     className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-slate-300 hover:bg-white/10 hover:text-white transition text-sm font-medium shrink-0"
   >
     <Eye className="w-4 h-4" />
@@ -318,13 +298,13 @@ const PendingProvider: React.FC = () => {
                       {/* Action Buttons */}
                       <div className="flex gap-3 pt-2 border-t border-white/10">
                         <button
-                          onClick={() => handleVerifyProvider(provider._id)}
+                          onClick={() => handleVerifyProvider(provider.id)}
                           className="flex-1 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-400/30 hover:border-emerald-400/50"
                         >
                           <CheckCircle className="w-4 h-4" /> Verify Provider
                         </button>
                         <button
-                          onClick={() => openRejectModal(provider._id)}
+                          onClick={() => openRejectModal(provider.id)}
                           className="flex-1 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-400/30 hover:border-red-400/50"
                         >
                           <XCircle className="w-4 h-4" /> Reject

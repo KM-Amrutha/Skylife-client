@@ -1,5 +1,5 @@
 export interface Destination {
-  _id: string;
+  id: string;
   name: string;
   iataCode: string;
   ident: string;

@@ -56,7 +56,6 @@ axiosInstance.interceptors.response.use(
         originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
         return axiosInstance(originalRequest);
       } catch (err) {
-        console.log("getting inside catch block axios for refreshing")
         console.log('Refresh token failed', err)
         store.dispatch(clearAuthPerson());
         window.location.href = '/sign-in';
