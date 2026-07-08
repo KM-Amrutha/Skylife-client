@@ -77,14 +77,14 @@ const SearchForm: React.FC<SearchFormProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 divide-y sm:divide-y-0 divide-gray-100">
           {/* FROM */}
           <div className="lg:border-r border-gray-200 relative px-4 py-2.5 lg:col-span-1" ref={fromRef}>
-            <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wide mb-0.5">From</label>
+            <label className="block text-[11px] font-bold text-gray-600 uppercase tracking-wide mb-0.5">From</label>
             <input
               type="text"
               value={fromDisplayName}
               onChange={(e) => handleFromSearch(e.target.value)}
               placeholder="City or airport"
               autoComplete="off"
-              className="w-full text-gray-900 text-sm font-semibold focus:outline-none placeholder:text-gray-300 placeholder:font-normal"
+              className="w-full text-gray-900 text-sm font-semibold focus:outline-none placeholder:text-gray-600 placeholder:font-normal"
             />
             {fromResults.length > 0 && (
               <ul className="absolute z-50 left-0 w-72 bg-white text-black rounded-lg max-h-60 overflow-auto shadow-xl border border-gray-200 mt-2">
@@ -95,7 +95,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
                     className="p-3 cursor-pointer hover:bg-blue-50 border-b last:border-b-0 border-gray-100"
                   >
                     <div className="font-semibold text-sm">{dest.name}</div>
-                    <div className="text-xs text-gray-500 mt-0.5">
+                    <div className="text-xs text-gray-700 mt-0.5">
                       {dest.iataCode} — {dest.municipality}, {dest.isoCountry}
                     </div>
                   </li>
@@ -106,14 +106,14 @@ const SearchForm: React.FC<SearchFormProps> = ({
 
           {/* TO */}
           <div className="lg:border-r border-gray-200 relative px-4 py-2.5 lg:col-span-1" ref={toRef}>
-            <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wide mb-0.5">To</label>
+            <label className="block text-[11px] font-bold text-gray-600 uppercase tracking-wide mb-0.5">To</label>
             <input
               type="text"
               value={toDisplayName}
               onChange={(e) => handleToSearch(e.target.value)}
               placeholder="City or airport"
               autoComplete="off"
-              className="w-full text-gray-900 text-sm font-semibold focus:outline-none placeholder:text-gray-300 placeholder:font-normal"
+              className="w-full text-gray-900 text-sm font-semibold focus:outline-none placeholder:text-gray-600 placeholder:font-normal"
             />
             {toResults.length > 0 && (
               <ul className="absolute z-50 left-0 w-72 bg-white text-black rounded-lg max-h-60 overflow-auto shadow-xl border border-gray-200 mt-2">
@@ -124,7 +124,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
                     className="p-3 cursor-pointer hover:bg-blue-50 border-b last:border-b-0 border-gray-100"
                   >
                     <div className="font-semibold text-sm">{dest.name}</div>
-                    <div className="text-xs text-gray-500 mt-0.5">
+                    <div className="text-xs text-gray-700 mt-0.5">
                       {dest.iataCode} — {dest.municipality}, {dest.isoCountry}
                     </div>
                   </li>
@@ -135,7 +135,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
 
           {/* DEPARTURE */}
           <div className="lg:border-r border-gray-200 px-4 py-2.5">
-            <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wide mb-0.5">Departure</label>
+            <label className="block text-[11px] font-bold text-gray-600 uppercase tracking-wide mb-0.5">Departure</label>
             <input
               type="date"
               value={form.departureDate}
@@ -147,20 +147,20 @@ const SearchForm: React.FC<SearchFormProps> = ({
 
           {/* RETURN */}
           <div className="lg:border-r border-gray-200 px-4 py-2.5">
-            <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wide mb-0.5">Return</label>
+            <label className="block text-[11px] font-bold text-gray-600 uppercase tracking-wide mb-0.5">Return</label>
             <input
               type="date"
               value={form.returnDate ?? ''}
               min={form.departureDate || today}
               onChange={(e) => onChange('returnDate', e.target.value)}
               disabled={form.tripType === 'one-way'}
-              className="w-full text-gray-900 text-sm font-semibold focus:outline-none disabled:text-gray-300 disabled:cursor-not-allowed"
+              className="w-full text-gray-900 text-sm font-semibold focus:outline-none disabled:text-gray-600 disabled:cursor-not-allowed"
             />
           </div>
 
           {/* PASSENGERS */}
           <div className="lg:border-r border-gray-200 px-4 py-2.5">
-            <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wide mb-0.5">Passengers</label>
+            <label className="block text-[11px] font-bold text-gray-600 uppercase tracking-wide mb-0.5">Passengers</label>
             <div className="flex items-center gap-3">
               <button
                 type="button"

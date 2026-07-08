@@ -18,31 +18,30 @@ const ProviderSignUpForm: React.FC<ProviderSignUpFormProps> = ({
   const navigate = useNavigate();
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4">
+       <div
+  className="flex items-center justify-center min-h-screen p-5"
+  style={{
+    backgroundImage: `linear-gradient(to bottom right, rgba(10,58,138,0.7), rgba(0,0,0,0.5)), url('/image/image3.jpg')`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  }}
+>
       <div className="w-full max-w-md bg-white rounded-xl shadow-2xl p-6">
+
         {/* Header with Logo */}
         <div className="text-center mb-6">
-  <div className="flex items-center justify-center gap-2 mb-3">
-    <img 
-      src="/image/gemlogo.png" 
-      alt="Logo" 
-      className="h-10 w-10"
-    />
-    <h1 className="text-2xl font-bold text-slate-900">
-      Skylife
-    </h1>
-  </div>
-  <h2 className="text-2xl font-bold text-slate-900 mb-1">
-    Partner with us?
-  </h2>
-  <p className="text-sm font-medium text-slate-700">
-    Register here!
-  </p>
-</div>
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <img src="/image/gemlogo.png" alt="Logo" className="h-10 w-10" />
+            <h1 className="text-2xl font-bold text-gray-900">Skylife</h1>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-1">Partner with us?</h2>
+          <p className="text-sm font-medium text-gray-700">Register here!</p>
+        </div>
 
-        {/* Form Container */}
-        <div className="bg-slate-900 rounded-3xl p-5">
+        {/* Form Container — kept dark card, it's intentional provider branding */}
+        <div className="bg-[#0a3a8a] rounded-3xl p-5">
           <form onSubmit={formik.handleSubmit} className="space-y-3">
+
             {/* Company Name */}
             <div>
               <input
@@ -55,9 +54,7 @@ const ProviderSignUpForm: React.FC<ProviderSignUpFormProps> = ({
                 className="w-full px-4 py-2.5 rounded-lg text-center placeholder-gray-500 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-white text-sm"
               />
               {formik.touched.companyName && formik.errors.companyName && (
-                <p className="text-red-300 text-xs mt-1">
-                  {formik.errors.companyName}
-                </p>
+                <p className="text-red-300 text-xs mt-1">{formik.errors.companyName}</p>
               )}
             </div>
 
@@ -73,9 +70,7 @@ const ProviderSignUpForm: React.FC<ProviderSignUpFormProps> = ({
                 className="w-full px-4 py-2.5 rounded-lg text-center placeholder-gray-500 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-white text-sm"
               />
               {formik.touched.email && formik.errors.email && (
-                <p className="text-red-300 text-xs mt-1">
-                  {formik.errors.email}
-                </p>
+                <p className="text-red-300 text-xs mt-1">{formik.errors.email}</p>
               )}
             </div>
 
@@ -91,9 +86,7 @@ const ProviderSignUpForm: React.FC<ProviderSignUpFormProps> = ({
                 className="w-full px-4 py-2.5 rounded-lg text-center placeholder-gray-500 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-white text-sm"
               />
               {formik.touched.airlineCode && formik.errors.airlineCode && (
-                <p className="text-red-300 text-xs mt-1">
-                  {formik.errors.airlineCode}
-                </p>
+                <p className="text-red-300 text-xs mt-1">{formik.errors.airlineCode}</p>
               )}
             </div>
 
@@ -109,9 +102,7 @@ const ProviderSignUpForm: React.FC<ProviderSignUpFormProps> = ({
                 className="w-full px-4 py-2.5 rounded-lg text-center placeholder-gray-500 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-white text-sm"
               />
               {formik.touched.mobile && formik.errors.mobile && (
-                <p className="text-red-300 text-xs mt-1">
-                  {formik.errors.mobile}
-                </p>
+                <p className="text-red-300 text-xs mt-1">{formik.errors.mobile}</p>
               )}
             </div>
 
@@ -134,39 +125,34 @@ const ProviderSignUpForm: React.FC<ProviderSignUpFormProps> = ({
                 {showPassword ? "Hide" : "Show"}
               </button>
               {formik.touched.password && formik.errors.password && (
-                <p className="text-red-300 text-xs mt-1">
-                  {formik.errors.password}
-                </p>
+                <p className="text-red-300 text-xs mt-1">{formik.errors.password}</p>
               )}
             </div>
 
-            {/* Submit Button - Same color as user signup */}
-           {/* Submit Button */}
-<button
-  type="submit"
-  disabled={formik.isSubmitting}
-  className="w-full bg-[#000D2B] text-white py-2.5 px-4 rounded-lg font-semibold text-sm hover:bg-[#001845] focus:outline-none focus:ring-4 focus:ring-white/50 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 mt-3"
->
-  {formik.isSubmitting ? (
-    <div className="flex items-center justify-center">
-      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-      Signing In...
-    </div>
-  ) : (
-    "Sign In"
-  )}
-</button>
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={formik.isSubmitting}
+              className="w-full bg-white text-[#0a3a8a] py-2.5 px-4 rounded-lg font-semibold text-sm hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-white/50 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 mt-3"
+            >
+              {formik.isSubmitting ? (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#0a3a8a] mr-2"></div>
+                  Signing In...
+                </div>
+              ) : (
+                "Sign In"
+              )}
+            </button>
 
-
-            {/* Already a partner - Inside form */}
+            {/* Already a partner */}
             <div className="text-center pt-2">
-              
               <p className="text-white text-xs">
                 Already a partner?{" "}
                 <button
                   type="button"
-                  onClick= {()=> navigate('/sign-in')}
-                  className="underline text-blue-300 hover:text-blue-200 font-medium"
+                  onClick={() => navigate('/sign-in')}
+                  className="underline text-blue-200 hover:text-white font-medium"
                 >
                   Login
                 </button>
@@ -174,13 +160,13 @@ const ProviderSignUpForm: React.FC<ProviderSignUpFormProps> = ({
             </div>
 
             {/* Passenger Register */}
-            <div className="border-t border-gray-400 pt-2">
+            <div className="border-t border-white/30 pt-2">
               <p className="text-white text-xs text-center">
                 Are you a passenger?{" "}
                 <button
                   type="button"
                   onClick={() => navigate('/sign-up')}
-                  className="underline text-blue-300 hover:text-blue-200 font-medium"
+                  className="underline text-blue-200 hover:text-white font-medium"
                 >
                   Register
                 </button>

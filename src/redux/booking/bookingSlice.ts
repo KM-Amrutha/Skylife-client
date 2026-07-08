@@ -32,6 +32,7 @@ import {
   getUserBookings,
   cancelPassenger,
   getTicket,
+  payWithWallet,
  
 
 } from "./bookingThunk";
@@ -46,6 +47,7 @@ interface BookingState {
   segmentError: string | null;
   isUpdatingSegment: boolean;
   updateSegmentError: string | null;
+ 
 
   // ─── Page 3 — Seat Map ────────────────────────────────────────────────────
   seatsMap: BookingSeatsMapResponse | null;
@@ -110,6 +112,9 @@ tickets: Ticket[];
 isLoadingTicket: boolean;
 ticketError: string | null;
 
+ isPayingWithWallet: boolean;
+payWithWalletError: string | null;
+
 
 }
 
@@ -168,6 +173,8 @@ cancelPassengerError: null,
 tickets: [] ,
 isLoadingTicket: false,
 ticketError: null,
+isPayingWithWallet: false,
+payWithWalletError: null,
 
 };
 
@@ -536,6 +543,17 @@ clearCancelPassengerError: (state) => {
     typeof action.payload === "string"
       ? action.payload
       : "Failed to fetch ticket";
+})
+.addCase(payWithWallet.pending, (state) => {
+  state.isPayingWithWallet = true;
+  state.payWithWalletError = null;
+})
+.addCase(payWithWallet.fulfilled, (state) => {
+  state.isPayingWithWallet = false;
+})
+.addCase(payWithWallet.rejected, (state, action) => {
+  state.isPayingWithWallet = false;
+  state.payWithWalletError = typeof action.payload === "string" ? action.payload : "Failed to pay with wallet";
 })
 
 

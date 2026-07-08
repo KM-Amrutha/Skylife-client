@@ -47,7 +47,6 @@ const useUserDashboard = (): UseUserDashboardReturn => {
  const handleSignOut = async () => {
   try {
     await dispatch(signOutUser()).unwrap();
-    localStorage.removeItem("accessToken");
     showSuccessToast("Signed out successfully");
     navigate("/");
   } catch (error: any) {

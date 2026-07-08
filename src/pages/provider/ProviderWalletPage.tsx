@@ -1,14 +1,19 @@
 import React from "react";
-import ProviderMainLayout from "../../layouts/ProviderMainLayout";
 import ProviderWallet from "../../components/provider/ProviderWallet";
+import ProviderHeaderLayout from '../../layouts/ProviderHeaderLayout';
+import ProviderSidebarLayout from '../../layouts/ProviderSidebarLayout';
 
-const ProviderWalletPage: React.FC = () => (
-  <ProviderMainLayout>
-    <div className="min-h-screen p-8 bg-gradient-to-r from-purple-900 to-blue-900">
-      <div className="max-w-2xl mx-auto">
-        <ProviderWallet />
+const ProviderWalletPage: React.FC = () => {
+  return (
+    <div className="flex min-h-screen bg-slate-100">
+      <ProviderSidebarLayout />
+      <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
+        <ProviderHeaderLayout />
+        <div className="flex-1 overflow-y-auto">
+          <ProviderWallet />
+        </div>
       </div>
     </div>
-  </ProviderMainLayout>
-);
+  );
+};
 export default ProviderWalletPage;

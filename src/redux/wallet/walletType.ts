@@ -35,3 +35,4 @@ export interface ProviderWallet {
   createdAt: string;
   updatedAt: string;
 }
+

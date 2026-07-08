@@ -61,10 +61,10 @@ const FoodSelectionModal: React.FC<FoodSelectionModalProps> = ({
     return (
       <div
         key={food.id}
-        className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition"
+        className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-200 hover:border-gray-300 transition"
       >
         {/* Food image */}
-        <div className="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 bg-white/10">
+        <div className="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 bg-gray-200">
           {food.image ? (
             <img
               src={food.image}
@@ -82,20 +82,20 @@ const FoodSelectionModal: React.FC<FoodSelectionModalProps> = ({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-0.5">
             <VegBadge vegNonveg={food.vegNonveg} />
-            <p className="text-white font-semibold text-sm truncate">
+            <p className="text-gray-900 font-semibold text-sm truncate">
               {food.foodName}
             </p>
           </div>
-          <p className="text-white/40 text-xs capitalize">
+          <p className="text-gray-600 text-xs capitalize">
             {food.foodType} · {food.serveMethod}
           </p>
           <div className="flex items-center gap-2 mt-1">
             {food.isComplimentary ? (
-              <span className="text-emerald-400 text-xs font-semibold">
+              <span className="text-emerald-600 text-xs font-semibold">
                 Complimentary
               </span>
             ) : (
-              <span className="text-white text-sm font-bold">
+              <span className="text-gray-900 text-sm font-bold">
                 ₹{food.foodPrice.toLocaleString("en-IN")}
               </span>
             )}
@@ -107,7 +107,7 @@ const FoodSelectionModal: React.FC<FoodSelectionModalProps> = ({
           {quantity === 0 ? (
             <button
               onClick={() => incrementFood(flightId, food.id)}
-              className="px-4 py-1.5 rounded-full border border-white/30 text-white text-xs font-bold hover:bg-white/10 transition"
+              className="px-4 py-1.5 rounded-full border border-gray-300 text-gray-700 text-xs font-bold hover:bg-gray-100 transition"
             >
               Add
             </button>
@@ -115,16 +115,16 @@ const FoodSelectionModal: React.FC<FoodSelectionModalProps> = ({
             <div className="flex items-center gap-2">
               <button
                 onClick={() => decrementFood(flightId, food.id)}
-                className="w-7 h-7 rounded-full bg-white/10 border border-white/20 text-white font-bold text-sm hover:bg-white/20 transition flex items-center justify-center"
+                className="w-7 h-7 rounded-full bg-white border border-gray-300 text-gray-700 font-bold text-sm hover:bg-gray-100 transition flex items-center justify-center"
               >
                 −
               </button>
-              <span className="text-white font-bold text-sm w-4 text-center">
+              <span className="text-gray-900 font-bold text-sm w-4 text-center">
                 {quantity}
               </span>
               <button
                 onClick={() => incrementFood(flightId, food.id)}
-                className="w-7 h-7 rounded-full bg-white/10 border border-white/20 text-white font-bold text-sm hover:bg-white/20 transition flex items-center justify-center"
+                className="w-7 h-7 rounded-full bg-white border border-gray-300 text-gray-700 font-bold text-sm hover:bg-gray-100 transition flex items-center justify-center"
               >
                 +
               </button>
@@ -139,7 +139,7 @@ const FoodSelectionModal: React.FC<FoodSelectionModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-start justify-center px-4 py-6 overflow-y-auto">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
 
@@ -147,19 +147,19 @@ const FoodSelectionModal: React.FC<FoodSelectionModalProps> = ({
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute -top-3 -right-3 z-20 w-8 h-8 rounded-full bg-slate-700 border border-white/20 text-white hover:bg-slate-600 transition flex items-center justify-center text-sm font-bold"
+          className="absolute -top-3 -right-3 z-20 w-8 h-8 rounded-full bg-white border border-gray-200 text-gray-600 hover:bg-gray-100 transition flex items-center justify-center text-sm font-bold shadow-md"
         >
           ✕
         </button>
 
-        <div className="bg-[#0a1628] border border-white/15 rounded-2xl overflow-hidden shadow-2xl">
+        <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-2xl">
           {/* Header */}
-          <div className="px-6 py-5 border-b border-white/10">
-            <h2 className="text-white font-bold text-lg">Select Food</h2>
-            <p className="text-white/40 text-sm mt-0.5">
+          <div className="px-6 py-5 border-b border-gray-100">
+            <h2 className="text-gray-900 font-bold text-lg">Select Food</h2>
+            <p className="text-gray-700 text-sm mt-0.5">
               {flightNumber} · {from} → {to}
             </p>
-            <p className="text-white/30 text-xs mt-1">
+            <p className="text-gray-600 text-xs mt-1">
               Food is shared across all passengers on this flight
             </p>
           </div>
@@ -169,7 +169,7 @@ const FoodSelectionModal: React.FC<FoodSelectionModalProps> = ({
             {/* Loading */}
             {isLoadingFoods && (
               <div className="flex items-center justify-center py-12">
-                <div className="w-8 h-8 border-4 border-white/20 border-t-white rounded-full animate-spin" />
+                <div className="w-8 h-8 border-4 border-gray-200 border-t-[#0a3a8a] rounded-full animate-spin" />
               </div>
             )}
 
@@ -177,7 +177,7 @@ const FoodSelectionModal: React.FC<FoodSelectionModalProps> = ({
             {!isLoadingFoods && foods.length === 0 && (
               <div className="text-center py-12">
                 <p className="text-4xl mb-3">🍽️</p>
-                <p className="text-white/50 text-sm">
+                <p className="text-gray-700 text-sm">
                   No food available for this flight
                 </p>
               </div>
@@ -190,7 +190,7 @@ const FoodSelectionModal: React.FC<FoodSelectionModalProps> = ({
                   <div className="w-3 h-3 rounded-sm border-2 border-emerald-500 flex items-center justify-center">
                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                   </div>
-                  <p className="text-emerald-400 text-xs font-bold uppercase tracking-widest">
+                  <p className="text-emerald-600 text-xs font-bold uppercase tracking-widest">
                     Vegetarian
                   </p>
                 </div>
@@ -207,7 +207,7 @@ const FoodSelectionModal: React.FC<FoodSelectionModalProps> = ({
                   <div className="w-3 h-3 rounded-sm border-2 border-red-500 flex items-center justify-center">
                     <div className="w-1.5 h-1.5 rounded-full bg-red-500" />
                   </div>
-                  <p className="text-red-400 text-xs font-bold uppercase tracking-widest">
+                  <p className="text-red-600 text-xs font-bold uppercase tracking-widest">
                     Non-Vegetarian
                   </p>
                 </div>
@@ -219,21 +219,21 @@ const FoodSelectionModal: React.FC<FoodSelectionModalProps> = ({
           </div>
 
           {/* Footer */}
-          <div className="px-6 py-4 border-t border-white/10">
+          <div className="px-6 py-4 border-t border-gray-100">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <p className="text-white/40 text-xs">
+                <p className="text-gray-600 text-xs">
                   {totalItems} item{totalItems !== 1 ? "s" : ""} selected
                 </p>
                 {flightTotal > 0 && (
-                  <p className="text-white font-bold text-lg">
+                  <p className="text-gray-900 font-bold text-lg">
                     ₹{flightTotal.toLocaleString("en-IN")}
                   </p>
                 )}
               </div>
               <button
                 onClick={onClose}
-                className="px-6 py-2.5 rounded-full bg-white text-[#001233] text-sm font-bold hover:bg-gray-100 transition"
+                className="px-6 py-2.5 rounded-full bg-[#0a3a8a] text-white text-sm font-bold hover:bg-[#082c6b] transition"
               >
                 {totalItems > 0 ? "Done" : "Skip Food"}
               </button>

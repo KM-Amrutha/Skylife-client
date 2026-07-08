@@ -23,216 +23,103 @@ const OfferList: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white" />
+        <div className="animate-spin rounded-full h-10 w-10 border-4 border-gray-200 border-t-blue-600" />
       </div>
     );
   }
 
   const formatDate = (iso: string) =>
-    new Date(iso).toLocaleDateString("en-IN", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
+    new Date(iso).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
 
   const isExpired = (validTo: string) => new Date(validTo) < new Date();
 
   return (
     <>
-      {/* Delete confirm modal */}
+      {/* Delete Confirm Modal */}
       {deletingOfferId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
-          <div className="bg-[#0a1628] border border-white/20 rounded-2xl w-full max-w-md shadow-2xl p-8 text-center">
-            <div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mx-auto mb-4">
-              <Trash2 className="w-8 h-8 text-red-400" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 backdrop-blur-sm px-4">
+          <div className="bg-white border border-gray-200 rounded-2xl w-full max-w-sm shadow-2xl p-8 text-center">
+            <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-4">
+              <Trash2 className="w-8 h-8 text-red-500" />
             </div>
-            <h2 className="text-white text-xl font-bold mb-2">Delete Offer</h2>
-            <p className="text-slate-400 text-sm mb-8">
-              Are you sure you want to delete this offer? This action cannot be
-              undone.
-            </p>
+            <h2 className="text-gray-900 text-xl font-bold mb-2">Delete Offer</h2>
+            <p className="text-gray-500 text-sm mb-8">Are you sure you want to delete this offer? This action cannot be undone.</p>
             <div className="flex gap-3">
-              <button
-                onClick={handleDeleteCancel}
-                className="flex-1 py-3 rounded-full border border-white/20 text-white text-sm font-semibold hover:bg-white/10 transition"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDeleteConfirm}
-                disabled={isSubmitting}
-                className="flex-1 py-3 rounded-full bg-red-500 hover:bg-red-600 text-white text-sm font-semibold transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                {isSubmitting ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Deleting...
-                  </>
-                ) : (
-                  "Delete"
-                )}
+              <button onClick={handleDeleteCancel} className="flex-1 py-3 rounded-xl border border-gray-200 text-gray-700 text-sm font-semibold hover:bg-gray-50 transition">Cancel</button>
+              <button onClick={handleDeleteConfirm} disabled={isSubmitting} className="flex-1 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-semibold transition disabled:opacity-60">
+                {isSubmitting ? "Deleting..." : "Delete"}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      <div className="space-y-4">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-slate-300">
-            Total offers:{" "}
-            <span className="font-semibold text-white">
-              {pagination?.totalCount ?? offers.length}
-            </span>
-          </p>
-          <button
-            onClick={() => navigate("/provider/add-offer")}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-500/20 border border-blue-400/30 text-blue-300 hover:bg-blue-500/30 transition text-sm font-semibold"
+      {/* Main Container */}
+      <div className="max-w-5xl mx-auto px-4 py-8 space-y-6">
+        
+        {/* Header Banner */}
+        <div className="bg-[#0a3a8a] text-white px-8 py-8 rounded-2xl shadow-lg flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold">Manage Offers</h1>
+            <p className="text-blue-200 text-sm mt-1">Configure discount codes for your fleet</p>
+          </div>
+          <Tag className="w-10 h-10 text-blue-400/50" />
+        </div>
+
+        {/* Action Bar */}
+        <div className="flex justify-between items-center">
+          <p className="text-sm text-gray-500 font-medium">Total: {pagination?.totalCount ?? offers.length} offers</p>
+          <button 
+            onClick={() => navigate("/provider/add-offer")} 
+            className="flex items-center gap-2 px-5 py-2 rounded-xl bg-[#0a3a8a] text-white text-sm font-semibold hover:bg-[#082a66] transition"
           >
-            <Plus className="w-4 h-4" />
-            Add Offer
+            <Plus className="w-4 h-4" /> Add Offer
           </button>
         </div>
 
-        {/* Empty */}
-        {offers.length === 0 && (
-          <div className="bg-white/5 border border-dashed border-slate-500/40 rounded-2xl p-10 text-center">
-            <Tag className="w-16 h-16 text-slate-500 mx-auto mb-4" />
-            <p className="text-slate-100 text-base mb-2">No offers yet</p>
-            <p className="text-slate-400 text-sm">
-              Create discount offers for your flights
-            </p>
+        {/* Grid Area */}
+        {offers.length === 0 ? (
+          <div className="bg-white border border-dashed border-gray-300 rounded-2xl p-10 text-center">
+            <Tag className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+            <p className="text-gray-800 font-semibold">No offers found</p>
           </div>
-        )}
-
-        {/* Grid */}
-        {offers.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {offers.map((offer) => {
               const expired = isExpired(offer.validTo);
               return (
-                <div
-                  key={offer.id}
-                  className={`bg-white/5 border rounded-2xl p-5 shadow-lg shadow-black/30 transition duration-150 flex flex-col justify-between ${
-                    expired
-                      ? "border-red-400/20 hover:border-red-400/40"
-                      : "border-white/10 hover:border-blue-400/40"
-                  }`}
-                >
-                  {/* Top */}
-                  <div className="mb-4">
-                    <div className="flex items-center justify-between gap-2 mb-2">
+                <div key={offer.id} className="bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition flex flex-col overflow-hidden">
+                  <div className="p-5 flex-1">
+                    <div className="flex justify-between items-start mb-4">
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-blue-500/20 border border-blue-400/30 flex items-center justify-center">
-                          <Tag className="w-4 h-4 text-blue-300" />
+                        <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center">
+                          <Tag className="w-4 h-4 text-blue-600" />
                         </div>
-                        <span className="text-white font-bold text-lg tracking-wide">
-                          {offer.offerCode}
-                        </span>
+                        <h3 className="font-bold text-base">{offer.offerCode}</h3>
                       </div>
-                      <span
-                        className={`text-xs px-2 py-0.5 rounded-full font-semibold border ${
-                          expired
-                            ? "bg-red-500/15 text-red-300 border-red-400/40"
-                            : offer.isActive
-                            ? "bg-emerald-500/15 text-emerald-300 border-emerald-400/40"
-                            : "bg-slate-500/15 text-slate-300 border-slate-400/40"
-                        }`}
-                      >
-                        {expired ? "Expired" : offer.isActive ? "Active" : "Inactive"}
+                      <span className={`px-2 py-1 rounded-lg text-[9px] font-bold uppercase ${expired ? 'bg-red-50 text-red-600' : offer.isActive ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-100 text-gray-600'}`}>
+                        {expired ? 'Expired' : offer.isActive ? 'Active' : 'Inactive'}
                       </span>
                     </div>
-                    <p className="text-slate-400 text-xs leading-relaxed">
-                      {offer.description}
-                    </p>
+
+                    <p className="text-gray-500 text-xs mb-5 line-clamp-2">{offer.description}</p>
+
+                   <div className="grid grid-cols-2 gap-2">
+  <div className="bg-gray-50 p-2 rounded-lg"><div className="text-[8px] text-gray-400 font-bold uppercase">Discount</div><div className="text-xs font-semibold">{offer.discountPercentage}% OFF</div></div>
+  <div className="bg-gray-50 p-2 rounded-lg"><div className="text-[8px] text-gray-400 font-bold uppercase">Min Order</div><div className="text-xs font-semibold">₹{offer.minimumAmount.toLocaleString()}</div></div>
+  <div className="bg-gray-50 p-2 rounded-lg"><div className="text-[8px] text-gray-400 font-bold uppercase">Aircraft</div><div className="text-xs font-semibold truncate">{offer.aircraftName}</div></div>
+  <div className="bg-gray-50 p-2 rounded-lg"><div className="text-[8px] text-gray-400 font-bold uppercase">Valid From</div><div className="text-xs font-semibold">{formatDate(offer.validFrom)}</div></div>
+  <div className="bg-gray-50 p-2 rounded-lg col-span-2"><div className="text-[8px] text-gray-400 font-bold uppercase">Valid To</div><div className="text-xs font-semibold">{formatDate(offer.validTo)}</div></div>
+</div>
                   </div>
 
-                  {/* Details */}
-                  <div className="space-y-2 text-xs mb-4">
-                    <div className="flex justify-between">
-                      <span className="text-slate-400">Discount</span>
-                      <span className="text-white font-bold text-sm">
-                        {offer.discountPercentage}% off
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-400">Min. amount</span>
-                      <span className="text-white font-semibold">
-                        ₹{offer.minimumAmount.toLocaleString("en-IN")}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-400">Valid from</span>
-                      <span className="text-white font-semibold">
-                        {formatDate(offer.validFrom)}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-400">Valid to</span>
-                      <span
-                        className={`font-semibold ${
-                          expired ? "text-red-400" : "text-white"
-                        }`}
-                      >
-                        {formatDate(offer.validTo)}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-400">Usage</span>
-                      <span className="text-white font-semibold">
-                        {offer.usageCount}
-                        {offer.usageLimit ? ` / ${offer.usageLimit}` : " / ∞"}
-                      </span>
-                    </div>
-                    {!offer.isEditable && (
-                      <div className="flex items-center gap-1.5 mt-1">
-                        <div className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-                        <span className="text-amber-400 text-[10px]">
-                          Core fields locked — offer has been used
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                      <div className="flex justify-between items-center py-1.5 px-3 rounded-lg bg-white/5 border border-white/10">
-                   <span className="text-slate-400 text-xs flex items-center gap-1.5">
-                     <span className="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block" />
-                    Aircraft
-                  </span>
-                    <span className="text-xs font-semibold text-blue-300 tracking-wide">
-                   {offer.aircraftName ?? "Unknown"}
-                    </span>
-                  </div>
-
-                  {/* Footer */}
-                  <div className="flex items-center justify-between pt-3 border-t border-white/10">
-                    <button
-                      onClick={() => handleToggleStatus(offer.id)}
-                      disabled={isSubmitting || expired}
-                      className="text-xs px-3 py-1.5 rounded-lg bg-slate-500/20 text-slate-300 border border-slate-400/30 hover:bg-slate-500/30 transition font-medium disabled:opacity-40 disabled:cursor-not-allowed"
-                      title={offer.isActive ? "Deactivate" : "Activate"}
-                    >
-                      {offer.isActive ? (
-                        <ToggleRight className="w-4 h-4 text-emerald-400" />
-                      ) : (
-                        <ToggleLeft className="w-4 h-4 text-slate-400" />
-                      )}
+                  <div className="px-5 py-3 bg-gray-50 border-t border-gray-100 flex justify-between items-center">
+                    <button onClick={() => handleToggleStatus(offer.id)} className="p-1.5 rounded-lg bg-white border border-gray-200 hover:text-blue-600 transition">
+                      {offer.isActive ? <ToggleRight className="w-4 h-4 text-emerald-600" /> : <ToggleLeft className="w-4 h-4 text-gray-400" />}
                     </button>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() =>
-                          navigate(`/provider/update-offer/${offer.id}/`)
-                        }
-                        className="text-xs px-3 py-1.5 rounded-lg bg-blue-500/20 text-blue-300 border border-blue-400/30 hover:bg-blue-500/30 transition font-medium"
-                      >
-                        <Pencil className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteClick(offer.id)}
-                        className="text-xs px-3 py-1.5 rounded-lg bg-red-500/20 text-red-300 border border-red-400/30 hover:bg-red-500/30 transition font-medium"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
+                    <div className="flex gap-1.5">
+                      <button onClick={() => navigate(`/provider/update-offer/${offer.id}/`)} className="p-1.5 rounded-lg bg-white border border-gray-200 text-blue-600 hover:bg-blue-50 transition"><Pencil className="w-4 h-4" /></button>
+                      <button onClick={() => handleDeleteClick(offer.id)} className="p-1.5 rounded-lg bg-white border border-gray-200 text-red-600 hover:bg-red-50 transition"><Trash2 className="w-4 h-4" /></button>
                     </div>
                   </div>
                 </div>
@@ -241,13 +128,16 @@ const OfferList: React.FC = () => {
           </div>
         )}
 
+        {/* Pagination */}
         {pagination && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={pagination.totalPages ?? 1}
-            isLoading={isLoading}
-            onPageChange={handlePageChange}
-          />
+          <div className="pt-4">
+            <Pagination 
+              currentPage={currentPage} 
+              totalPages={pagination.totalPages ?? 1} 
+              isLoading={isLoading} 
+              onPageChange={handlePageChange} 
+            />
+          </div>
         )}
       </div>
     </>

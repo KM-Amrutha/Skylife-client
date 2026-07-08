@@ -1,10 +1,11 @@
 import React from "react";
-// import { FormikHelpers } from "formik";
-import { Plane, MapPin, Clock, DollarSign, Luggage,Armchair } from "lucide-react";
+import { Plane, MapPin, Clock, DollarSign, Luggage, Armchair, ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import useEditFlight from "../../hooks/provider/useEditFlight";
 import { Destination } from "../../redux/destination/destinationType";
 
 const EditFlightForm: React.FC = () => {
+  const navigate = useNavigate();
   const {
     flight,
     isLoading,
@@ -22,414 +23,406 @@ const EditFlightForm: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-500" />
+        <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-[#0a3a8a]" />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-red-500/10 border border-red-400/60 text-red-200 px-8 py-6 rounded-2xl text-center">
-        <p className="text-lg font-medium">Error loading flight</p>
-        <p className="text-sm mt-2">{error}</p>
+      <div className="bg-red-50 border border-red-200 text-red-700 px-8 py-6 rounded-2xl text-center mx-4 mt-6">
+        <p className="text-lg font-bold">Error loading flight</p>
+        <p className="text-sm mt-1">{error}</p>
       </div>
     );
   }
 
   if (!flight) {
     return (
-      <div className="bg-yellow-500/10 border border-yellow-400/60 text-yellow-200 px-8 py-6 rounded-2xl text-center">
-        <p className="text-lg font-medium">Flight not found</p>
-        <p className="text-sm mt-2">The flight you're trying to edit doesn't exist or has been removed.</p>
+      <div className="bg-amber-50 border border-amber-200 text-amber-700 px-8 py-6 rounded-2xl text-center mx-4 mt-6">
+        <p className="text-lg font-bold">Flight not found</p>
+        <p className="text-sm mt-1">The flight you're trying to edit doesn't exist or has been removed.</p>
       </div>
     );
   }
 
   const isRejected = flight.adminApproval.status === "rejected";
 
+  const labelClass = "block text-gray-700 text-xs font-bold mb-1.5";
+  const inputBaseClass =
+    "w-full px-3 py-2.5 rounded-xl bg-gray-50 border border-gray-300 placeholder-gray-400 " +
+    "text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0a3a8a]/20 focus:border-[#0a3a8a] " +
+    "transition duration-200 ease-in-out text-sm";
+  const staticBlockClass = "px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 text-sm flex items-center gap-2.5 min-h-[42px]";
+
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="text-center mb-10">
-        <h1 className="text-4xl font-bold text-white mb-4">
-          {isRejected ? "Reschedule Rejected Flight" : "Edit Flight Schedule"}
-        </h1>
-        <p className="text-slate-300 text-lg">
-          {isRejected
-            ? "Update your flight details and resubmit for approval"
-            : "Modify flight details — changes will require admin re-approval"}
-        </p>
+    <div className="min-h-screen w-full max-w-[100vw] overflow-x-hidden bg-slate-100 text-gray-900">
+      
+      {/* Top Header Card */}
+      <div className="bg-[#0a3a8a] text-white px-4 sm:px-8 py-8 rounded-2xl mx-4 sm:mx-8 mt-6 shadow-xs">
+        <div className="max-w-3xl mx-auto flex items-center gap-5">
+          <button
+            type="button"
+            onClick={() => navigate("/provider/flights")}
+            className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center flex-shrink-0 shadow-lg hover:bg-blue-50 transition"
+          >
+            <ArrowLeft className="w-5 h-5 text-[#0a3a8a]" />
+          </button>
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold">
+              {isRejected ? "Reschedule Rejected Flight ✈️" : "Edit Flight Schedule ✈️"}
+            </h1>
+            <p className="text-blue-200 text-sm mt-1">
+              {isRejected
+                ? "Update your flight details and resubmit for approval"
+                : "Modify flight details — changes will require admin re-approval"}
+            </p>
+          </div>
+        </div>
       </div>
 
-      {isRejected && flight.adminApproval.reason && (
-        <div className="bg-red-900/30 border border-red-500/50 p-6 rounded-2xl mb-8">
-          <div className="flex items-center gap-3 mb-3">
-            <Plane className="w-8 h-8 text-red-300" />
-            <h3 className="text-xl font-bold text-red-300">Previous Rejection Reason</h3>
+      <div className="max-w-3xl mx-auto px-4 md:px-8 py-8">
+        
+        {/* Previous Rejection Reason Callout */}
+        {isRejected && flight.adminApproval.reason && (
+          <div className="bg-red-50 border border-red-200 p-5 rounded-2xl mb-6">
+            <div className="flex items-center gap-2 mb-2 text-red-800">
+              <Plane className="w-5 h-5 text-red-600" />
+              <h3 className="font-bold text-sm">Previous Rejection Reason</h3>
+            </div>
+            <p className="text-red-700 italic text-sm leading-relaxed">
+              "{flight.adminApproval.reason}"
+            </p>
           </div>
-          <p className="text-slate-200 italic text-base leading-relaxed">
-            "{flight.adminApproval.reason}"
-          </p>
-        </div>
-      )}
+        )}
 
-      {(flight.flightType === "recurring" || flight.flightType === "return") && (
-  <div className="mb-6 px-4 py-3 rounded-xl bg-purple-500/10 border border-purple-400/30 text-purple-300 text-sm font-medium text-center">
-    {flight.flightType === "recurring" ? "🔁 Recurring Flight — duration and arrival airport are locked" : "↩️ Return Flight — duration and arrival airport are locked"}
-  </div>
-)}
+        {/* Locked Flight Constraints Indicator */}
+        {(flight.flightType === "recurring" || flight.flightType === "return") && (
+          <div className="mb-6 px-4 py-3 rounded-xl bg-purple-50 border border-purple-200 text-purple-700 text-xs font-bold text-center uppercase tracking-wider">
+            {flight.flightType === "recurring" 
+              ? "🔁 Recurring Flight — duration and arrival airport are locked" 
+              : "↩️ Return Flight — duration and arrival airport are locked"}
+          </div>
+        )}
 
-      <form onSubmit={formik.handleSubmit} className="space-y-8">
-        {/* Flight Info Section */}
-        <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-8">
-          <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-            <Plane className="w-7 h-7 text-blue-300" />
-            Flight Information
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-slate-300 text-sm font-medium mb-2">
-                Flight Number
-              </label>
-              <input
-                type="text"
-                name="flightNumber"
-                value={formik.values.flightNumber || ""}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-blue-400 transition"
-                placeholder="e.g., AI101"
-              />
-              {formik.touched.flightNumber && formik.errors.flightNumber && (
-                <p className="text-red-400 text-sm mt-2">{formik.errors.flightNumber}</p>
-              )}
+        <form onSubmit={formik.handleSubmit} className="space-y-6" noValidate>
+          
+          {/* ===== 1. FLIGHT INFORMATION ===== */}
+          <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+            <div className="flex items-center gap-2 px-5 py-4 border-b border-gray-100 bg-gray-50">
+              <Plane className="w-4 h-4 text-[#0a3a8a]" />
+              <h2 className="text-gray-900 font-semibold text-sm">Flight Information</h2>
             </div>
 
-            <div>
-              <label className="block text-slate-300 text-sm font-medium mb-2">
-                Aircraft
-              </label>
-              <div className="px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-slate-300">
-                {flight.aircraftName}
+            <div className="p-5 space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="flightNumber" className={labelClass}>Flight Number *</label>
+                  <input
+                    type="text"
+                    id="flightNumber"
+                    name="flightNumber"
+                    value={formik.values.flightNumber || ""}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    placeholder="e.g., AI101"
+                    className={`${inputBaseClass} ${formik.touched.flightNumber && formik.errors.flightNumber ? "border-red-400 bg-red-50/30" : ""}`}
+                  />
+                  {formik.touched.flightNumber && formik.errors.flightNumber && (
+                    <p className="text-red-500 text-xs mt-1">⚠ {formik.errors.flightNumber}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className={labelClass}>Aircraft</label>
+                  <div className={staticBlockClass}>
+                    {flight.aircraftName}
+                  </div>
+                </div>
+
+                <div>
+                  <label className={labelClass}>Departure Airport</label>
+                  <div className={staticBlockClass}>
+                    <MapPin className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                    <span className="truncate">{flight.departureDestination?.name || flight.departureDestinationId}</span>
+                  </div>
+                  <p className="text-gray-400 text-[11px] font-medium mt-1">Departure airport cannot be changed</p>
+                </div>
+
+                {!isRecurringOrReturn ? (
+                  <div>
+                    <label className={labelClass}>Arrival Airport *</label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={arrivalDisplayName}
+                        onChange={(e) => handleArrivalSearch(e.target.value)}
+                        className={inputBaseClass}
+                        placeholder="Search arrival airport..."
+                      />
+                      {arrivalSearchResults.length > 0 && (
+                        <ul className="absolute z-50 w-full bg-white border border-gray-200 rounded-xl max-h-60 overflow-auto shadow-xl mt-1.5 divide-y divide-gray-100">
+                          {arrivalSearchResults.map((dest: Destination) => (
+                            <li
+                              key={dest.id}
+                              onMouseDown={() => { selectArrival(dest); clearArrivalResults(); }}
+                              className="p-3 cursor-pointer hover:bg-slate-50 transition text-sm font-semibold text-gray-900"
+                            >
+                              {dest.name} ({dest.iataCode || dest.ident})
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <label className={labelClass}>Arrival Airport</label>
+                    <div className={staticBlockClass}>
+                      <MapPin className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                      <span className="truncate">{flight.arrivalDestination?.name || flight.arrivalDestinationId}</span>
+                    </div>
+                    <p className="text-gray-400 text-[11px] font-medium mt-1">Cannot be changed for recurring/return routes</p>
+                  </div>
+                )}
+
+                {!isReturn ? (
+                  <div>
+                    <label className={labelClass}>Departure Time *</label>
+                    <input
+                      type="datetime-local"
+                      name="departureTime"
+                      value={formik.values.departureTime || ""}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      min={new Date().toISOString().slice(0, 16)}
+                      className={`${inputBaseClass} ${formik.touched.departureTime && formik.errors.departureTime ? "border-red-400 bg-red-50/30" : ""}`}
+                    />
+                    {formik.touched.departureTime && formik.errors.departureTime && (
+                      <p className="text-red-500 text-xs mt-1">⚠ {formik.errors.departureTime}</p>
+                    )}
+                    <p className="text-gray-400 text-[11px] font-medium mt-1">Changing departure time will auto-update return pair</p>
+                  </div>
+                ) : (
+                  <div>
+                    <label className={labelClass}>Departure Time</label>
+                    <div className={staticBlockClass}>
+                      <Clock className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                      {new Date(flight.departureTime).toLocaleString()}
+                    </div>
+                    <p className="text-gray-400 text-[11px] font-medium mt-1">Return flight departure time is auto-calculated</p>
+                  </div>
+                )}
+
+                {!isRecurringOrReturn && (
+                  <div>
+                    <label className={labelClass}>Duration (minutes) *</label>
+                    <input
+                      type="number"
+                      name="durationMinutes"
+                      value={formik.values.durationMinutes || ""}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className={`${inputBaseClass} ${formik.touched.durationMinutes && formik.errors.durationMinutes ? "border-red-400 bg-red-50/30" : ""}`}
+                    />
+                    {formik.touched.durationMinutes && formik.errors.durationMinutes && (
+                      <p className="text-red-500 text-xs mt-1">⚠ {formik.errors.durationMinutes}</p>
+                    )}
+                  </div>
+                )}
+
+                {!isReturn ? (
+                  <div>
+                    <label className={labelClass}>Buffer Time (minutes) *</label>
+                    <input
+                      type="number"
+                      name="bufferMinutes"
+                      value={formik.values.bufferMinutes || ""}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className={`${inputBaseClass} ${formik.touched.bufferMinutes && formik.errors.bufferMinutes ? "border-red-400 bg-red-50/30" : ""}`}
+                    />
+                    <p className="text-gray-400 text-[11px] font-medium mt-1">Changing buffer updates the paired return flight</p>
+                    {formik.touched.bufferMinutes && formik.errors.bufferMinutes && (
+                      <p className="text-red-500 text-xs mt-1">⚠ {formik.errors.bufferMinutes as string}</p>
+                    )}
+                  </div>
+                ) : (
+                  <div>
+                    <label className={labelClass}>Buffer Time (minutes)</label>
+                    <div className={staticBlockClass}>
+                      {flight.bufferMinutes ?? "—"}
+                    </div>
+                    <p className="text-gray-400 text-[11px] font-medium mt-1">Buffer time is auto-calculated for return legs</p>
+                  </div>
+                )}
+
+                <div>
+                  <label className={labelClass}>Gate (optional)</label>
+                  <input
+                    type="text"
+                    name="gate"
+                    value={formik.values.gate || ""}
+                    onChange={formik.handleChange}
+                    placeholder="e.g., A12"
+                    className={inputBaseClass}
+                  />
+                </div>
               </div>
             </div>
+          </div>
 
-            <div>
-              <label className="block text-slate-300 text-sm font-medium mb-2">
-                Departure Airport
-              </label>
-              <div className="px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-slate-300 flex items-center gap-3">
-                <MapPin className="w-5 h-5" />
-                {/* {flight.departureDestinationId} */}
-                 {flight.departureDestination?.name || flight.departureDestinationId} 
-              </div>
-              <p className="text-slate-400 text-xs mt-2">Departure airport cannot be changed</p>
+          {/* ===== 2. PRICING & SURCHARGES ===== */}
+          <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+            <div className="flex items-center gap-2 px-5 py-4 border-b border-gray-100 bg-gray-50">
+              <DollarSign className="w-4 h-4 text-[#0a3a8a]" />
+              <h2 className="text-gray-900 font-semibold text-sm">Pricing & Surcharges</h2>
             </div>
 
-           {!isRecurringOrReturn ? (
-  <div>
-    <label className="block text-slate-300 text-sm font-medium mb-2">Arrival Airport</label>
-    <div className="relative">
-      <input
-        type="text"
-        value={arrivalDisplayName}
-        onChange={(e) => handleArrivalSearch(e.target.value)}
-        className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-blue-400"
-        placeholder="Search arrival airport..."
-      />
-      {arrivalSearchResults.length > 0 && (
-        <div className="absolute z-20 w-full mt-2 bg-slate-800/90 backdrop-blur border border-white/20 rounded-xl shadow-2xl max-h-60 overflow-y-auto">
-          {arrivalSearchResults.map((dest: Destination) => (
+            <div className="p-5 space-y-5">
+              <div>
+                <h4 className="text-gray-900 font-bold text-sm mb-3">Base Fare (INR)</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                  <div>
+                    <label className={labelClass}>Economy *</label>
+                    <input
+                      type="number"
+                      name="baseFare.economy"
+                      value={formik.values.baseFare?.economy || ""}
+                      onChange={formik.handleChange}
+                      className={inputBaseClass}
+                    />
+                  </div>
+                  <div>
+                    <label className={labelClass}>Premium Economy</label>
+                    <input
+                      type="number"
+                      name="baseFare.premium_economy"
+                      value={formik.values.baseFare?.premium_economy || ""}
+                      onChange={formik.handleChange}
+                      className={inputBaseClass}
+                    />
+                  </div>
+                  <div>
+                    <label className={labelClass}>Business</label>
+                    <input
+                      type="number"
+                      name="baseFare.business"
+                      value={formik.values.baseFare?.business || ""}
+                      onChange={formik.handleChange}
+                      className={inputBaseClass}
+                    />
+                  </div>
+                  <div>
+                    <label className={labelClass}>First Class</label>
+                    <input
+                      type="number"
+                      name="baseFare.first"
+                      value={formik.values.baseFare?.first || ""}
+                      onChange={formik.handleChange}
+                      className={inputBaseClass}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <h4 className="text-gray-900 font-bold text-sm mb-3 flex items-center gap-1.5">
+                  <Armchair className="w-4 h-4 text-[#0a3a8a]" />
+                  Seat Surcharges (INR, optional)
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div>
+                    <label className={labelClass}>Window Seat</label>
+                    <input
+                      type="number"
+                      name="seatSurcharge.window"
+                      value={formik.values.seatSurcharge?.window || ""}
+                      onChange={formik.handleChange}
+                      className={inputBaseClass}
+                    />
+                  </div>
+                  <div>
+                    <label className={labelClass}>Aisle Seat</label>
+                    <input
+                      type="number"
+                      name="seatSurcharge.aisle"
+                      value={formik.values.seatSurcharge?.aisle || ""}
+                      onChange={formik.handleChange}
+                      className={inputBaseClass}
+                    />
+                  </div>
+                  <div>
+                    <label className={labelClass}>Extra Legroom</label>
+                    <input
+                      type="number"
+                      name="seatSurcharge.extraLegroom"
+                      value={formik.values.seatSurcharge?.extraLegroom || ""}
+                      onChange={formik.handleChange}
+                      className={inputBaseClass}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ===== 3. BAGGAGE RULES ===== */}
+          <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+            <div className="flex items-center gap-2 px-5 py-4 border-b border-gray-100 bg-gray-50">
+              <Luggage className="w-4 h-4 text-[#0a3a8a]" />
+              <h2 className="text-gray-900 font-semibold text-sm">Baggage Rules</h2>
+            </div>
+
+            <div className="p-5">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className={labelClass}>Free Cabin Bag (kg)</label>
+                  <input
+                    type="number"
+                    name="baggageRules.freeCabinKg"
+                    value={formik.values.baggageRules?.freeCabinKg || ""}
+                    onChange={formik.handleChange}
+                    className={inputBaseClass}
+                  />
+                </div>
+                <div>
+                  <label className={labelClass}>Extra Charge per Kg (INR)</label>
+                  <input
+                    type="number"
+                    name="baggageRules.extraChargePerKg"
+                    value={formik.values.baggageRules?.extraChargePerKg || ""}
+                    onChange={formik.handleChange}
+                    className={inputBaseClass}
+                  />
+                </div>
+                <div>
+                  <label className={labelClass}>Max Extra Kg Allowed</label>
+                  <input
+                    type="number"
+                    name="baggageRules.maxExtraKg"
+                    value={formik.values.baggageRules?.maxExtraKg || ""}
+                    onChange={formik.handleChange}
+                    className={inputBaseClass}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ===== ACTION SUBMIT BUTTON ===== */}
+          <div className="flex justify-center mt-4">
             <button
-              key={dest.id}
-              type="button"
-              onClick={() => { selectArrival(dest); clearArrivalResults(); }}
-              className="w-full px-5 py-3 text-left text-slate-200 hover:bg-white/10 transition"
+              type="submit"
+              disabled={formik.isSubmitting}
+              className="w-full sm:w-auto px-12 py-3.5 bg-[#0a3a8a] text-white rounded-2xl font-semibold text-sm hover:bg-[#082e6f] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md"
             >
-              {dest.name} ({dest.iataCode || dest.ident})
+              {formik.isSubmitting ? "Submitting..." : "Submit for Approval"}
             </button>
-          ))}
-        </div>
-      )}
-    </div>
-  </div>
-) : (
-  <div>
-    <label className="block text-slate-300 text-sm font-medium mb-2">Arrival Airport</label>
-    <div className="px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-slate-300 flex items-center gap-3">
-      <MapPin className="w-5 h-5" />
-      {flight.arrivalDestination?.name || flight.arrivalDestinationId}
-    </div>
-    <p className="text-slate-400 text-xs mt-2">Cannot be changed for recurring or return flights</p>
-  </div>
-)}
-
-
-{!isReturn ? (
-  <div>
-    <label className="block text-slate-300 text-sm font-medium mb-2">
-      Departure Time
-    </label>
-    <input
-      type="datetime-local"
-      name="departureTime"
-      value={formik.values.departureTime || ""}
-      onChange={formik.handleChange}
-      onBlur={formik.handleBlur}
-      min={new Date().toISOString().slice(0, 16)}
-      className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-400 transition"
-    />
-    {formik.touched.departureTime && formik.errors.departureTime && (
-      <p className="text-red-400 text-sm mt-2">
-        {formik.errors.departureTime}
-      </p>
-    )}
-    <p className="text-slate-400 text-xs mt-2">
-      Changing departure time will auto-update the paired return flight
-    </p>
-  </div>
-) : (
-  <div>
-    <label className="block text-slate-300 text-sm font-medium mb-2">
-      Departure Time
-    </label>
-    <div className="px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-slate-300 flex items-center gap-3">
-      <Clock className="w-5 h-5" />
-      {new Date(flight.departureTime).toLocaleString()}
-    </div>
-    <p className="text-slate-400 text-xs mt-2">
-      Return flight departure time is auto-calculated
-    </p>
-  </div>
-)}
-
-          {!isRecurringOrReturn && (
-  <div>
-    <label className="block text-slate-300 text-sm font-medium mb-2">Duration (minutes)</label>
-    <input
-      type="number"
-      name="durationMinutes"
-      value={formik.values.durationMinutes || ""}
-      onChange={formik.handleChange}
-      onBlur={formik.handleBlur}
-      className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-400"
-    />
-    {formik.touched.durationMinutes && formik.errors.durationMinutes && (
-      <p className="text-red-400 text-sm mt-2">{formik.errors.durationMinutes}</p>
-    )}
-  </div>
-)}
-{!isReturn ? (
-  <div>
-    <label className="block text-slate-300 text-sm font-medium mb-2">
-      Buffer Time (minutes)
-    </label>
-    <input
-      type="number"
-      name="bufferMinutes"
-      value={formik.values.bufferMinutes || ""}
-      onChange={formik.handleChange}
-      onBlur={formik.handleBlur}
-      className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-400"
-    />
-    <p className="text-slate-400 text-xs mt-2">
-      Changing buffer time will auto-update the paired return flight
-    </p>
-    {formik.touched.bufferMinutes && formik.errors.bufferMinutes && (
-      <p className="text-red-400 text-sm mt-2">{formik.errors.bufferMinutes as string}</p>
-    )}
-  </div>
-) : (
-  <div>
-    <label className="block text-slate-300 text-sm font-medium mb-2">
-      Buffer Time (minutes)
-    </label>
-    <div className="px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-slate-300">
-      {flight.bufferMinutes ?? "—"}
-    </div>
-    <p className="text-slate-400 text-xs mt-2">
-      Buffer time is auto-calculated for return flights
-    </p>
-  </div>
-)}
-
-            <div>
-              <label className="block text-slate-300 text-sm font-medium mb-2">
-                Gate (optional)
-              </label>
-              <input
-                type="text"
-                name="gate"
-                value={formik.values.gate || ""}
-                onChange={formik.handleChange}
-                className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-blue-400"
-                placeholder="e.g., A12"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Pricing Section */}
-        <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-8">
-          <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-            <DollarSign className="w-7 h-7 text-green-300" />
-            Pricing & Surcharges
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-slate-300 text-sm font-medium mb-2">
-                Economy Base Fare
-              </label>
-              <input
-                type="number"
-                name="baseFare.economy"
-                value={formik.values.baseFare?.economy || ""}
-                onChange={formik.handleChange}
-                className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-400"
-              />
-            </div>
-
-            <div>
-              <label className="block text-slate-300 text-sm font-medium mb-2">
-                Premium Economy (optional)
-              </label>
-              <input
-                type="number"
-                name="baseFare.premium_economy"
-                value={formik.values.baseFare?.premium_economy || ""}
-                onChange={formik.handleChange}
-                className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-400"
-              />
-            </div>
-
-            <div>
-              <label className="block text-slate-300 text-sm font-medium mb-2">
-                Business Class (optional)
-              </label>
-              <input
-                type="number"
-                name="baseFare.business"
-                value={formik.values.baseFare?.business || ""}
-                onChange={formik.handleChange}
-                className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-400"
-              />
-            </div>
-
-            <div>
-              <label className="block text-slate-300 text-sm font-medium mb-2">
-                First Class (optional)
-              </label>
-              <input
-                type="number"
-                name="baseFare.first"
-                value={formik.values.baseFare?.first || ""}
-                onChange={formik.handleChange}
-                className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-400"
-              />
-            </div>
           </div>
 
-          <div className="mt-8">
-            <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-3">
-              <Armchair className="w-6 h-6 text-cyan-300" />
-              Seat Surcharges (optional)
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div>
-                <label className="block text-slate-300 text-sm mb-2">Window Seat</label>
-                <input
-                  type="number"
-                  name="seatSurcharge.window"
-                  value={formik.values.seatSurcharge?.window || ""}
-                  onChange={formik.handleChange}
-                  className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-400"
-                />
-              </div>
-              <div>
-                <label className="block text-slate-300 text-sm mb-2">Aisle Seat</label>
-                <input
-                  type="number"
-                  name="seatSurcharge.aisle"
-                  value={formik.values.seatSurcharge?.aisle || ""}
-                  onChange={formik.handleChange}
-                  className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-400"
-                />
-              </div>
-              <div>
-                <label className="block text-slate-300 text-sm mb-2">Extra Legroom</label>
-                <input
-                  type="number"
-                  name="seatSurcharge.extraLegroom"
-                  value={formik.values.seatSurcharge?.extraLegroom || ""}
-                  onChange={formik.handleChange}
-                  className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-400"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Baggage Rules */}
-        <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-8">
-          <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-            <Luggage className="w-7 h-7 text-purple-300" />
-            Baggage Rules
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-              <label className="block text-slate-300 text-sm font-medium mb-2">
-                Free Cabin Bag (kg)
-              </label>
-              <input
-                type="number"
-                name="baggageRules.freeCabinKg"
-                value={formik.values.baggageRules?.freeCabinKg || ""}
-                onChange={formik.handleChange}
-                className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-400"
-              />
-            </div>
-
-            <div>
-              <label className="block text-slate-300 text-sm font-medium mb-2">
-                Extra Charge per Kg
-              </label>
-              <input
-                type="number"
-                name="baggageRules.extraChargePerKg"
-                value={formik.values.baggageRules?.extraChargePerKg || ""}
-                onChange={formik.handleChange}
-                className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-400"
-              />
-            </div>
-
-            <div>
-              <label className="block text-slate-300 text-sm font-medium mb-2">
-                Max Extra Kg (optional)
-              </label>
-              <input
-                type="number"
-                name="baggageRules.maxExtraKg"
-                value={formik.values.baggageRules?.maxExtraKg || ""}
-                onChange={formik.handleChange}
-                className="w-full px-5 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-400"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Submit Button */}
-        <div className="flex justify-center">
-          <button
-            type="submit"
-            disabled={formik.isSubmitting}
-            className="px-12 py-4 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-bold text-xl rounded-2xl transition-all shadow-lg hover:shadow-purple-500/50 hover:scale-105 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
-          >
-            {formik.isSubmitting ? "Submitting..." : "Submit for Approval"}
-          </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };

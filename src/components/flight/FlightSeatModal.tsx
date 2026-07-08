@@ -59,11 +59,9 @@ const FlightSeatModal: React.FC<FlightSeatModalProps> = ({ flightSeats, isLoadin
     (a, b) => CABIN_ORDER.indexOf(a.cabinClass) - CABIN_ORDER.indexOf(b.cabinClass)
   );
 
-  // Collect all surcharges from first cabin (same for all)
   const surcharge = flightSeats[0]?.seatSurcharge;
 
   const renderCabinGrid = (cabinData: FlightSeatMapDTO) => {
-    
     const { seats, cabinClass } = cabinData;
 
     const rowMap: Record<number, FlightSeatDTO[]> = {};
@@ -75,21 +73,20 @@ const FlightSeatModal: React.FC<FlightSeatModalProps> = ({ flightSeats, isLoadin
     const sortedRows = Object.keys(rowMap).map(Number).sort((a, b) => a - b);
     const allColumns = Array.from(new Set(seats.map((s) => s.columnPosition))).sort();
 
-
     const colPositionMap: Record<string, string> = {};
-seats.forEach((s) => { colPositionMap[s.columnPosition] = s.position; });
+    seats.forEach((s) => { colPositionMap[s.columnPosition] = s.position; });
 
     const aisleAfter = new Set<string>();
-for (let i = 0; i < allColumns.length - 1; i++) {
-  const currCol = allColumns[i]!;
-  const nextCol = allColumns[i + 1]!;
-  if (
-    colPositionMap[currCol] === 'aisle' &&
-    colPositionMap[nextCol] === 'aisle'
-  ) {
-    aisleAfter.add(currCol);
-  }
-}
+    for (let i = 0; i < allColumns.length - 1; i++) {
+      const currCol = allColumns[i]!;
+      const nextCol = allColumns[i + 1]!;
+      if (
+        colPositionMap[currCol] === 'aisle' &&
+        colPositionMap[nextCol] === 'aisle'
+      ) {
+        aisleAfter.add(currCol);
+      }
+    }
     const overwingRows = new Set(
       seats.filter((s) => s.section === 'overwing').map((s) => s.rowNumber)
     );
@@ -140,11 +137,11 @@ for (let i = 0; i < allColumns.length - 1; i++) {
                     ) : (
                       <div className="w-7 h-7" />
                     )}
-                   {aisleAfter.has(col) && (
-  <div className="w-8 flex-shrink-0 flex items-center justify-center">
-    <div className="w-px h-6 bg-slate-500/60" />
-  </div>
-)}
+                    {aisleAfter.has(col) && (
+                      <div className="w-8 flex-shrink-0 flex items-center justify-center">
+                        <div className="w-px h-6 bg-slate-500/60" />
+                      </div>
+                    )}
                   </React.Fragment>
                 );
               })}
@@ -155,151 +152,149 @@ for (let i = 0; i < allColumns.length - 1; i++) {
     );
   };
 
-  
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-start justify-center px-4 py-6 overflow-y-auto">
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
 
       {/* Outer wrapper */}
-      <div className="relative z-10 flex flex-col items-center my-auto">
+      <div className="relative z-10 flex flex-col items-center my-auto drop-shadow-xl">
 
-  {/* Close button */}
-  <button
-    onClick={onClose}
-    className="absolute -top-3 -right-3 z-20 w-8 h-8 rounded-full bg-slate-700 border border-white/20 text-white hover:bg-slate-600 transition flex items-center justify-center text-sm font-bold"
-  >
-    ✕
-  </button>
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute -top-3 -right-3 z-20 w-8 h-8 rounded-full bg-slate-700 border border-white/20 text-white hover:bg-slate-600 transition flex items-center justify-center text-sm font-bold"
+        >
+          ✕
+        </button>
 
-  {/* Cockpit triangle — same as tail */}
-  <div
-    style={{
-      width: '100%',
-      height: '50px',
-      background: '#eef5f6',
-      clipPath: 'polygon(50% 0%, 100% 100%, 0% 100%)',
-    }}
-  />
+        {/* Cockpit triangle */}
+        <div
+          style={{
+            width: '100%',
+            height: '50px',
+            background: '#ffffff',
+            clipPath: 'polygon(50% 0%, 100% 100%, 0% 100%)',
+          }}
+        />
 
-  {/* Main fuselage */}
-  <div
-    style={{ background: '#ecf2fc', borderLeft: '1px solid rgba(255,255,255,0.2)', borderRight: '1px solid rgba(255,255,255,0.2)' }}
-    className="px-6 py-4 flex flex-col items-center gap-1 w-auto"
-  >
-    {/* Modal title + surcharge + legend */}
-    <div className="flex flex-col items-center gap-2 mb-4 w-full">
-      
-      <h2 className="text-[#00001F] text-base font-bold tracking-wide">Seat Map</h2>
+        {/* Main fuselage */}
+        <div
+          style={{ background: '#ffffff', borderLeft: '1px solid rgba(0,0,0,0.08)', borderRight: '1px solid rgba(0,0,0,0.08)' }}
+          className="px-6 py-4 flex flex-col items-center gap-1 w-auto"
+        >
+          {/* Modal title + surcharge + legend */}
+          <div className="flex flex-col items-center gap-2 mb-4 w-full">
+            
+            <h2 className="text-[#00001F] text-base font-bold tracking-wide">Seat Map</h2>
 
-      {surcharge && (
-        <div className="flex gap-3 text-[10px] text-slate-400 flex-wrap justify-center">
-          {surcharge.window      && <span>Window <span className="text-blue font-bold">+₹{surcharge.window}</span></span>}
-          {surcharge.aisle       && <span>Aisle <span className="text-blue font-bold">+₹{surcharge.aisle}</span></span>}
-          {surcharge.extraLegroom && <span>Extra legroom <span className="text-blue font-bold">+₹{surcharge.extraLegroom}</span></span>}
+            {surcharge && (
+              <div className="flex gap-3 text-[10px] text-slate-500 flex-wrap justify-center">
+                {surcharge.window      && <span>Window <span className="text-blue-600 font-bold">+₹{surcharge.window}</span></span>}
+                {surcharge.aisle       && <span>Aisle <span className="text-blue-600 font-bold">+₹{surcharge.aisle}</span></span>}
+                {surcharge.extraLegroom && <span>Extra legroom <span className="text-blue-600 font-bold">+₹{surcharge.extraLegroom}</span></span>}
+              </div>
+            )}
+
+            <div className="flex flex-wrap gap-x-3 gap-y-1 justify-center">
+              {[
+                { label: 'First',         color: 'bg-amber-400' },
+                { label: 'Business',      color: 'bg-purple-500' },
+                { label: 'Prem. Economy', color: 'bg-blue-500' },
+                { label: 'Economy',       color: 'bg-slate-500' },
+                { label: 'Booked',        color: 'bg-red-500' },
+                { label: 'Locked',        color: 'bg-amber-500' },
+                { label: 'Blocked',       color: 'bg-gray-700' },
+              ].map(({ label, color }) => (
+                <div key={label} className="flex items-center gap-1">
+                  <div className={`w-2.5 h-2.5 rounded-sm ${color}`} />
+                  <span className="text-[10px] text-slate-500">{label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Loading */}
+          {isLoading && (
+            <div className="flex items-center justify-center h-32 w-48">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-800" />
+            </div>
+          )}
+
+          {/* Error */}
+          {error && !isLoading && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-xs">
+              {error}
+            </div>
+          )}
+
+          {/* Empty */}
+          {!isLoading && !error && flightSeats.length === 0 && (
+            <p className="text-slate-400 text-xs text-center py-8">No seats found.</p>
+          )}
+
+          {/* Cabin sections */}
+          {!isLoading && !error && sortedCabins.map((cabin, index) => (
+            <div key={cabin.cabinClass} className="flex flex-col items-center w-full">
+              {index > 0 && (
+                <div className="w-full flex items-center gap-2 my-3">
+                  <div className="flex-1 h-px bg-slate-200" />
+                  <div className="flex-1 h-px bg-slate-200" />
+                </div>
+              )}
+              {renderCabinGrid(cabin)}
+            </div>
+          ))}
         </div>
-      )}
 
-      <div className="flex flex-wrap gap-x-3 gap-y-1 justify-center">
-        {[
-          { label: 'First',         color: 'bg-amber-400' },
-          { label: 'Business',      color: 'bg-purple-500' },
-          { label: 'Prem. Economy', color: 'bg-blue-500' },
-          { label: 'Economy',       color: 'bg-slate-500' },
-          { label: 'Booked',        color: 'bg-red-500' },
-          { label: 'Locked',        color: 'bg-amber-500' },
-          { label: 'Blocked',       color: 'bg-gray-700' },
-        ].map(({ label, color }) => (
-          <div key={label} className="flex items-center gap-1">
-            <div className={`w-2.5 h-2.5 rounded-sm ${color}`} />
-            <span className="text-[10px] text-slate-400">{label}</span>
+        {/* Fuels + Amenities */}
+        <div
+          style={{ background: '#ffffff', borderLeft: '1px solid rgba(0,0,0,0.08)', borderRight: '1px solid rgba(0,0,0,0.08)', borderTop: '1px solid rgba(0,0,0,0.05)' }}
+          className="w-full flex border-b border-slate-100"
+        >
+          <div className="flex-1 py-3 flex items-center justify-center" style={{ borderRight: '1px solid rgba(0,0,0,0.05)' }}>
+            <span className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold">Fuels</span>
           </div>
-        ))}
-      </div>
-    </div>
-
-    {/* Loading */}
-    {isLoading && (
-      <div className="flex items-center justify-center h-32 w-48">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white" />
-      </div>
-    )}
-
-    {/* Error */}
-    {error && !isLoading && (
-      <div className="bg-red-500/10 border border-red-400/40 text-red-300 px-4 py-3 rounded-xl text-xs">
-        {error}
-      </div>
-    )}
-
-    {/* Empty */}
-    {!isLoading && !error && flightSeats.length === 0 && (
-      <p className="text-slate-400 text-xs text-center py-8">No seats found.</p>
-    )}
-
-    {/* Cabin sections */}
-    {!isLoading && !error && sortedCabins.map((cabin, index) => (
-      <div key={cabin.cabinClass} className="flex flex-col items-center w-full">
-        {index > 0 && (
-          <div className="w-full flex items-center gap-2 my-3">
-            <div className="flex-1 h-px bg-white/10" />
-            <div className="flex-1 h-px bg-white/10" />
+          <div className="flex-1 py-3 flex items-center justify-center">
+            <span className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold">Amenities</span>
           </div>
-        )}
-        {renderCabinGrid(cabin)}
+        </div>
+
+        {/* Tail */}
+        <div
+          style={{
+            width: '100%',
+            height: '50px',
+            background: '#ffffff',
+            clipPath: 'polygon(0% 0%, 100% 0%, 50% 100%)',
+          }}
+        />
+
       </div>
-    ))}
-  </div>
 
-  {/* Fuels + Amenities */}
-  <div
-    style={{ background: '#fbffff', borderLeft: '1px solid rgba(255,255,255,0.2)', borderRight: '1px solid rgba(255,255,255,0.2)', borderTop: '1px solid rgba(255,255,255,0.1)' }}
-    className="w-full flex"
-  >
-    <div className="flex-1 py-3 flex items-center justify-center" style={{ borderRight: '1px solid rgba(241, 248, 249, 0.1)' }}>
-      <span className="text-[10px] text-slate-500 uppercase tracking-widest">Fuels</span>
-    </div>
-    <div className="flex-1 py-3 flex items-center justify-center">
-      <span className="text-[10px] text-slate-500 uppercase tracking-widest">Amenities</span>
-    </div>
-  </div>
-
-  {/* Tail — bottom point */}
-  <div
-    style={{
-      width: '100%',
-      height: '50px',
-      background: '#e6e9ef',
-      clipPath: 'polygon(0% 0%, 100% 0%, 50% 100%)',
-    }}
-  />
-
-</div>
-     
-
-      {/* Tooltip */}
+      {/* Attractive Light-Theme Tooltip */}
       {tooltip && (
         <div
-          className="fixed z-[100] bg-[#0d1f3c] border border-white/20 rounded-xl p-3 shadow-2xl text-xs text-white min-w-[180px] pointer-events-none"
+          className="fixed z-[100] bg-white border border-slate-200 rounded-xl p-3.5 shadow-xl text-xs text-slate-700 min-w-[190px] pointer-events-none animate-in fade-in duration-150"
           style={{ top: tooltip.y - 10, left: tooltip.x + 36 }}
         >
-          <p className="font-bold text-sm mb-2">{tooltip.seat.seatNumber}</p>
-          <div className="space-y-1 text-slate-300">
-            <p>Cabin: <span className="text-white">{CABIN_LABELS[tooltip.seat.cabinClass] ?? tooltip.seat.cabinClass}</span></p>
-            <p>Position: <span className="text-white capitalize">{tooltip.seat.position}</span></p>
-            <p>Section: <span className="text-white capitalize">{tooltip.seat.section}</span></p>
-            <p>Status: <span className={`font-semibold ${
-              tooltip.seat.isBooked  ? 'text-red-400'   :
-              tooltip.seat.isLocked  ? 'text-amber-400' :
-              tooltip.seat.isBlocked ? 'text-gray-400'  : 'text-emerald-400'
+          <p className="font-extrabold text-slate-900 text-sm mb-1.5 border-b border-slate-100 pb-1">{tooltip.seat.seatNumber}</p>
+          <div className="space-y-1 font-medium">
+            <p className="text-slate-400">Cabin: <span className="text-slate-800">{CABIN_LABELS[tooltip.seat.cabinClass] ?? tooltip.seat.cabinClass}</span></p>
+            <p className="text-slate-400">Position: <span className="text-slate-800 capitalize">{tooltip.seat.position}</span></p>
+            <p className="text-slate-400">Section: <span className="text-slate-800 capitalize">{tooltip.seat.section}</span></p>
+            <p className="text-slate-400">Status: <span className={`font-bold ${
+              tooltip.seat.isBooked  ? 'text-red-500'   :
+              tooltip.seat.isLocked  ? 'text-amber-500' :
+              tooltip.seat.isBlocked ? 'text-gray-500'  : 'text-emerald-600'
             }`}>{getSeatStatus(tooltip.seat)}</span></p>
-            {tooltip.seat.isExitRow && <p className="text-yellow-400 font-medium">⚠ Exit Row</p>}
-            <p>Fare: <span className="text-white font-semibold">₹{tooltip.seat.fare.toLocaleString('en-IN')}</span></p>
+            {tooltip.seat.isExitRow && <p className="text-amber-600 font-bold bg-amber-50 px-1.5 py-0.5 rounded-sm inline-block mt-0.5">⚠ Exit Row</p>}
+            <p className="text-slate-400 border-t border-slate-100 pt-1.5 mt-1.5">Fare: <span className="text-slate-900 font-extrabold text-sm">₹{tooltip.seat.fare.toLocaleString('en-IN')}</span></p>
             {tooltip.seat.features.length > 0 && (
-              <p>Features: <span className="text-white">{tooltip.seat.features.join(', ')}</span></p>
+              <p className="text-slate-400">Features: <span className="text-slate-800">{tooltip.seat.features.join(', ')}</span></p>
             )}
             {tooltip.seat.lockedUntil && (
-              <p>Locked until: <span className="text-white">{new Date(tooltip.seat.lockedUntil).toLocaleTimeString()}</span></p>
+              <p className="text-slate-400 text-[10px]">Locked until: <span className="text-amber-600 font-mono">{new Date(tooltip.seat.lockedUntil).toLocaleTimeString()}</span></p>
             )}
           </div>
         </div>

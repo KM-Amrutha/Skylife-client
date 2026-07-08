@@ -49,42 +49,31 @@ export const signinUser = createAsyncThunk(
     }
   }
 );
-export const resendOtp = createAsyncThunk(
-  "auth/resendOtp",
-  async ({ email }: ResendOtpRequest, { rejectWithValue }) => {
+export const verifyOtp = createAsyncThunk(
+  "auth/verifyOtp",
+  async ({ otpSessionId, otp }: verifyOtpRequest, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post("auth/otp/resend", { email });
+      const response = await axiosInstance.post("auth/otp/verify", { otpSessionId, otp });
       return response.data;
     } catch (error: any) {
-      console.log(error);
-      if (error.response && error.response.data.message) {
-        return rejectWithValue(error.response.data.message);
-      } else {
-        return rejectWithValue("Failed to resend otp");
-      }
+      return rejectWithValue(error.response?.data?.message || "Failed to verify OTP");
     }
   }
 );
 
-export const verifyOtp = createAsyncThunk(
-  "auth/verifyOtp",
-  async ({ email, otp }: verifyOtpRequest, { rejectWithValue }) => {
+export const resendOtp = createAsyncThunk(
+  "auth/resendOtp",
+  async ({ otpSessionId }: ResendOtpRequest, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post("auth/otp/verify", {
-        email,
-        otp,
-      });
+      const response = await axiosInstance.post("auth/otp/resend", { otpSessionId });
       return response.data;
     } catch (error: any) {
-      console.log(error);
-      if (error.response && error.response.data.message) {
-        return rejectWithValue(error.response.data.message);
-      } else {
-        return rejectWithValue("Failed to verify otp");
-      }
+      return rejectWithValue(error.response?.data?.message || "Failed to resend OTP");
     }
   }
 );
+
+
 export const forgotPassword = createAsyncThunk(
   "auth/forgotPassword",
   async ({ password, token }: RequestPasswordChange, { rejectWithValue }) => {
@@ -187,22 +176,6 @@ export const getProviderProfile = createAsyncThunk(
   }
 );
 
-
-export const getAdminProfile = createAsyncThunk(
-  "auth/getAdminProfile",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await axiosInstance.get("/admin/providers/pending");
-      return response.data;
-    } catch (error: any) {
-      if (error.response && error.response.data.message) {
-        return rejectWithValue(error.response.data.message);
-      } else {
-        return rejectWithValue("Failed to fetch admin profile");
-      }
-    }
-  }
-);
 
 export const completeProviderProfile = createAsyncThunk(
   "auth/completeProviderProfile",

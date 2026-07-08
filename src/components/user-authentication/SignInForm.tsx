@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import GoogleAuth from "./GoogleAuth";
 import { CredentialResponse } from "@react-oauth/google";
 
-
 interface SignInFormProps {
   showPassword: boolean;
   setShowPassword: (show: boolean) => void;
@@ -23,33 +22,30 @@ const SignInForm: React.FC<SignInFormProps> = ({
 }) => {
   const navigate = useNavigate();
   return (
-      <div className="flex items-center justify-center min-h-screen p-5">
+    <div
+      className="flex items-center justify-center min-h-screen p-5"
+      style={{
+        backgroundImage: `linear-gradient(to bottom right, rgba(10,58,138,0.75), rgba(0,0,0,0.55)), url('/image/image3.jpg')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
       <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md">
-  
+
         {/* Header */}
-<div className="text-center mb-8">
-  <div className="flex items-center justify-center gap-2 mb-3">
-    <img 
-      src="/image/gemlogo.png" 
-      alt="Logo" 
-      className="h-10 w-10"
-    />
-    <h1 className="text-2xl font-bold text-slate-900">
-      Skylife
-    </h1>
-  </div>
-  <h2 className="text-3xl font-bold text-black mb-2">
-    Welcome Back
-  </h2>
-  <p className="text-gray-600 text-base">
-    Sign in to your AirTicket account
-  </p>
-</div>
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <img src="/image/gemlogo.png" alt="Logo" className="h-10 w-10" />
+            <h1 className="text-2xl font-bold text-gray-900">Skylife</h1>
+          </div>
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h2>
+          <p className="text-gray-600 text-base">Sign in to your AirTicket account</p>
+        </div>
 
         <form onSubmit={formik.handleSubmit} className="space-y-5">
           {/* Email */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-black mb-2">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-2">
               Email Address
             </label>
             <input
@@ -59,23 +55,21 @@ const SignInForm: React.FC<SignInFormProps> = ({
               value={formik.values.email}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className={`w-full px-4 py-3 border-2 rounded-lg text-black bg-white placeholder-gray-400 transition-colors focus:outline-none focus:ring-3 focus:ring-slate-900/10 ${
+              className={`w-full px-4 py-3 border-2 rounded-lg text-gray-900 bg-white placeholder-gray-400 transition-colors focus:outline-none focus:ring-3 focus:ring-[#0a3a8a]/10 ${
                 formik.touched.email && formik.errors.email
-                  ? 'border-red-500 focus:border-red-500' 
-                  : 'border-gray-300 focus:border-slate-900'
+                  ? 'border-red-500 focus:border-red-500'
+                  : 'border-gray-300 focus:border-[#0a3a8a]'
               }`}
               placeholder="Enter your email"
             />
             {formik.touched.email && formik.errors.email && (
-              <p className="text-red-500 text-xs mt-1 font-medium">
-                {formik.errors.email}
-              </p>
+              <p className="text-red-500 text-xs mt-1 font-medium">{formik.errors.email}</p>
             )}
           </div>
 
           {/* Password */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-black mb-2">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-900 mb-2">
               Password
             </label>
             <div className="relative">
@@ -86,10 +80,10 @@ const SignInForm: React.FC<SignInFormProps> = ({
                 value={formik.values.password}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className={`w-full px-4 py-3 pr-12 border-2 rounded-lg text-black bg-white placeholder-gray-400 transition-colors focus:outline-none focus:ring-3 focus:ring-slate-900/10 ${
+                className={`w-full px-4 py-3 pr-12 border-2 rounded-lg text-gray-900 bg-white placeholder-gray-400 transition-colors focus:outline-none focus:ring-3 focus:ring-[#0a3a8a]/10 ${
                   formik.touched.password && formik.errors.password
-                    ? 'border-red-500 focus:border-red-500' 
-                    : 'border-gray-300 focus:border-slate-900'
+                    ? 'border-red-500 focus:border-red-500'
+                    : 'border-gray-300 focus:border-[#0a3a8a]'
                 }`}
                 placeholder="Enter your password"
               />
@@ -102,20 +96,15 @@ const SignInForm: React.FC<SignInFormProps> = ({
               </button>
             </div>
             {formik.touched.password && formik.errors.password && (
-              <p className="text-red-500 text-xs mt-1 font-medium">
-                {formik.errors.password}
-              </p>
+              <p className="text-red-500 text-xs mt-1 font-medium">{formik.errors.password}</p>
             )}
           </div>
-
 
           {/* Submit Button */}
           <button
             type="submit"
-          
             disabled={formik.isSubmitting}
-            className="w-full bg-slate-900 text-white py-3 px-4 rounded-lg font-semibold text-base hover:bg-slate-800 focus:outline-none 
-            focus:ring-4 focus:ring-slate-900/50 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 mt-6"
+            className="w-full bg-[#0a3a8a] text-white py-3 px-4 rounded-lg font-semibold text-base hover:bg-[#082c6b] focus:outline-none focus:ring-4 focus:ring-[#0a3a8a]/30 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 mt-6"
           >
             {formik.isSubmitting ? (
               <div className="flex items-center justify-center">
@@ -126,47 +115,45 @@ const SignInForm: React.FC<SignInFormProps> = ({
               'Sign In'
             )}
           </button>
-
         </form>
 
-        {/* ADD FORGOT PASSWORD LINK HERE - AFTER FORM, BEFORE FOOTER */}
+        {/* Forgot Password */}
         <div className="text-center mt-4">
-          <a 
+          <a
             href="/forgot-password"
-            className="text-slate-900 font-semibold hover:underline transition-colors text-sm"
+            className="text-[#0a3a8a] font-semibold hover:underline transition-colors text-sm"
           >
             Forgot Password?
           </a>
         </div>
+
         <GoogleAuth handleGoogleAuthSuccess={handleGoogleAuthSuccess} />
+
         {/* Footer */}
         <div className="text-center mt-6">
           <p className="text-gray-600 text-sm">
             Don't have an account?{' '}
-            <button 
-              onClick={onToggleAuth}
-              className="text-blue-600 font-semibold hover:underline"
-            >
+            <button onClick={onToggleAuth} className="text-[#0a3a8a] font-semibold hover:underline">
               Sign Up
             </button>
           </p>
 
-<div className="flex items-center justify-center">
-        <div className="border-t border-gray-300 flex-grow mr-2"></div>
-        <span className="text-gray-400 text-xs">OR</span>
-        <div className="border-t border-gray-300 flex-grow ml-2"></div>
-      </div>
-       <p className="text-gray-600 text-xs">
-        Are you an airline provider?{' '}
-        <button 
-          type="button"
-          onClick={() => navigate('/provider-sign-up')}
-          className="text-blue-600 font-semibold hover:underline"
-        >
-          Register
-        </button>
-      </p>
+          <div className="flex items-center justify-center mt-3">
+            <div className="border-t border-gray-300 flex-grow mr-2"></div>
+            <span className="text-gray-400 text-xs">OR</span>
+            <div className="border-t border-gray-300 flex-grow ml-2"></div>
+          </div>
 
+          <p className="text-gray-600 text-xs mt-3">
+            Are you an airline provider?{' '}
+            <button
+              type="button"
+              onClick={() => navigate('/provider-sign-up')}
+              className="text-[#0a3a8a] font-semibold hover:underline"
+            >
+              Register
+            </button>
+          </p>
         </div>
       </div>
     </div>

@@ -17,6 +17,7 @@ import {
 const initialState: AdminState = {
   users: [],
   providers: [],
+
   pendingProviders: [],
   isLoading: false,
   error: null,

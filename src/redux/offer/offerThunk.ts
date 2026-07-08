@@ -12,9 +12,15 @@ export const getProviderOffers = createAsyncThunk(
       const res = await axiosInstance.get(
         `/provider/offers?page=${page}&limit=${limit}`
       );
+      console.log('offer details is: ', res.data?.data?.offers)
       return {
         offers: res.data?.data?.offers || [],
-        pagination: res.data?.data?.pagination || null,
+         pagination: {
+    currentPage: res.data?.data?.currentPage || 1,
+    totalPages: res.data?.data?.totalPages || 1,
+    totalCount: res.data?.data?.totalCount || 0,
+  },
+  
       };
     } catch (error: any) {
       if (error.response?.data?.message) {

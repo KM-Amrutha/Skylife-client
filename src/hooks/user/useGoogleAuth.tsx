@@ -27,6 +27,8 @@ const useGoogleAuth = () => {
     showSuccessToast(`Welcome back${response.data.user.firstName ? " " + response.data.user.firstName : ""}!`);
 
     const role = response.data.user.role;
+    console.log("role is: ", role)
+    
     if (role === "user") navigate("/user/userhome");
     else if (role === "provider") navigate("/provider/dashboard");
     else if (role === "admin") navigate("/admin/dashboard");

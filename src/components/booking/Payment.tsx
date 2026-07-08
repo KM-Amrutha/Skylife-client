@@ -45,19 +45,19 @@ const PaymentForm: React.FC<{
       <PaymentElement options={{ layout: "tabs" }} />
 
       {errorMessage && (
-        <div className="bg-red-500/20 border border-red-400/30 rounded-xl p-3">
-          <p className="text-red-300 text-sm">{errorMessage}</p>
+        <div className="bg-red-50 border border-red-200 rounded-xl p-3">
+          <p className="text-red-600 text-sm">{errorMessage}</p>
         </div>
       )}
 
       <button
         type="submit"
         disabled={!stripe || isProcessing}
-        className="w-full py-4 rounded-full bg-white text-[#001233] text-base font-bold hover:bg-gray-100 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-      >
+        className="w-full py-4 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-base font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/10"
+          >
         {isProcessing ? (
           <>
-            <div className="w-5 h-5 border-2 border-[#001233]/30 border-t-[#001233] rounded-full animate-spin" />
+            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
             Processing payment...
           </>
         ) : (
@@ -68,7 +68,7 @@ const PaymentForm: React.FC<{
         )}
       </button>
 
-      <div className="flex items-center justify-center gap-2 text-white/30 text-xs">
+      <div className="flex items-center justify-center gap-2 text-gray-600 text-xs">
         <Lock className="w-3 h-3" />
         <span>Secured by Stripe</span>
       </div>
@@ -89,48 +89,95 @@ const Payment: React.FC = () => {
 
   if (!isReady) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[#001233] to-[#001f4d] flex items-center justify-center">
-        <div className="w-10 h-10 border-4 border-white/20 border-t-white rounded-full animate-spin" />
+      <div className="min-h-screen bg-slate-100 flex items-center justify-center">
+        <div className="w-10 h-10 border-4 border-gray-200 border-t-[#0a3a8a] rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#001233] to-[#001f4d] text-white">
-      <header className="flex items-center justify-between px-6 md:px-8 py-5 border-b border-white/10">
+    <div className="min-h-screen w-full max-w-[100vw] overflow-x-hidden bg-slate-100 text-gray-900">
+      <header className="flex items-center justify-between px-4 md:px-8 py-4 md:py-5 border-b border-gray-200 bg-white shadow-sm">
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-white/60 hover:text-white transition text-sm font-medium"
+          className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition text-sm font-medium"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back
+          <span className="hidden sm:inline">Back</span>
         </button>
-        <span className="text-lg font-semibold tracking-wide">Skylife</span>
-        <div className="flex items-center gap-1 text-white/40 text-xs">
+        <div className="flex items-center">
+          <img src="/image/gemlogo.png" alt="Skylife" className="h-8 md:h-10" />
+          <span className="text-base md:text-lg font-semibold tracking-wide text-gray-900">Skylife</span>
+        </div>
+
+        <div className="flex items-center gap-1 text-gray-600 text-xs">
           <Lock className="w-3 h-3" />
-          <span>Secure Payment</span>
+          <span className="hidden sm:inline">Secure Payment</span>
         </div>
       </header>
 
-      <div className="max-w-md mx-auto px-4 md:px-8 py-10">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white">Complete Payment</h1>
-          <p className="text-white/50 mt-2 text-sm">
-            Booking ID: <span className="text-white/70">{bookingId}</span>
-          </p>
-        </div>
+      <div className="max-w-md mx-auto px-4 md:px-8 pt-2 pb-10">
+        {/* Blue Banner Header */}
+<div className="bg-[#0a3a8a] text-white px-6 py-8 rounded-2xl mt-4 mb-6 shadow-xs max-w-md mx-auto">
+  <div className="flex items-center gap-5">
+    <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center flex-shrink-0 shadow-lg">
+      <Lock className="w-6 h-6 text-[#0a3a8a]" />
+    </div>
+    <div className="flex-1 min-w-0">
+      <h1 className="text-2xl sm:text-3xl font-bold">Complete Payment</h1>
+      <p className="text-blue-200 text-sm mt-1">
+        Booking ID: <span className="text-white font-semibold">{bookingId}</span>
+      </p>
+    </div>
+  </div>
+</div>
 
-        <div className="bg-white/8 border border-white/15 rounded-2xl p-4 mb-6">
+        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-4 mb-6">
           <div className="flex justify-between items-center">
-            <span className="text-white/50 text-sm">Total Amount</span>
-            <span className="text-white font-bold text-xl">
+            <span className="text-gray-700 text-sm">Total Amount</span>
+            <span className="text-gray-900 font-bold text-xl">
               ₹{amount.toLocaleString("en-IN")}
             </span>
           </div>
         </div>
 
-        <div className="bg-white/5 border border-white/10 rounded-2xl p-5">
-          <Elements stripe={stripePromise} options={elementsOptions}>
+        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-5">
+          <Elements
+            stripe={stripePromise}
+            options={{
+              ...elementsOptions,
+              appearance: {
+                theme: "stripe",
+                variables: {
+                  colorPrimary: "#0a3a8a",
+                  colorBackground: "#ffffff",
+                  colorText: "#111827",
+                  colorTextSecondary: "#4b5563",
+                  colorTextPlaceholder: "#9ca3af",
+                  colorDanger: "#dc2626",
+                  borderRadius: "10px",
+                  fontFamily: "system-ui, sans-serif",
+                },
+                rules: {
+                  ".Tab": {
+                    border: "1px solid #e5e7eb",
+                    backgroundColor: "#ffffff",
+                  },
+                  ".Tab--selected": {
+                    border: "1px solid #0a3a8a",
+                    backgroundColor: "#eff6ff",
+                  },
+                  ".Input": {
+                    border: "1px solid #d1d5db",
+                    backgroundColor: "#ffffff",
+                  },
+                  ".Input:focus": {
+                    border: "1px solid #0a3a8a",
+                  },
+                },
+              },
+            }}
+          >
             <PaymentForm
               amount={amount}
               bookingId={bookingId ?? ""}

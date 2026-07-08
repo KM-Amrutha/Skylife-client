@@ -8,145 +8,150 @@ interface AircraftDetailModalProps {
 
 const AircraftDetailModal: React.FC<AircraftDetailModalProps> = ({ aircraft, onClose }) => {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-slate-900/40 backdrop-blur-xs"
         onClick={onClose}
       />
 
-      {/* Modal */}
-      <div className="relative z-10 bg-[#00001F] border border-white/20 rounded-2xl p-8 shadow-2xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+      {/* Modal Container */}
+      <div className="relative z-10 bg-white border border-gray-200 rounded-2xl shadow-xl w-full max-w-xl max-h-[85vh] flex flex-col">
         
-        {/* Header */}
-        <div className="flex items-start justify-between mb-6">
-          <div>
-            <h3 className="text-white text-2xl font-bold">{aircraft.aircraftName}</h3>
-            <p className="text-slate-400 text-sm mt-1">{aircraft.aircraftType} • {aircraft.manufacturer}</p>
+        {/* Header Row */}
+        <div className="p-6 border-b border-gray-100 flex items-start justify-between bg-gray-50/50 rounded-t-2xl">
+          <div className="min-w-0">
+            <h3 className="text-gray-900 text-xl font-bold tracking-tight">{aircraft.aircraftName}</h3>
+            <p className="text-gray-500 text-xs font-medium mt-1">
+              {aircraft.aircraftType} <span className="text-gray-300 mx-1">•</span> {aircraft.manufacturer}
+            </p>
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white transition text-xl font-bold ml-4"
+            className="p-1.5 rounded-xl text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition"
           >
-            ✕
+            <span className="text-sm font-semibold">✕</span>
           </button>
         </div>
 
-        {/* Status Badge */}
-        <div className="mb-6">
-          <span className={
-            'px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wide ' +
-            (aircraft.status === 'active'
-              ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-400/40'
-              : aircraft.status === 'maintenance'
-              ? 'bg-amber-500/15 text-amber-300 border border-amber-400/40'
-              : 'bg-slate-500/20 text-slate-200 border border-slate-400/40')
-          }>
-            {aircraft.status}
-          </span>
-        </div>
-
-        {/* Details Grid */}
-        <div className="grid grid-cols-2 gap-4 text-sm">
+        {/* Workspace Scroll Area */}
+        <div className="p-6 overflow-y-auto space-y-6 flex-1">
           
-          {/* Aircraft Info */}
-          <div className="col-span-2">
-            <p className="text-slate-400 text-xs uppercase tracking-wider mb-3 border-b border-white/10 pb-2">
-              Aircraft Info
-            </p>
+          {/* Status Badge Block */}
+          <div>
+            <span className={
+              'inline-flex px-2.5 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-wider border ' +
+              (aircraft.status === 'active'
+                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                : aircraft.status === 'maintenance'
+                ? 'bg-amber-50 text-amber-700 border-amber-200'
+                : 'bg-gray-100 text-gray-600 border-gray-200')
+            }>
+              {aircraft.status}
+            </span>
           </div>
 
-          <div className="bg-white/5 rounded-xl p-4">
-            <p className="text-slate-400 text-xs mb-1">Build Year</p>
-            <p className="text-white font-medium">{aircraft.buildYear}</p>
-          </div>
+          {/* Grid Layout Container */}
+          <div className="space-y-5">
+            
+            {/* Section: Aircraft Info */}
+            <div>
+              <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-2.5 border-b border-gray-100 pb-1.5">
+                Aircraft Info
+              </p>
+              <div className="grid grid-cols-2 gap-2.5 text-sm">
+                <div className="bg-gray-50/60 border border-gray-100 rounded-xl p-3">
+                  <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Build Year</p>
+                  <p className="text-gray-900 font-bold mt-0.5">{aircraft.buildYear}</p>
+                </div>
+                <div className="bg-gray-50/60 border border-gray-100 rounded-xl p-3">
+                  <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Seat Capacity</p>
+                  <p className="text-gray-900 font-bold mt-0.5">{aircraft.seatCapacity}</p>
+                </div>
+                <div className="bg-gray-50/60 border border-gray-100 rounded-xl p-3">
+                  <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Flying Range</p>
+                  <p className="text-gray-900 font-bold mt-0.5">{aircraft.flyingRangeKm} km</p>
+                </div>
+                <div className="bg-gray-50/60 border border-gray-100 rounded-xl p-3">
+                  <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Engine Count</p>
+                  <p className="text-gray-900 font-bold mt-0.5">{aircraft.engineCount}</p>
+                </div>
+                <div className="bg-gray-50/60 border border-gray-100 rounded-xl p-3">
+                  <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Lavatory Count</p>
+                  <p className="text-gray-900 font-bold mt-0.5">{aircraft.lavatoryCount}</p>
+                </div>
+                <div className="bg-gray-50/60 border border-gray-100 rounded-xl p-3">
+                  <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Available From</p>
+                  <p className="text-gray-800 text-xs font-semibold mt-0.5">
+                    {new Date(aircraft.availableFrom).toLocaleDateString('en-US', {
+                      year: 'numeric', month: 'long', day: 'numeric'
+                    })}
+                  </p>
+                </div>
+              </div>
+            </div>
 
-          <div className="bg-white/5 rounded-xl p-4">
-            <p className="text-slate-400 text-xs mb-1">Seat Capacity</p>
-            <p className="text-white font-medium">{aircraft.seatCapacity}</p>
-          </div>
+            {/* Section: Location Info */}
+            <div>
+              <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-2.5 border-b border-gray-100 pb-1.5">
+                Location Info
+              </p>
+              <div className="grid grid-cols-2 gap-2.5 text-sm">
+                <div className="bg-gray-50/60 border border-gray-100 rounded-xl p-3">
+                  <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Base Station</p>
+                  <p className="text-gray-900 font-bold mt-0.5 truncate">{aircraft.baseStation?.name || '—'}</p>
+                  {aircraft.baseStation?.city && (
+                    <p className="text-gray-500 text-xs mt-0.5 font-medium">{aircraft.baseStation.city}</p>
+                  )}
+                </div>
+                <div className="bg-gray-50/60 border border-gray-100 rounded-xl p-3">
+                  <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Current Location</p>
+                  <p className="text-gray-900 font-bold mt-0.5 truncate">{aircraft.currentLocation?.name || '—'}</p>
+                  {aircraft.currentLocation?.city && (
+                    <p className="text-gray-500 text-xs mt-0.5 font-medium">{aircraft.currentLocation.city}</p>
+                  )}
+                </div>
+              </div>
+            </div>
 
-          <div className="bg-white/5 rounded-xl p-4">
-            <p className="text-slate-400 text-xs mb-1">Flying Range</p>
-            <p className="text-white font-medium">{aircraft.flyingRangeKm} km</p>
-          </div>
+            {/* Section: Timestamps */}
+            <div>
+              <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-2.5 border-b border-gray-100 pb-1.5">
+                Timestamps
+              </p>
+              <div className="grid grid-cols-2 gap-2.5 text-sm">
+                <div className="bg-gray-50/60 border border-gray-100 rounded-xl p-3">
+                  <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Created At</p>
+                  <p className="text-gray-700 text-xs font-semibold mt-0.5">
+                    {new Date(aircraft.createdAt).toLocaleDateString('en-US', {
+                      year: 'numeric', month: 'long', day: 'numeric'
+                    })}
+                  </p>
+                </div>
+                <div className="bg-gray-50/60 border border-gray-100 rounded-xl p-3">
+                  <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Last Updated</p>
+                  <p className="text-gray-700 text-xs font-semibold mt-0.5">
+                    {new Date(aircraft.updatedAt).toLocaleDateString('en-US', {
+                      year: 'numeric', month: 'long', day: 'numeric'
+                    })}
+                  </p>
+                </div>
+              </div>
+            </div>
 
-          <div className="bg-white/5 rounded-xl p-4">
-            <p className="text-slate-400 text-xs mb-1">Engine Count</p>
-            <p className="text-white font-medium">{aircraft.engineCount}</p>
           </div>
-
-          <div className="bg-white/5 rounded-xl p-4">
-            <p className="text-slate-400 text-xs mb-1">Lavatory Count</p>
-            <p className="text-white font-medium">{aircraft.lavatoryCount}</p>
-          </div>
-
-          <div className="bg-white/5 rounded-xl p-4">
-            <p className="text-slate-400 text-xs mb-1">Available From</p>
-            <p className="text-white font-medium">
-              {new Date(aircraft.availableFrom).toLocaleDateString('en-US', {
-                year: 'numeric', month: 'long', day: 'numeric'
-              })}
-            </p>
-          </div>
-
-          {/* Location Info */}
-          <div className="col-span-2 mt-2">
-            <p className="text-slate-400 text-xs uppercase tracking-wider mb-3 border-b border-white/10 pb-2">
-              Location Info
-            </p>
-          </div>
-
-          <div className="bg-white/5 rounded-xl p-4">
-            <p className="text-slate-400 text-xs mb-1">Base Station</p>
-            <p className="text-white font-medium">{aircraft.baseStation?.name || '—'}</p>
-            {aircraft.baseStation?.city && (
-              <p className="text-slate-400 text-xs mt-1">{aircraft.baseStation.city}</p>
-            )}
-          </div>
-
-          <div className="bg-white/5 rounded-xl p-4">
-            <p className="text-slate-400 text-xs mb-1">Current Location</p>
-            <p className="text-white font-medium">{aircraft.currentLocation?.name || '—'}</p>
-            {aircraft.currentLocation?.city && (
-              <p className="text-slate-400 text-xs mt-1">{aircraft.currentLocation.city}</p>
-            )}
-          </div>
-
-          {/* Timestamps */}
-          <div className="col-span-2 mt-2">
-            <p className="text-slate-400 text-xs uppercase tracking-wider mb-3 border-b border-white/10 pb-2">
-              Timestamps
-            </p>
-          </div>
-
-          <div className="bg-white/5 rounded-xl p-4">
-            <p className="text-slate-400 text-xs mb-1">Created At</p>
-            <p className="text-white font-medium">
-              {new Date(aircraft.createdAt).toLocaleDateString('en-US', {
-                year: 'numeric', month: 'long', day: 'numeric'
-              })}
-            </p>
-          </div>
-
-          <div className="bg-white/5 rounded-xl p-4">
-            <p className="text-slate-400 text-xs mb-1">Last Updated</p>
-            <p className="text-white font-medium">
-              {new Date(aircraft.updatedAt).toLocaleDateString('en-US', {
-                year: 'numeric', month: 'long', day: 'numeric'
-              })}
-            </p>
-          </div>
-
         </div>
 
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="w-full mt-6 py-2.5 rounded-xl border border-white/20 text-white text-sm font-medium hover:bg-white/10 transition"
-        >
-          Close
-        </button>
+        {/* Footer Area */}
+        <div className="p-4 border-t border-gray-100 bg-gray-50 rounded-b-2xl flex items-center justify-end">
+          <button
+            onClick={onClose}
+            className="px-5 py-2 rounded-xl bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 text-xs font-bold uppercase tracking-wider transition shadow-xs"
+          >
+            Close
+          </button>
+        </div>
+
       </div>
     </div>
   );

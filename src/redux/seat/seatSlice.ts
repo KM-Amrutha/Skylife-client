@@ -4,19 +4,25 @@ import {
   createSeatLayout,
   generateSeats,
   getSeatLayoutsByAircraft,
-  deleteSeatLayout
+  deleteSeatLayout,
+  getAircraftSeats,
+  toggleSeatBlock
 } from "./seatThunk";
 import {
   SeatType,
   SeatLayout,
+  AircraftSeatDTO
 } from "./seatType";
 
 interface SeatState {
   seatTypes: SeatType[];
   seatLayouts: SeatLayout[];
+    seats: AircraftSeatDTO[];
   isLoading: boolean;
   error: string | null;
   generatedSeatsCount: number;
+   isToggling: boolean,
+  toggleError: string|null,
 }
 
 interface ApiResponse<T> {
@@ -27,9 +33,12 @@ interface ApiResponse<T> {
 const initialState: SeatState = {
   seatTypes: [],
   seatLayouts: [],
+  seats: [],
   isLoading: false,
   error: null,
-  generatedSeatsCount: 0
+  generatedSeatsCount: 0,
+  isToggling: false,
+  toggleError: null
 };
 
 const seatSlice = createSlice({
@@ -46,7 +55,12 @@ const seatSlice = createSlice({
   state.seatLayouts = [];
   state.generatedSeatsCount = 0;
   state.error = null;
-}
+},
+clearSeats: (state) => {
+      state.seats = [];
+      state.error = null;
+      state.toggleError = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -130,10 +144,37 @@ const seatSlice = createSlice({
 .addCase(deleteSeatLayout.rejected, (state, action) => {
   state.isLoading = false;
   state.error = typeof action.payload === "string" ? action.payload : "Failed to delete seat layout";
-});
+})
+ .addCase(getAircraftSeats.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(getAircraftSeats.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.seats = action.payload;
+      })
+      .addCase(getAircraftSeats.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = typeof action.payload === "string" ? action.payload : "Failed to fetch seats";
+      })
+      .addCase(toggleSeatBlock.pending, (state) => {
+        state.isToggling = true;
+        state.toggleError = null;
+      })
+      .addCase(toggleSeatBlock.fulfilled, (state, action) => {
+        state.isToggling = false;
+        const { seatId, isBlocked } = action.payload;
+        const seat = state.seats.find((s) => s.id === seatId);
+        if (seat) seat.isBlocked = isBlocked;
+      })
+      .addCase(toggleSeatBlock.rejected, (state, action) => {
+        state.isToggling = false;
+        state.toggleError = typeof action.payload === "string" ? action.payload : "Failed to toggle block";
+      });
+
       
   }
 });
 
-export const { clearSeatError, clearGeneratedSeatsCount, resetSeatState } = seatSlice.actions;
+export const { clearSeatError, clearGeneratedSeatsCount, resetSeatState,clearSeats } = seatSlice.actions;
 export default seatSlice.reducer;

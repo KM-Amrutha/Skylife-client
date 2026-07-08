@@ -1,19 +1,16 @@
-import { createSlice,PayloadAction } from "@reduxjs/toolkit";
-import { Auth,Otp } from "./authTypes";
+import { createSlice } from "@reduxjs/toolkit";
+import { Auth } from "./authTypes";
 
 
 import {
     signupUser,
     signinUser,
-    resendOtp,
-    verifyOtp,
     forgotPassword,
     updatePassword,
     signupProvider,
     updateProviderProfile,
     getProviderProfile,
     completeProviderProfile,
-    getAdminProfile,
     googleAuth,
     getUserProfile,
     updateUserProfile,
@@ -22,7 +19,6 @@ import {
 } from "./authThunk";
 
 const initialState: Auth = {
-    otp: null,
     user: null,
     provider: null,
     admin: null,
@@ -34,17 +30,6 @@ const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
-        setOtp:(state, action: PayloadAction<Otp | null>) => {
-            state.otp = action.payload;
-        },
-        updateCountDown:(state, action: PayloadAction<number>) => {
-            if(state.otp){
-                state.otp.countDown = action.payload;
-            }
-        },
-        clearOtpDetails:(state) => {
-            state.otp = null;
-    },
     setUser:(state,action)=>{
         state.user = action.payload;
     },
@@ -58,7 +43,7 @@ const authSlice = createSlice({
         state.user = null;
         state.provider = null;
         state.admin = null;
-        state.otp = null;
+    
 
     }
     },
@@ -118,24 +103,6 @@ const authSlice = createSlice({
 
 
 builder
-  .addCase(getAdminProfile.pending, (state) => {
-    state.isLoading = true;
-    state.error = null;
-  })
-  .addCase(getAdminProfile.fulfilled, (state, action) => {
-    state.isLoading = false;
-    state.admin = action.payload.data;
-    state.error = null;
-  })
-  .addCase(getAdminProfile.rejected, (state, action) => {
-    state.isLoading = false;
-    state.admin = null;
-    state.error = typeof action.payload === "string" ? action.payload : "Failed to fetch admin profile";
-  })
-
-
-    
-    
       .addCase(signupProvider.pending, (state) => {
         state.isLoading = true;
       })
@@ -149,39 +116,7 @@ builder
           typeof action.payload === "string"
             ? action.payload
             : "Failed to create user";
-      })
-
-        .addCase(resendOtp.pending,(state)=>{
-            state.isLoading = true;
-            state.error = null;
-        })
-        .addCase(resendOtp.fulfilled,(state)=>{
-            state.isLoading = false;
-            state.error = null; 
-        })
-        .addCase(resendOtp.rejected,(state,action)=>{
-            state.isLoading = false;
-            state.error = action.payload === "string"
-            ? action.payload: "Failed to resend otp";   
-        })
-
-      .addCase(verifyOtp.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(verifyOtp.fulfilled, (state) => {
-        state.isLoading = true;
-        state.otp = null;
-        state.error = null;
-      })
-      .addCase(verifyOtp.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error =
-          typeof action.payload === "string"
-            ? action.payload
-            : "Failed to verify otp";
-      })
-
-    
+      })    
       .addCase(forgotPassword.pending, (state) => {
         state.isLoading = true;
       })
@@ -271,8 +206,9 @@ builder
       .addCase(googleAuth.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
-        const loggedInUser = action.payload. data?.user;
+        const loggedInUser = action.payload. data?.userData;
         if (!loggedInUser) return;
+        state.user = loggedInUser;
       })
       .addCase(googleAuth.rejected, (state, action) => {
         state.isLoading = false;
@@ -322,7 +258,6 @@ builder
         state.user = null;
         state.provider = null;
         state.admin = null; 
-        state.otp = null;
         state.error = null;
       })
       .addCase(signOutUser.rejected, (state, action) => {
@@ -338,9 +273,6 @@ builder
 })
 
 export const {
-    setOtp,
-    updateCountDown,
-    clearOtpDetails,
     setUser,
     setProvider,
     setAdmin,

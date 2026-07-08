@@ -1,143 +1,125 @@
-import { useEffect } from "react";
-import { useFormik, FormikProps } from "formik";
+import { useEffect, useState } from "react";
+import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useLocation } from "react-router-dom";
-import { AppDispatch, RootState } from "../../redux/store";
+import { useDispatch } from "react-redux";
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
+import { AppDispatch } from "../../redux/store";
 import { verifyOtp, resendOtp } from "../../redux/auth/authThunk";
-import { clearOtpDetails,updateCountDown } from "../../redux/auth/authSlice";
 import { showSuccessToast, showErrorToast } from "../../utils/toast";
+import { OTP_MESSAGES } from "../../utils/OtpConstants"
+
+const OTP_COUNTDOWN_SECONDS = 60;
 
 
 
-interface OtpFormData {
-  otp: string[];
-}
-interface UseOtpFormReturn {
-  otp: RootState["auth"]["otp"];
 
-  handleOtpForm: FormikProps<OtpFormData>;
-  isResending: boolean;
-  handleResendOtp: () => void;
-  handleGoBack: () => void;
-  otpType: "signup" | "forgotPassword";
-}
-
-const useOtpVerification = (): UseOtpFormReturn => {
+const useOtpVerification = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const location = useLocation();
-  const { otp, isLoading } = useSelector((state: RootState) => state.auth);
-   // DETECT OTP TYPE FROM URL OR STATE
-  const otpType: 'signup' | 'forgotPassword' = location.pathname.includes('forgot-password') || 
-                                               location.state?.otpType === 'forgotPassword' ? 
-                                               'forgotPassword' : 'signup';
+  const [searchParams] = useSearchParams();
 
+  const otpSessionId = searchParams.get("session");
+  const otpType: 'signup' | 'forgotPassword' =
+    location.state?.otpType === 'forgotPassword' ? 'forgotPassword' : 'signup';
 
-   useEffect(() => {
-  if (!otp || !otp.email) {
-    if (otpType === "forgotPassword") {
-      navigate("/forgot-password");
-    } else {
-      navigate("/sign-up");
+  // local countdown — UX only, Redis TTL is real enforcement
+  const [countdown, setCountdown] = useState(OTP_COUNTDOWN_SECONDS);
+  const [isResending, setIsResending] = useState(false);
+  const [canResend, setCanResend] = useState(false);
+
+  // guard — no session id = wrong page, redirect
+  useEffect(() => {
+    if (!otpSessionId) {
+      navigate(otpType === 'forgotPassword' ? '/forgot-password' : '/sign-up', { replace: true });
     }
-  }
-}, [otp, otpType, navigate]);
+  }, [otpSessionId, otpType, navigate]);
 
-   useEffect(() => {
-  let interval: NodeJS.Timeout;
+  // countdown timer — purely cosmetic
+  useEffect(() => {
+    if (countdown <= 0) {
+      setCanResend(true);
+      return;
+    }
+    const timer = setTimeout(() => setCountdown((c) => c - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [countdown]);
 
-  if (otp && otp.countDown > 0) {
-    interval = setInterval(() => {
-      dispatch(updateCountDown(otp.countDown - 1));
-    }, 1000);
-  }
-
-  return () => {
-    if (interval) clearInterval(interval);
-  };
-}, [otp?.countDown, dispatch, otp]);
-
-
- 
   const validationSchema = Yup.object({
     otp: Yup.array()
       .of(Yup.string().matches(/^[0-9]$/, 'Must be a digit'))
       .length(6, 'OTP must be 6 digits')
-      .required('OTP is required')
+      .required('OTP is required'),
   });
 
-  const handleOtpForm = useFormik<OtpFormData>({
-    initialValues: {
-      otp: ['', '', '', '', '', '']
-    },
+  const handleOtpForm = useFormik({
+    initialValues: { otp: ['', '', '', '', '', ''] },
     validationSchema,
     onSubmit: async (values) => {
-      if (!otp?.email) return;
-      
+      if (!otpSessionId) return;
       try {
-        const otpString = values.otp.join('');
-        
-        // VERIFY OTP
-        await dispatch(verifyOtp({ 
-          email: otp.email, 
-          otp: otpString 
+        await dispatch(verifyOtp({
+          otpSessionId,
+          otp: values.otp.join(''),
         })).unwrap();
-        
-        dispatch(clearOtpDetails());
+
         handleOtpForm.resetForm();
+
         
-        // SIMPLE LOGIC - NO CONFUSION
         if (otpType === 'forgotPassword') {
-          // FORGOT PASSWORD → RESET PASSWORD PAGE
           showSuccessToast('OTP verified! Set your new password.');
-          navigate('/reset-password', {
-            state: {
-              email: otp.email,
-              verified: true
-            }
-          });
+          navigate('/reset-password', { state: { otpSessionId, verified: true } });
         } else {
-          // SIGNUP → SIGN-IN PAGE
           showSuccessToast('Account verified! Please sign in.');
           navigate('/sign-in');
         }
-        
       } catch (error: any) {
+        // session expired or max attempts — force restart
+      if (error === OTP_MESSAGES.EXPIRED || error === OTP_MESSAGES.MAX_ATTEMPTS) {
+  showErrorToast(error);
+  navigate(otpType === 'forgotPassword' ? '/forgot-password' : '/sign-up', { replace: true });
+  return;
+}
         showErrorToast(error || 'Invalid OTP. Please try again.');
         handleOtpForm.setFieldValue('otp', ['', '', '', '', '', '']);
       }
-    }
+    },
   });
 
   const handleResendOtp = async () => {
-    if (!otp?.email) return;
-    
+    if (!otpSessionId || !canResend) return;
+    setIsResending(true);
     try {
-      await dispatch(resendOtp({ email: otp.email })).unwrap();
+      await dispatch(resendOtp({ otpSessionId })).unwrap();
       showSuccessToast('OTP sent successfully!');
+      setCountdown(OTP_COUNTDOWN_SECONDS);
+      setCanResend(false);
       handleOtpForm.setFieldValue('otp', ['', '', '', '', '', '']);
     } catch (error: any) {
+      // max resends hit or session expired — force restart
+     if (error === OTP_MESSAGES.MAX_RESENDS || error === OTP_MESSAGES.EXPIRED) {
+  showErrorToast(error);
+  navigate(otpType === 'forgotPassword' ? '/forgot-password' : '/sign-up', { replace: true });
+  return;
+}
       showErrorToast(error || 'Failed to resend OTP.');
+    } finally {
+      setIsResending(false);
     }
   };
 
   const handleGoBack = () => {
-    dispatch(clearOtpDetails());
-    if (otpType === 'forgotPassword') {
-      navigate('/forgot-password');
-    } else {
-      navigate('/sign-up');
-    }
+    navigate(otpType === 'forgotPassword' ? '/forgot-password' : '/sign-up');
   };
 
-  return { 
-    otp,
-    handleOtpForm, 
-    isResending: isLoading,
+  return {
+    handleOtpForm,
+    countdown,
+    canResend,
+    isResending,
     handleResendOtp,
     handleGoBack,
-    otpType
+    otpType,
   };
 };
 

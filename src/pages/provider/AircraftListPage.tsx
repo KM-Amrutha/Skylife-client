@@ -1,12 +1,20 @@
 import React from 'react';
-import ProviderMainLayout from '../../layouts/ProviderMainLayout';
 import AircraftList from '../../components/aircraft/aircraftListForm';
+import ProviderHeaderLayout from '../../layouts/ProviderHeaderLayout';
+import ProviderSidebarLayout from '../../layouts/ProviderSidebarLayout';
+
 
 const AircraftListPage: React.FC = () => {
-  return (
-    <ProviderMainLayout>
-      <AircraftList />
-    </ProviderMainLayout>
+ return (
+    <div className="flex min-h-screen bg-slate-100">
+      <ProviderSidebarLayout />
+      <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
+        <ProviderHeaderLayout />
+        <div className="flex-1 overflow-y-auto">
+          <AircraftList />
+        </div>
+      </div>
+    </div>
   );
 };
 

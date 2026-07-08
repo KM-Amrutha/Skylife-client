@@ -1,21 +1,20 @@
 import React from "react";
-import ProviderMainLayout from "../../layouts/ProviderMainLayout";
 import EditFlightForm from "../../components/flight/EditFlightForm";
+import ProviderHeaderLayout from '../../layouts/ProviderHeaderLayout';
+import ProviderSidebarLayout from '../../layouts/ProviderSidebarLayout';
+
 
 const EditFlightPage: React.FC = () => {
-  return (
-    <ProviderMainLayout>
-      
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-900/70 to-blue-900/70" />
-
-        {/* Content */}
-        <div className="relative z-10 flex flex-col items-center justify-start min-h-[600px] py-10">
-          <div className="w-full max-w-4xl bg-[#00001F]/60 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/20">
-            <EditFlightForm />
-          </div>
+    return (
+    <div className="flex min-h-screen bg-slate-100">
+      <ProviderSidebarLayout />
+      <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
+        <ProviderHeaderLayout />
+        <div className="flex-1 overflow-y-auto">
+          <EditFlightForm />
         </div>
-    </ProviderMainLayout>
+      </div>
+    </div>
   );
 };
 

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import ProviderMainLayout from "../../layouts/ProviderMainLayout";
-import FlightForm from "../../components/flight/FlightForm";
+import FlightForm from "../../components/flight/flightForm";
 import RecurringFlightForm from "../../components/flight/RecurringFlightForm";
+import ProviderHeaderLayout from '../../layouts/ProviderHeaderLayout';
+import ProviderSidebarLayout from '../../layouts/ProviderSidebarLayout';
 
 type ScheduleTab = "single" | "recurring";
 
@@ -9,29 +10,29 @@ const AddFlightPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<ScheduleTab>("single");
 
   return (
-    <ProviderMainLayout>
-     
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-900/70 to-blue-900/70" />
-
-        <div className="relative z-10 flex flex-col gap-10 items-center justify-start">
-          <div className="w-full max-w-6xl bg-[#00001F]/60 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
-            <div className="flex border-b border-white/10">
+    <div className="flex min-h-screen bg-slate-100">
+      <ProviderSidebarLayout />
+      <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
+        <ProviderHeaderLayout />
+        <div className="flex-1 overflow-y-auto p-6">
+          <div className="w-full max-w-6xl mx-auto bg-white rounded-2xl shadow border border-slate-200 overflow-hidden">
+            <div className="flex border-b border-slate-200">
               <button
                 onClick={() => setActiveTab("single")}
-                className={`flex-1 py-5 text-base font-semibold transition-all duration-200 ${
+                className={`flex-1 py-4 text-base font-semibold transition-all duration-200 ${
                   activeTab === "single"
-                    ? "bg-blue-600/30 text-white border-b-2 border-blue-400"
-                    : "text-white/50 hover:text-white/80 hover:bg-white/5"
+                    ? "bg-blue-50 text-blue-700 border-b-2 border-blue-500"
+                    : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"
                 }`}
               >
                 ✈️ Single Flight
               </button>
               <button
                 onClick={() => setActiveTab("recurring")}
-                className={`flex-1 py-5 text-base font-semibold transition-all duration-200 ${
+                className={`flex-1 py-4 text-base font-semibold transition-all duration-200 ${
                   activeTab === "recurring"
-                    ? "bg-purple-600/30 text-white border-b-2 border-purple-400"
-                    : "text-white/50 hover:text-white/80 hover:bg-white/5"
+                    ? "bg-purple-50 text-purple-700 border-b-2 border-purple-500"
+                    : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"
                 }`}
               >
                 🔁 Recurring Flights
@@ -40,8 +41,8 @@ const AddFlightPage: React.FC = () => {
             {activeTab === "single" ? <FlightForm /> : <RecurringFlightForm />}
           </div>
         </div>
-      
-    </ProviderMainLayout>
+      </div>
+    </div>
   );
 };
 

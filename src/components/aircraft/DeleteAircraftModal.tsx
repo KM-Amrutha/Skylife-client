@@ -1,65 +1,60 @@
 import React from 'react';
+import { Trash2 } from 'lucide-react';
+
 interface DeleteConfirmModalProps {
   onConfirm: () => void;
   onCancel: () => void;
   isLoading: boolean;
 }
+
 const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
   onConfirm,
   onCancel,
   isLoading,
 }) => {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-slate-900/40 backdrop-blur-xs"
         onClick={onCancel}
       />
 
-      {/* Modal */}
-      <div className="relative z-10 bg-[#00001F] border border-white/20 rounded-2xl p-8 shadow-2xl w-full max-w-sm mx-4">
-        {/* Icon */}
-        <div className="flex items-center justify-center w-14 h-14 rounded-full bg-red-500/15 border border-red-400/30 mx-auto mb-5">
-          <svg
-            className="w-7 h-7 text-red-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-            />
-          </svg>
+      {/* Modal Box */}
+      <div className="relative z-10 bg-white border border-gray-200 rounded-2xl p-6 shadow-xl w-full max-w-sm flex flex-col items-center">
+        
+        {/* Warning Icon Container */}
+        <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-red-50 border border-red-100 mb-4 shrink-0">
+          <Trash2 className="w-5 h-5 text-red-600" />
         </div>
 
-        <h3 className="text-white text-xl font-bold text-center mb-2">
-          Delete Aircraft
+        {/* Modal Text Content */}
+        <h3 className="text-gray-900 text-lg font-bold text-center tracking-tight mb-1">
+          Delete Aircraft Asset
         </h3>
-        <p className="text-slate-300 text-sm text-center mb-6">
+        <p className="text-gray-500 text-xs text-center leading-normal mb-6">
           Are you sure you want to delete this aircraft? This will also remove
-          all associated seat layouts and seats. This action cannot be undone.
+          all associated seat layouts and configuration seats. This action cannot be undone.
         </p>
 
-        <div className="flex gap-3">
+        {/* Action Button Row */}
+        <div className="flex gap-3 w-full">
           <button
             onClick={onCancel}
             disabled={isLoading}
-            className="flex-1 py-2.5 rounded-xl border border-white/20 text-white text-sm font-medium hover:bg-white/10 transition disabled:opacity-50"
+            className="flex-1 py-2 rounded-xl bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 text-xs font-bold uppercase tracking-wider transition disabled:opacity-50 shadow-xs"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
             disabled={isLoading}
-            className="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-bold transition disabled:opacity-50"
+            className="flex-1 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider transition disabled:opacity-50 shadow-xs"
           >
-            {isLoading ? 'Deleting...' : 'Delete'}
+            {isLoading ? 'Removing...' : 'Delete Asset'}
           </button>
         </div>
+        
       </div>
     </div>
   );

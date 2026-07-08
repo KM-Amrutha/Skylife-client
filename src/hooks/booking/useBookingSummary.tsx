@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import { useState,useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { AppDispatch, RootState } from "../../redux/store";
@@ -6,7 +6,9 @@ import {
   getBookingSummary,
   getEligibleOffers,
   initiateBooking,
+  payWithWallet,  
 } from "../../redux/booking/bookingThunk";
+import {getUserWallet} from "../../redux/wallet/walletThunk";
 import {
   setSelectedOffer,
   // clearBookingSession,
@@ -17,6 +19,10 @@ const useBookingSummary = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { sessionId } = useParams<{ sessionId: string }>();
+  const { isPayingWithWallet } = useSelector((state: RootState) => state.booking);
+const { userWallet } = useSelector((state: RootState) => state.wallet);
+const [showWalletConfirm, setShowWalletConfirm] = useState(false);
+
   const segment = useSelector((state: RootState) => state.booking.segment);
 
   const {
@@ -36,6 +42,11 @@ const useBookingSummary = () => {
     dispatch(getBookingSummary(sessionId));
     dispatch(getEligibleOffers(sessionId));
   }, [sessionId, dispatch]);
+
+// fetch wallet balance on mount
+  useEffect(() => {
+  dispatch(getUserWallet());
+}, [dispatch]);
 
   // ─── Select offer ─────────────────────────────────────────────────────────
   const handleSelectOffer = useCallback(
@@ -69,7 +80,39 @@ const useBookingSummary = () => {
     }
   }, [sessionId, selectedOfferId, dispatch, navigate]);
 
-  // ─── Back to passengers ───────────────────────────────────────────────────
+    //___________________________________wallet pay_______________________________
+
+  const handlePayWithWallet = useCallback(async () => {
+  if (!sessionId) return;
+  try {
+    const result = await dispatch(
+      payWithWallet({
+        sessionId,
+        ...(selectedOfferId && { offerId: selectedOfferId }),
+      })
+    ).unwrap();
+
+    navigate(`/user/bookings/${result.bookingId}/confirmation?redirect_status=succeeded`);
+  } catch (err: any) {
+    showErrorToast(err || "Failed to pay with wallet");
+  }
+}, [sessionId, selectedOfferId, dispatch, navigate]);
+
+  //_________________________________________pay with wallet___________________________
+  const handleWalletConfirmOpen = useCallback(() => {
+  setShowWalletConfirm(true);
+}, []);
+
+const handleWalletConfirmClose = useCallback(() => {
+  setShowWalletConfirm(false);
+}, []);
+
+const handleConfirmWalletPay = useCallback(async () => {
+  setShowWalletConfirm(false);
+  await handlePayWithWallet();
+}, [handlePayWithWallet]);
+
+  // ─── Back to passengers ──────────────────────────────────────────────────
   const handleBack = useCallback(() => {
     navigate(`/user/bookings/${sessionId}/passengers`);
   }, [sessionId, navigate]);
@@ -116,6 +159,12 @@ const useBookingSummary = () => {
     handleBack,
     formatTime,
     formatDate,
+    userWallet,
+  isPayingWithWallet,
+  showWalletConfirm,
+  handleWalletConfirmOpen,
+  handleWalletConfirmClose,
+  handleConfirmWalletPay,
   };
 };
 

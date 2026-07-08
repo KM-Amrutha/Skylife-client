@@ -1,22 +1,19 @@
 import React from "react";
-import ProviderMainLayout from "../../layouts/ProviderMainLayout";
 import FoodList from "../../components/food/FoodList";
+import ProviderHeaderLayout from '../../layouts/ProviderHeaderLayout';
+import ProviderSidebarLayout from '../../layouts/ProviderSidebarLayout';
 
 const FoodListPage: React.FC = () => {
-  return (
-    <ProviderMainLayout>
-      <div className="p-4 md:p-8 pt-20 lg:pt-8">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-white text-3xl font-bold">Food & Beverages</h1>
-            <p className="text-slate-400 text-sm mt-1">
-              Manage food and beverage items for your flights
-            </p>
-          </div>
+   return (
+    <div className="flex min-h-screen bg-slate-100">
+      <ProviderSidebarLayout />
+      <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
+        <ProviderHeaderLayout />
+        <div className="flex-1 overflow-y-auto">
+          <FoodList />
         </div>
-        <FoodList />
       </div>
-    </ProviderMainLayout>
+    </div>
   );
 };
 

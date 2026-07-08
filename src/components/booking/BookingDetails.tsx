@@ -18,7 +18,7 @@ const PassengerForm: React.FC<{
   const [isOpen, setIsOpen] = useState(index === 0);
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+    <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
       {/* Accordion header */}
       <button
         onClick={() => setIsOpen((p) => !p)}
@@ -33,12 +33,12 @@ const PassengerForm: React.FC<{
               {passenger.name.trim() || `Passenger ${index + 1}`}
             </p>
             {passenger.dob && (
-              <p className="text-gray-400 text-xs mt-0.5">{passenger.dob}</p>
+              <p className="text-gray-600 text-xs mt-0.5">{passenger.dob}</p>
             )}
           </div>
         </div>
         <ChevronRight
-          className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
+          className={`w-4 h-4 text-gray-600 transition-transform duration-200 ${
             isOpen ? "rotate-90" : ""
           }`}
         />
@@ -49,7 +49,7 @@ const PassengerForm: React.FC<{
         <div className="px-5 pb-5 border-t border-gray-100 pt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Name */}
           <div className="md:col-span-2">
-            <label className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1.5 block">
+            <label className="text-gray-600 text-xs font-semibold uppercase tracking-wider mb-1.5 block">
               Full Name
             </label>
             <input
@@ -63,7 +63,7 @@ const PassengerForm: React.FC<{
 
           {/* DOB */}
           <div>
-            <label className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1.5 block">
+            <label className="text-gray-600 text-xs font-semibold uppercase tracking-wider mb-1.5 block">
               Date of Birth
             </label>
             <input
@@ -77,7 +77,7 @@ const PassengerForm: React.FC<{
 
           {/* Gender */}
           <div>
-            <label className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1.5 block">
+            <label className="text-gray-600 text-xs font-semibold uppercase tracking-wider mb-1.5 block">
               Gender
             </label>
             <div className="flex gap-2">
@@ -88,7 +88,7 @@ const PassengerForm: React.FC<{
                   className={`flex-1 py-3 rounded-xl text-xs font-semibold capitalize transition border ${
                     passenger.gender === g
                       ? "bg-[#0a3a8a] text-white border-[#0a3a8a]"
-                      : "bg-gray-50 text-gray-500 border-gray-200 hover:border-gray-300"
+                      : "bg-gray-50 text-gray-700 border-gray-200 hover:border-gray-300"
                   }`}
                 >
                   {g}
@@ -99,7 +99,7 @@ const PassengerForm: React.FC<{
 
           {/* Mobile */}
           <div>
-            <label className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1.5 block">
+            <label className="text-gray-600 text-xs font-semibold uppercase tracking-wider mb-1.5 block">
               Mobile Number
             </label>
             <input
@@ -114,7 +114,7 @@ const PassengerForm: React.FC<{
 
           {/* Extra Luggage */}
           <div>
-            <label className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1.5 block">
+            <label className="text-gray-600 text-xs font-semibold uppercase tracking-wider mb-1.5 block">
               Extra Luggage (kg)
             </label>
             <input
@@ -131,7 +131,7 @@ const PassengerForm: React.FC<{
 
           {/* Address */}
           <div className="md:col-span-2">
-            <label className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1.5 block">
+            <label className="text-gray-600 text-xs font-semibold uppercase tracking-wider mb-1.5 block">
               Address
             </label>
             <input
@@ -185,7 +185,7 @@ const FlightActionCard: React.FC<{
 
   return (
     <>
-      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+      <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
         
         {/* Provider + Aircraft Header */}
         <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100 bg-gray-50">
@@ -202,14 +202,14 @@ const FlightActionCard: React.FC<{
           )}
           <div className="flex-1 min-w-0">
             <p className="text-gray-900 font-semibold text-sm">{flight.providerName}</p>
-            <p className="text-gray-400 text-xs">
+            <p className="text-gray-600 text-xs">
               {flight.flightNumber} · {flight.aircraftName}
               {flight.manufacturer ? ` · ${flight.manufacturer}` : ""}
             </p>
           </div>
           {flight.gate && (
             <div className="flex-shrink-0 text-right">
-              <p className="text-gray-400 text-[10px] uppercase tracking-wider">Gate</p>
+              <p className="text-gray-600 text-[10px] uppercase tracking-wider">Gate</p>
               <p className="text-gray-900 font-bold text-sm">{flight.gate}</p>
             </div>
           )}
@@ -224,27 +224,27 @@ const FlightActionCard: React.FC<{
                 {formatTime(flight.departureTime)}
               </p>
               <p className="text-[#0a3a8a] font-bold text-sm mt-0.5">{flight.from}</p>
-              <p className="text-gray-400 text-[10px] mt-0.5 leading-tight line-clamp-2">
+              <p className="text-gray-600 text-[10px] mt-0.5 leading-tight line-clamp-2">
                 {flight.fromName}
               </p>
-              <p className="text-gray-300 text-[10px] mt-1">
+              <p className="text-gray-600 text-[10px] mt-1">
                 {formatDate(flight.departureTime)}
               </p>
             </div>
 
             {/* Duration line */}
             <div className="flex-1 flex flex-col items-center gap-1">
-              <p className="text-gray-400 text-[10px]">
+              <p className="text-gray-600 text-[10px]">
                 {formatDuration(flight.durationMinutes)}
               </p>
               <div className="w-full flex items-center gap-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-[#0a3a8a] flex-shrink-0" />
                 <div className="flex-1 border-t border-dashed border-gray-200" />
-                <Plane className="w-3 h-3 text-gray-400 flex-shrink-0" />
+                <Plane className="w-3 h-3 text-gray-600 flex-shrink-0" />
                 <div className="flex-1 border-t border-dashed border-gray-200" />
                 <div className="w-1.5 h-1.5 rounded-full bg-gray-300 flex-shrink-0" />
               </div>
-              <p className="text-gray-300 text-[10px]">Direct</p>
+              <p className="text-gray-600 text-[10px]">Direct</p>
             </div>
 
             {/* Arrival */}
@@ -253,10 +253,10 @@ const FlightActionCard: React.FC<{
                 {formatTime(flight.arrivalTime)}
               </p>
               <p className="text-gray-600 font-bold text-sm mt-0.5">{flight.to}</p>
-              <p className="text-gray-400 text-[10px] mt-0.5 leading-tight line-clamp-2">
+              <p className="text-gray-600 text-[10px] mt-0.5 leading-tight line-clamp-2">
                 {flight.toName}
               </p>
-              <p className="text-gray-300 text-[10px] mt-1">
+              <p className="text-gray-600 text-[10px] mt-1">
                 {formatDate(flight.arrivalTime)}
               </p>
             </div>
@@ -265,20 +265,20 @@ const FlightActionCard: React.FC<{
 
         {/* Baggage Rules */}
         <div className="px-5 py-3 border-t border-gray-100 bg-gray-50 flex items-center gap-4 flex-wrap">
-          <div className="flex items-center gap-1.5 text-xs text-gray-500">
+          <div className="flex items-center gap-1.5 text-xs text-gray-700">
             <span className="text-emerald-600 font-semibold">
               {flight.baggageRules.freeCabinKg}kg
             </span>
             <span>free cabin baggage</span>
           </div>
           <div className="w-px h-3 bg-gray-200" />
-          <div className="flex items-center gap-1.5 text-xs text-gray-500">
+          <div className="flex items-center gap-1.5 text-xs text-gray-700">
             <span>Extra:</span>
             <span className="text-amber-600 font-semibold">
               ₹{flight.baggageRules.extraChargePerKg.toLocaleString("en-IN")}/kg
             </span>
             {flight.baggageRules.maxExtraKg && (
-              <span className="text-gray-400">
+              <span className="text-gray-600">
                 · max {flight.baggageRules.maxExtraKg}kg
               </span>
             )}
@@ -303,7 +303,7 @@ const FlightActionCard: React.FC<{
           >
             <div className="flex items-center gap-2">
               <Armchair
-                className={`w-4 h-4 ${seatsComplete ? "text-emerald-600" : "text-gray-400"}`}
+                className={`w-4 h-4 ${seatsComplete ? "text-emerald-600" : "text-gray-600"}`}
               />
               <div className="text-left">
                 <p
@@ -313,7 +313,7 @@ const FlightActionCard: React.FC<{
                 >
                   Seats
                 </p>
-                <p className="text-gray-400 text-[10px]">
+                <p className="text-gray-600 text-[10px]">
                   {lockedSeatsCount}/{passengerCount} selected
                 </p>
               </div>
@@ -336,7 +336,7 @@ const FlightActionCard: React.FC<{
           >
             <div className="flex items-center gap-2">
               <Utensils
-                className={`w-4 h-4 ${foodItemsCount > 0 ? "text-[#0a3a8a]" : "text-gray-400"}`}
+                className={`w-4 h-4 ${foodItemsCount > 0 ? "text-[#0a3a8a]" : "text-gray-600"}`}
               />
               <div className="text-left">
                 <p
@@ -346,7 +346,7 @@ const FlightActionCard: React.FC<{
                 >
                   Food
                 </p>
-                <p className="text-gray-400 text-[10px]">
+                <p className="text-gray-600 text-[10px]">
                   {foodItemsCount > 0
                     ? `${foodItemsCount} item${foodItemsCount > 1 ? "s" : ""}`
                     : "Optional"}
@@ -415,10 +415,10 @@ const BookingDetails: React.FC = () => {
 
   if (!segment) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-        <div className="bg-white border border-gray-200 rounded-xl p-12 text-center max-w-md">
+      <div className="min-h-screen bg-slate-100 flex items-center justify-center px-4">
+        <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-12 text-center max-w-md">
           <p className="text-gray-900 text-xl font-semibold">Session not found</p>
-          <p className="text-gray-500 mt-2 mb-6">
+          <p className="text-gray-700 mt-2 mb-6">
             Your booking session has expired or is invalid.
           </p>
           <button
@@ -461,7 +461,7 @@ const BookingDetails: React.FC = () => {
     : null;
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900">
+    <div className="min-h-screen bg-slate-100 text-gray-900">
 
       {/* Header */}
       <UserHeader
@@ -473,23 +473,30 @@ const BookingDetails: React.FC = () => {
                { label: "Payment", active: false },
            ]}
           />
-      <div className="max-w-3xl mx-auto px-4 md:px-8 py-10">
+      <div className="max-w-3xl mx-auto px-4 md:px-8 pt-0 pb-10">
 
         {/* Page title */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Passenger Details</h1>
-          <p className="text-gray-500 mt-2 text-sm">
-            Fill in details for all passengers, then select seats and food for each flight.
-          </p>
-        </div>
+        <div className="bg-[#0a3a8a] text-white px-6 py-8 rounded-2xl mt-4 shadow-xs max-w-4xl mx-auto">
+  <div className="flex items-center gap-5">
+    <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center flex-shrink-0 shadow-lg">
+      <Users className="w-6 h-6 text-[#0a3a8a]" />
+    </div>
+    <div className="flex-1 min-w-0">
+      <h1 className="text-2xl sm:text-3xl font-bold">Passenger Details</h1>
+      <p className="text-blue-200 text-sm mt-1">
+        Fill in details for all passengers, then select seats and food for each flight.
+      </p>
+    </div>
+  </div>
+</div>
 
         {/* Passenger forms */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-4">
-            <Users className="w-4 h-4 text-gray-400" />
+            <Users className="w-4 h-4 text-gray-600" />
             <h2 className="text-gray-900 font-semibold text-base">
               Passengers
-              <span className="text-gray-400 font-normal text-sm ml-2">
+              <span className="text-gray-600 font-normal text-sm ml-2">
                 {segment.passengerCount} traveller{segment.passengerCount > 1 ? "s" : ""}
               </span>
             </h2>
@@ -510,7 +517,7 @@ const BookingDetails: React.FC = () => {
         <div className="mb-8">
           <h2 className="text-gray-900 font-semibold text-base mb-4">
             Flights
-            <span className="text-gray-400 font-normal text-sm ml-2">
+            <span className="text-gray-600 font-normal text-sm ml-2">
               Select seats and food per flight
             </span>
           </h2>

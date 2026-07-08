@@ -110,15 +110,8 @@ export interface SignupProvider{
     airlineCode:string;
   }
 
-  export interface Otp{
-    email:string;
-    countDown:number;
-    expiryTime:string;
-    isVerified:boolean;
-
-  }
+ 
   export interface Auth {
-  otp: Otp | null;
   user: User | null;
   provider: Provider | null;
   admin: Admin | null;
@@ -127,11 +120,11 @@ export interface SignupProvider{
 }
 
 export interface ResendOtpRequest {
-  email: string;
+  otpSessionId: string;   // was: email
 }
 
 export interface verifyOtpRequest {
-  email: string;
+  otpSessionId: string;   // was: email
   otp: string;
 }
 export interface RequestSignin {

@@ -32,7 +32,7 @@ const AuthForm: React.FC = () => {
   const { user, provider, admin } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
-    if (user) navigate('/welcome');
+    if (user) navigate('/user/userhome');
     else if (provider) navigate('/provider/dashboard');
     else if (admin) navigate('/admin/dashboard');
   }, [user, provider, admin, navigate]);

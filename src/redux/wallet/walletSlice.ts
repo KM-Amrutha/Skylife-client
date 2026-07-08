@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { UserWallet, ProviderWallet } from "./walletType";
-import { getUserWallet, getProviderWallet } from "./walletThunk";
+import { getUserWallet, getProviderWallet, addMoneyToWallet,addMoneyToProviderWallet } from "./walletThunk";
 
 interface WalletState {
   userWallet: UserWallet | null;
@@ -63,7 +63,35 @@ const walletSlice = createSlice({
           typeof action.payload === "string"
             ? action.payload
             : "Failed to fetch wallet";
-      });
+      })
+.addCase(addMoneyToWallet.pending, (state) => {
+  state.isLoadingUserWallet = true;
+  state.userWalletError = null;
+})
+.addCase(addMoneyToWallet.fulfilled, (state, action) => {
+  state.isLoadingUserWallet = false;
+  if (state.userWallet) {
+    state.userWallet.balance = action.payload.balance;
+  }
+})
+.addCase(addMoneyToWallet.rejected, (state, action) => {
+  state.isLoadingUserWallet = false;
+  state.userWalletError = typeof action.payload === "string" ? action.payload : "Failed to add money";
+})
+.addCase(addMoneyToProviderWallet.pending, (state) => {
+  state.isLoadingProviderWallet = true;
+  state.providerWalletError = null;
+})
+.addCase(addMoneyToProviderWallet.fulfilled, (state, action) => {
+  state.isLoadingProviderWallet = false;
+  if (state.providerWallet) {
+    state.providerWallet.balance = action.payload.balance;
+  }
+})
+.addCase(addMoneyToProviderWallet.rejected, (state, action) => {
+  state.isLoadingProviderWallet = false;
+  state.providerWalletError = typeof action.payload === "string" ? action.payload : "Failed to add money";
+})
   },
 });
 

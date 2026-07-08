@@ -1,29 +1,19 @@
-import React, { useState } from 'react';
-import ProviderMainLayout from '../../layouts/ProviderMainLayout';
+import React from 'react';
 import ProviderDashboard from '../../components/provider/ProviderDashboard';
-import ChangePasswordModal from '../../components/user-authentication/ChangePasswordModal';
-import useChangePassword from '../../hooks/user/useChangePassword';
+import ProviderHeaderLayout from '../../layouts/ProviderHeaderLayout';
+import ProviderSidebarLayout from '../../layouts/ProviderSidebarLayout';
 
 const ProviderDashboardPage: React.FC = () => {
-  const [isChangingPassword, setIsChangingPassword] = useState(false);
-  const { formik: passwordFormik } = useChangePassword(() => setIsChangingPassword(false));
-
-  const openChangePassword = () => setIsChangingPassword(true);
-  const closeChangePassword = () => {
-    passwordFormik.resetForm();
-    setIsChangingPassword(false);
-  };
-
   return (
-    <ProviderMainLayout>
-      <ProviderDashboard onChangePasswordClick={openChangePassword} />
-      {isChangingPassword && (
-        <ChangePasswordModal
-          formik={passwordFormik}
-          onClose={closeChangePassword}
-        />
-      )}
-    </ProviderMainLayout>
+    <div className="flex min-h-screen bg-slate-100">
+      <ProviderSidebarLayout />
+      <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
+        <ProviderHeaderLayout />
+        <div className="flex-1 overflow-y-auto">
+          <ProviderDashboard />
+        </div>
+      </div>
+    </div>
   );
 };
 

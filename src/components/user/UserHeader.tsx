@@ -30,14 +30,14 @@ const UserHeader: React.FC<UserHeaderProps> = ({
   } = useUserHeader();
 
   return (
-    <header className="flex items-center justify-between px-4 md:px-8 py-4 md:py-5 border-b border-gray-200 bg-white">
+    <header className="flex items-center justify-between px-4 md:px-8 py-4 md:py-5 border-b border-gray-200 bg-white shadow-sm">
 
       {/* ── Left — back button or empty ── */}
       <div className="w-auto sm:w-32 flex-shrink-0">
         {onBack ? (
           <button
             onClick={onBack}
-            className="flex items-center gap-2 text-gray-500 hover:text-gray-900 transition text-sm font-medium"
+            className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition text-sm font-medium"
           >
             <ArrowLeft className="w-4 h-4" />
             <span className="hidden sm:inline">{backLabel}</span>
@@ -61,13 +61,13 @@ const UserHeader: React.FC<UserHeaderProps> = ({
                   className={`font-semibold transition ${
                     step.active
                       ? "text-[#0a3a8a]"
-                      : "text-gray-300"
+                      : "text-gray-600"
                   }`}
                 >
                   {i + 1}. {step.label}
                 </span>
                 {i < steps.length - 1 && (
-                  <ChevronRight className="w-3 h-3 text-gray-300" />
+                  <ChevronRight className="w-3 h-3 text-gray-600" />
                 )}
               </React.Fragment>
             ))}

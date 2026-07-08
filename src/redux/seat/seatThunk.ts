@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../config/axios";
 import {
   CreateSeatLayoutDTO,
+  ToggleSeatBlockResponseDTO,AircraftSeatDTO
 } from "./seatType";
 
 // Get all seat types
@@ -85,6 +86,36 @@ export const deleteSeatLayout = createAsyncThunk(
         return rejectWithValue(error.response.data.message);
       }
       return rejectWithValue("Failed to delete seat layout");
+    }
+  }
+);
+
+export const getAircraftSeats = createAsyncThunk(
+  "seats/getAircraftSeats",
+  async (aircraftId: string, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(`provider/aircraft/${aircraftId}/seats`);
+      return response.data.data as AircraftSeatDTO[];
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || "Failed to fetch seats");
+    }
+  }
+);
+
+export const toggleSeatBlock = createAsyncThunk(
+  "seats/toggleSeatBlock",
+  async (
+    { aircraftId, seatId, blockReason }: { aircraftId: string; seatId: string; blockReason?: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.patch(
+        `provider/aircraft/${aircraftId}/seats/${seatId}/toggle-block`,
+        { blockReason }
+      );
+      return response.data.data as ToggleSeatBlockResponseDTO;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || "Failed to toggle seat block");
     }
   }
 );

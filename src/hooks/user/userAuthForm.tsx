@@ -21,8 +21,7 @@ import { AppDispatch } from "../../redux/store";
 import {
   setUser,
   setAdmin,
-  setProvider,
-  setOtp
+  setProvider
 } from "../../redux/auth/authSlice";
 
 interface UseAuthFormReturn {
@@ -48,22 +47,15 @@ const useAuthForm = (formState: SignState = "sign in"): UseAuthFormReturn => {
       try {
         if (formState === "sign up") {
           const response = await dispatch(signupUser({ userData: values })).unwrap();
-          
-          const expiryTime = new Date(Date.now() + 60000).toISOString();
-          dispatch(setOtp({
-            email: values.email,
-            countDown: 60,
-            expiryTime,
-            isVerified: false
-          }));
-          showSuccessToast(response.message);
-          handleUserAuth.resetForm();
-          navigate("/verify-otp");
+          const otpSessionId = response.data.otpSessionId;
+showSuccessToast(response.message);
+handleUserAuth.resetForm();
+navigate(`/verify-otp?session=${otpSessionId}`);
         } else {
           const response = await dispatch(
             signinUser({ email: values.email, password: values.password })
           ).unwrap();
-          localStorage.setItem("accessToken", response.data.accessToken);
+        
 
           const userData = response.data.userData
           const providerData = response.data.providerData
@@ -82,9 +74,11 @@ const useAuthForm = (formState: SignState = "sign in"): UseAuthFormReturn => {
           showSuccessToast(`Welcome back ${providerData.companyName}`);
            }
           handleUserAuth.resetForm();
-
+       
           navigate(
-            role === "user"  ? "/user/userhome" : role === "admin" ? "/admin/dashboard" : "/provider/dashboard"
+            role === "user"  ? "/user/userhome" 
+            : role === "admin" ? "/admin/dashboard" 
+            : "/provider/dashboard"
           );
         }
       } catch (error:any) {
@@ -117,16 +111,10 @@ const useAuthForm = (formState: SignState = "sign in"): UseAuthFormReturn => {
           
           })
         ).unwrap();
-        const expiryTime = new Date(Date.now() + 60000).toISOString();
-        dispatch(setOtp({
-          email: values.email,
-          countDown: 60,
-          expiryTime,
-          isVerified: false
-        }));
-        showSuccessToast(response.message);
-        handleProviderAuth.resetForm();
-        navigate("/verify-otp");
+        const otpSessionId = response.data.otpSessionId;
+showSuccessToast(response.message);
+handleProviderAuth.resetForm();
+navigate(`/verify-otp?session=${otpSessionId}`);
       } catch (error: any) {
         showErrorToast(error.message || "Provider registration failed");
       }

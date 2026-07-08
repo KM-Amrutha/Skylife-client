@@ -2,6 +2,7 @@ import React from "react";
 import useAdminUsers from "../../hooks/admin/useAdminUsers";
 import { User } from "../../redux/auth/authTypes";
 import Pagination from "../../layouts/Pagination";
+import Sidebar from "./Sidebar";
 import {
   User as UserIcon,
   Calendar,
@@ -15,92 +16,89 @@ import {
 
 const UserCard: React.FC<{
   user: User;
-
   onToggleStatus: (userId: string, isActive: boolean) => void;
 }> = ({ user, onToggleStatus }) => {
   return (
-
-    <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 hover:border-blue-400/40 transition duration-300 group">
+    <div className="rounded-2xl border border-gray-200 shadow-xs bg-white hover:border-gray-300 transition duration-200 flex flex-col justify-between overflow-hidden">
       <div className="p-5">
-        {/* Header */}
-        <div className="flex items-center gap-4 mb-5">
+        {/* Profile Header */}
+        <div className="flex items-center gap-4 mb-4">
           {user.profilePicture ? (
             <img
               src={user.profilePicture}
               alt={`${user.firstName} ${user.lastName}`}
-              className="w-16 h-16 rounded-2xl object-cover border-2 border-white/20 shadow-lg"
+              className="w-14 h-14 rounded-xl object-cover border border-gray-200 shadow-xs shrink-0"
             />
           ) : (
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 via-blue-500 to-cyan-500 flex items-center justify-center shadow-lg border-2 border-white/10 shrink-0">
-              <span className="text-white text-xl font-bold">
+            <div className="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-xs shrink-0">
+              <span className="text-blue-600 text-lg font-bold">
                 {user.firstName?.[0]}{user.lastName?.[0]}
               </span>
             </div>
           )}
 
           <div className="flex-1 min-w-0">
-            <h3 className="text-white font-bold text-lg truncate">
+            <h3 className="text-gray-900 font-bold text-base truncate">
               {user.firstName} {user.lastName}
             </h3>
-            <p className="text-cyan-400 text-xs truncate">{user.email}</p>
-            <span className={`inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider
+            <p className="text-gray-500 text-xs truncate mb-1">{user.email}</p>
+            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider
               ${user.isActive
-                ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-400/30'
-                : 'bg-red-500/15 text-red-300 border border-red-400/30'
+                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                : 'bg-red-50 text-red-700 border border-red-200'
               }`}>
-              <span className={`w-1.5 h-1.5 rounded-full ${user.isActive ? 'bg-emerald-400' : 'bg-red-400'}`} />
+              <span className={`w-1.5 h-1.5 rounded-full ${user.isActive ? 'bg-emerald-500' : 'bg-red-500'}`} />
               {user.isActive ? 'Active' : 'Blocked'}
             </span>
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="border-t border-white/5 mb-4" />
+        <div className="border-t border-gray-100 my-3" />
 
-        {/* Details Grid */}
-        <div className="grid grid-cols-2 gap-2.5 mb-4">
-          <div className="bg-white/5 rounded-xl p-3">
-            <div className="flex items-center gap-2 mb-1">
-              <Phone className="w-3 h-3 text-slate-400" />
-              <p className="text-slate-400 text-[10px] uppercase tracking-wider">Mobile</p>
+        {/* Info Grid */}
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          <div className="bg-gray-50/60 rounded-xl p-2.5 border border-gray-100">
+            <div className="flex items-center gap-1.5 mb-0.5">
+              <Phone className="w-3 h-3 text-gray-400" />
+              <p className="text-gray-400 text-[9px] font-bold uppercase tracking-wider">Mobile</p>
             </div>
-            <p className="text-white text-xs font-medium truncate">{user.mobile || '—'}</p>
+            <p className="text-gray-800 text-xs font-semibold truncate">{user.mobile || '—'}</p>
           </div>
 
-          <div className="bg-white/5 rounded-xl p-3">
-            <div className="flex items-center gap-2 mb-1">
-              <Calendar className="w-3 h-3 text-slate-400" />
-              <p className="text-slate-400 text-[10px] uppercase tracking-wider">Date of Birth</p>
+          <div className="bg-gray-50/60 rounded-xl p-2.5 border border-gray-100">
+            <div className="flex items-center gap-1.5 mb-0.5">
+              <Calendar className="w-3 h-3 text-gray-400" />
+              <p className="text-gray-400 text-[9px] font-bold uppercase tracking-wider">DOB</p>
             </div>
-            <p className="text-white text-xs font-medium">{user.dateOfBirth || '—'}</p>
+            <p className="text-gray-800 text-xs font-semibold truncate">{user.dateOfBirth || '—'}</p>
           </div>
 
-          <div className="bg-white/5 rounded-xl p-3">
-            <div className="flex items-center gap-2 mb-1">
-              <UserIcon className="w-3 h-3 text-slate-400" />
-              <p className="text-slate-400 text-[10px] uppercase tracking-wider">Gender</p>
+          <div className="bg-gray-50/60 rounded-xl p-2.5 border border-gray-100">
+            <div className="flex items-center gap-1.5 mb-0.5">
+              <UserIcon className="w-3 h-3 text-gray-400" />
+              <p className="text-gray-400 text-[9px] font-bold uppercase tracking-wider">Gender</p>
             </div>
-            <p className="text-white text-xs font-medium capitalize">{user.gender || '—'}</p>
+            <p className="text-gray-800 text-xs font-semibold capitalize truncate">{user.gender || '—'}</p>
           </div>
 
-          <div className="bg-white/5 rounded-xl p-3">
-            <div className="flex items-center gap-2 mb-1">
-              <Calendar className="w-3 h-3 text-slate-400" />
-              <p className="text-slate-400 text-[10px] uppercase tracking-wider">Joined</p>
+          <div className="bg-gray-50/60 rounded-xl p-2.5 border border-gray-100">
+            <div className="flex items-center gap-1.5 mb-0.5">
+              <Calendar className="w-3 h-3 text-gray-400" />
+              <p className="text-gray-400 text-[9px] font-bold uppercase tracking-wider">Joined</p>
             </div>
-            <p className="text-white text-xs font-medium">
+            <p className="text-gray-800 text-xs font-semibold">
               {user.createdAt
-                ? new Date(user.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+                ? new Date(user.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })
                 : '—'}
             </p>
           </div>
 
-          <div className="bg-white/5 rounded-xl p-3 col-span-2">
-            <div className="flex items-center gap-2 mb-1">
-              <MapPin className="w-3 h-3 text-slate-400" />
-              <p className="text-slate-400 text-[10px] uppercase tracking-wider">Address</p>
+          <div className="bg-gray-50/60 rounded-xl p-2.5 border border-gray-100 col-span-2">
+            <div className="flex items-center gap-1.5 mb-0.5">
+              <MapPin className="w-3 h-3 text-gray-400" />
+              <p className="text-gray-400 text-[9px] font-bold uppercase tracking-wider">Address</p>
             </div>
-            <p className="text-white text-xs font-medium truncate">
+            <p className="text-gray-800 text-xs font-semibold truncate">
               {user.address1
                 ? `${user.address1}${user.address2 ? `, ${user.address2}` : ''}`
                 : '—'}
@@ -108,37 +106,35 @@ const UserCard: React.FC<{
           </div>
         </div>
 
-        {/* Verification badges */}
-        <div className="flex items-center gap-2 mb-4">
-          <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-semibold
-            ${user.otpVerified ? 'bg-blue-500/15 text-blue-300 border border-blue-400/20' : 'bg-slate-700/50 text-slate-500 border border-slate-600/30'}`}>
-            {user.otpVerified
-              ? <CheckCircle className="w-3 h-3" />
-              : <XCircle className="w-3 h-3" />}
+        {/* Verification Status Indicators */}
+        <div className="flex items-center gap-2">
+          <div className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider border
+            ${user.otpVerified ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-gray-100 text-gray-500 border-gray-200'}`}>
+            {user.otpVerified ? <CheckCircle className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
             OTP Verified
           </div>
-          <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-semibold
-            ${user.googleVerified ? 'bg-orange-500/15 text-orange-300 border border-orange-400/20' : 'bg-slate-700/50 text-slate-500 border border-slate-600/30'}`}>
-            {user.googleVerified
-              ? <CheckCircle className="w-3 h-3" />
-              : <XCircle className="w-3 h-3" />}
-            Google
+          <div className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider border
+            ${user.googleVerified ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-gray-100 text-gray-500 border-gray-200'}`}>
+            {user.googleVerified ? <CheckCircle className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
+            Google Link
           </div>
         </div>
+      </div>
 
-        {/* Action Button */}
+      {/* Action Block/Unblock Bottom Anchor */}
+      <div className="p-4 bg-gray-50 rounded-b-2xl border-t border-gray-100">
         <button
           onClick={() => onToggleStatus(user.userId || '', !user.isActive)}
-          className={`w-full py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-lg
+          className={`w-full py-2 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-xs border
             ${user.isActive
-              ? 'bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-400/30 hover:border-red-400/50'
-              : 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-400/30 hover:border-emerald-400/50'
+              ? 'bg-white hover:bg-red-50 text-red-600 border-red-200 hover:border-red-300'
+              : 'bg-white hover:bg-emerald-50 text-emerald-600 border-emerald-200 hover:border-emerald-300'
             }`}
         >
           {user.isActive ? (
-            <><ShieldOff className="w-4 h-4" /> Block User</>
+            <><ShieldOff className="w-3 h-3" /> Block Account</>
           ) : (
-            <><Shield className="w-4 h-4" /> Activate User</>
+            <><Shield className="w-3 h-3" /> Activate Account</>
           )}
         </button>
       </div>
@@ -152,52 +148,70 @@ const AllUsersTable: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white" />
+        <div className="animate-spin rounded-full h-10 w-10 border-4 border-gray-200 border-t-blue-600" />
       </div>
     );
   }
 
   if (users.length === 0) {
     return (
-      <div className="px-8 py-6">
-        <div className="bg-white/5 border border-dashed border-slate-500/40 rounded-2xl p-10 text-center">
-          <UserIcon className="w-16 h-16 text-slate-500 mx-auto mb-4" />
-          <p className="text-slate-100 text-base mb-2">No users registered yet</p>
-          <p className="text-slate-400 text-sm">Users will appear here once they sign up</p>
+      <div className="px-4 md:px-8 py-6">
+        <div className="bg-white border border-dashed border-gray-300 rounded-2xl p-10 text-center shadow-xs">
+          <UserIcon className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+          <p className="text-gray-800 text-base font-semibold mb-1">No users registered yet</p>
+          <p className="text-gray-500 text-sm">Users will appear here once they sign up</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="px-8 py-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
-        <h2 className="text-white text-3xl font-bold">All Users</h2>
-        <div className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-400/20 rounded-xl">
-          <span className="text-2xl font-bold text-white">{users.length}</span>
-          <span className="text-xs text-blue-300 uppercase tracking-widest font-semibold">Users</span>
-        </div>
+     <div className="flex min-h-screen bg-gray-50">
+      <Sidebar />
+      <div className="flex-1 min-w-0 overflow-y-auto">
+    <div className="px-4 md:px-8 py-6 bg-gray-50 min-h-screen">
+      {/* Top Header */}
+      <div className="bg-[#0a3a8a] text-white px-6 py-8 rounded-2xl mt-4 mb-6 shadow-xs">
+  <div className="flex items-center justify-between gap-5">
+    <div className="flex items-center gap-5">
+      <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center flex-shrink-0 shadow-lg">
+        <svg className="w-6 h-6 text-[#0a3a8a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
       </div>
-
-      {/* Cards */}
+      <div>
+        <h1 className="text-2xl sm:text-3xl font-bold">All Users</h1>
+        <p className="text-blue-200 text-sm mt-1">Manage registered users on the platform</p>
+      </div>
+    </div>
+    <div className="flex-shrink-0 px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-sm font-semibold whitespace-nowrap">
+      {users.length} users
+    </div>
+  </div>
+</div>
+      {/* Grid Canvas */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {users.map((user) => (
           <UserCard
-           key={user.userId}
-           user={user}
-           onToggleStatus={handleUpdateUserStatus}
-           />
+            key={user.userId}
+            user={user}
+            onToggleStatus={handleUpdateUserStatus}
+          />
         ))}
       </div>
 
-      {/* Pagination */}
-      <Pagination
-        currentPage={currentPage}
-        totalPages={pagination?.totalPages ?? 1}
-        isLoading={isLoading}
-        onPageChange={handlePageChange}
-      />
+      {/* Footer Navigation Spacer */}
+      <div className="mt-8">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={pagination?.totalPages ?? 1}
+          isLoading={isLoading}
+          onPageChange={handlePageChange}
+        />
+      </div>
+      </div>
+      </div>
     </div>
   );
 };

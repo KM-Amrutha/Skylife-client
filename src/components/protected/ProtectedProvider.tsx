@@ -11,14 +11,11 @@ const ProtectedProvider: React.FC = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const token = localStorage.getItem('accessToken');
-      
-      if (token && !provider) {
+      if ( !provider) {
         try {
           await dispatch(getProviderProfile()).unwrap();
         } catch (error) {
           console.error('Failed to fetch provider:', error);
-          localStorage.removeItem('accessToken');
         }
       }
       
@@ -26,7 +23,7 @@ const ProtectedProvider: React.FC = () => {
     };
 
     checkAuth();
-  }, [dispatch, provider]);
+  }, [dispatch]);
 
   if (isChecking) {
     return (
@@ -36,13 +33,7 @@ const ProtectedProvider: React.FC = () => {
     );
   }
 
-  const token = localStorage.getItem('accessToken');
-
-  if (!token || !provider) {
-    return <Navigate to="/" replace />;
-  }
-
-  if (provider.role !== "provider") {
+  if ( !provider || provider.role !== "provider") {
     return <Navigate to="/" replace />;
   }
 

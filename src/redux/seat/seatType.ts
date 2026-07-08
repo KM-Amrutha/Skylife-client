@@ -60,3 +60,35 @@ export interface Seat {
   createdAt: Date;
   updatedAt: Date;
 }
+export interface AircraftSeatDTO {
+  id: string;
+  aircraftId: string;
+  seatNumber: string;
+  rowNumber: number;
+  columnPosition: string;
+  section: string;
+  position: string;
+  cabinClass: string;
+  isExitRow: boolean;
+  isBlocked: boolean;
+  blockReason?: string;
+  features: string[];
+}
+
+export interface ToggleSeatBlockResponseDTO {
+  seatId: string;
+  seatNumber: string;
+  isBlocked: boolean;
+  affectedFlightSeats: number;
+  refundIssued: boolean;
+  refundAmount?: number;
+  userId?: string;
+}
+
+export interface AircraftSeatsState {
+  seats: AircraftSeatDTO[];
+  isLoading: boolean;
+  error: string | null;
+  isToggling: boolean;
+  toggleError: string | null;
+}

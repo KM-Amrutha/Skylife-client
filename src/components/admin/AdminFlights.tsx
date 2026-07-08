@@ -12,9 +12,9 @@ import {
   ChevronUp,
   Eye,
 } from "lucide-react";
-import AdminLayout from "../../layouts/AdminLayout";
 import useAdminFlights from "../../hooks/admin/useAdminFlights";
 import Pagination from "../../layouts/Pagination";
+import Sidebar from "./Sidebar";
 
 const AdminFlights: React.FC = () => {
   const {
@@ -39,43 +39,53 @@ const AdminFlights: React.FC = () => {
   };
 
   return (
-    <AdminLayout title="All Flights">
-      <div className="p-4 md:p-8 pt-20 lg:pt-8">
+    <>
+    <div className="flex min-h-screen bg-gray-50">
+     <Sidebar />
+     <div className="flex-1 min-w-0 p-4 md:p-8 pt-20 lg:pt-8 overflow-y-auto">
+      <div className="p-4 md:p-8 pt-20 lg:pt-8 bg-gray-50 min-h-screen">
+      
+       {/* Header */}
+<div className="bg-[#0a3a8a] text-white px-6 py-8 rounded-2xl mt-4 mb-6 shadow-xs">
+  <div className="flex items-center justify-between gap-5">
+    <div className="flex items-center gap-5">
+      <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center flex-shrink-0 shadow-lg">
+        <svg className="w-6 h-6 text-[#0a3a8a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+            d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+        </svg>
+      </div>
+      <div>
+        <h1 className="text-2xl sm:text-3xl font-bold">All Active Flights</h1>
+        <p className="text-blue-200 text-sm mt-1">View and manage all approved scheduled flights</p>
+      </div>
+    </div>
+    <div className="flex-shrink-0 px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-sm font-semibold whitespace-nowrap">
+      {adminFlights.length} active
+    </div>
+  </div>
+</div>
 
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-white text-3xl font-bold">All Active Flights</h1>
-            <p className="text-slate-400 text-sm mt-1">
-              View and manage all approved scheduled flights
-            </p>
-          </div>
-          <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-400/20 rounded-xl">
-            <span className="text-2xl font-bold text-white">{adminFlights.length}</span>
-            <span className="text-xs text-emerald-300 uppercase tracking-widest font-semibold">Active</span>
-          </div>
-        </div>
-
-        {/* Loading */}
+        {/* Loading State */}
         {isLoading && (
           <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white" />
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
           </div>
         )}
 
-        {/* Error */}
+        {/* Error State */}
         {error && (
-          <div className="bg-red-500/10 border border-red-400/60 text-red-200 px-4 py-3 rounded-xl mb-6">
+          <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-xl mb-6">
             <p className="text-sm font-medium">{error}</p>
           </div>
         )}
 
-        {/* Empty */}
+        {/* Empty State */}
         {!isLoading && adminFlights.length === 0 && (
-          <div className="bg-white/5 border border-dashed border-slate-500/40 rounded-2xl p-10 text-center">
-            <Plane className="w-16 h-16 text-slate-500 mx-auto mb-4" />
-            <p className="text-slate-100 text-base mb-2">No active flights</p>
-            <p className="text-slate-400 text-sm">No approved scheduled flights found</p>
+          <div className="bg-white border border-dashed border-gray-300 rounded-2xl p-10 text-center shadow-sm">
+            <Plane className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+            <p className="text-gray-800 text-base font-semibold mb-1">No active flights</p>
+            <p className="text-gray-500 text-sm">No approved scheduled flights found</p>
           </div>
         )}
 
@@ -87,64 +97,70 @@ const AdminFlights: React.FC = () => {
               return (
                 <div
                   key={flight.id}
-                  className="rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 shadow-xl overflow-hidden transition-all duration-300 hover:border-emerald-400/30"
+                  className="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden transition-all duration-300 hover:border-gray-300"
                 >
-                  {/* Card Header */}
-                  <div className="p-5 flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-4 flex-1">
-                      {/* Icon */}
+                  {/* Card Header Summary */}
+                  <div className="p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div className="flex items-center gap-4 flex-1 w-full min-w-0">
                       {flight.providerLogo ? (
-        <img
-          src={flight.providerLogo}
-        
-          className="w-10 h-10 rounded-lg object-cover border border-white/15"
-        />
-      ) : (
-        <div className="w-10 h-10 rounded-lg bg-sky-500/20 border border-sky-400/20 flex items-center justify-center">
-          <Plane className="w-5 h-5 text-sky-400" />
-        </div>)}
+                        <img
+                          src={flight.providerLogo}
+                          alt={flight.providerName}
+                          className="w-11 h-11 rounded-lg object-cover border border-gray-200 shadow-sm flex-shrink-0"
+                        />
+                      ) : (
+                        <div className="w-11 h-11 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center flex-shrink-0">
+                          <Plane className="w-5 h-5 text-blue-600" />
+                        </div>
+                      )}
 
-                      {/* Left */}
+                      {/* Flight/Aircraft Text */}
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="text-white font-bold text-xl">{flight.providerName}</span>
+                          <span className="text-gray-900 font-bold text-lg truncate">{flight.providerName}</span>
                         </div>
-                        <p className="text-slate-500 text-xs mt-0.5">
-                          Flight No. <span className="text-green-300 font-bold">{flight.flightNumber}</span>
-                          <br></br>
-                           {flight.aircraftName}
-          {flight.aircraftType ? ` · ${flight.aircraftType}` : ""}
-          {flight.manufacturer ? ` · ${flight.manufacturer}` : ""}
-                        </p>
+                        <div className="text-gray-500 text-xs mt-0.5 space-y-0.5">
+                          <p>
+                            Flight No. <span className="text-blue-700 font-bold">{flight.flightNumber}</span>
+                          </p>
+                          <p className="text-gray-400 truncate">
+                            {flight.aircraftName}
+                            {flight.aircraftType ? ` · ${flight.aircraftType}` : ""}
+                            {flight.manufacturer ? ` · ${flight.manufacturer}` : ""}
+                          </p>
+                        </div>
                       </div>
 
-                      {/* Centre — Route */}
-                      <div className="flex-1 flex flex-col items-center gap-1">
-                        <div className="flex items-center gap-3">
-                          <div className="text-center">
-                            <p className="text-white font-bold text-lg">{flight.departureDestination?.iataCode || 'N/A'}</p>
-                            <p className="text-slate-400 text-[10px] truncate max-w-[100px]">{flight.departureDestination?.name || '—'}</p>
+                      {/* Route Map Section */}
+                      <div className="flex-1 hidden md:flex flex-col items-center gap-1 min-w-0 px-4">
+                        <div className="flex items-center gap-4 justify-center w-full">
+                          <div className="text-right max-w-[120px]">
+                            <p className="text-gray-900 font-bold text-base tracking-tight">{flight.departureDestination?.iataCode || 'N/A'}</p>
+                            <p className="text-gray-500 text-[10px] truncate">{flight.departureDestination?.name || '—'}</p>
                           </div>
-                          <div className="flex items-center gap-1 text-slate-500">
-                            <div className="w-8 h-px bg-slate-600" />
-                            <Plane className="w-3 h-3 rotate-90" />
-                            <div className="w-8 h-px bg-slate-600" />
+                          
+                          <div className="flex items-center gap-1.5 text-gray-300 flex-shrink-0">
+                            <div className="w-10 h-px bg-gray-200" />
+                            <Plane className="w-3.5 h-3.5 text-gray-400 rotate-90" />
+                            <div className="w-10 h-px bg-gray-200" />
                           </div>
-                          <div className="text-center">
-                            <p className="text-white font-bold text-lg">{flight.arrivalDestination?.iataCode || 'N/A'}</p>
-                            <p className="text-slate-400 text-[10px] truncate max-w-[100px]">{flight.arrivalDestination?.name || '—'}</p>
+
+                          <div className="text-left max-w-[120px]">
+                            <p className="text-gray-900 font-bold text-base tracking-tight">{flight.arrivalDestination?.iataCode || 'N/A'}</p>
+                            <p className="text-gray-500 text-[10px] truncate">{flight.arrivalDestination?.name || '—'}</p>
                           </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-slate-400 text-xs">
-                            Flight ID: <span className="text-cyan-400">{flight.flightId}</span>
+                        
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className="text-gray-400 text-[11px]">
+                            ID: <span className="text-gray-600 font-mono font-medium">{flight.flightId}</span>
                           </span>
                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
                             flight.flightType === "recurring"
-                              ? "bg-purple-500/15 border-purple-400/30 text-purple-300"
+                              ? "bg-purple-50 border-purple-200 text-purple-700"
                               : flight.flightType === "return"
-                              ? "bg-amber-500/15 border-amber-400/30 text-amber-300"
-                              : "bg-blue-500/15 border-blue-400/30 text-blue-300"
+                              ? "bg-amber-50 border-amber-200 text-amber-700"
+                              : "bg-blue-50 border-blue-200 text-blue-700"
                           }`}>
                             {flight.flightType === "recurring" ? "🔁 Recurring" : flight.flightType === "return" ? "↩️ Return" : "✈️ Outbound"}
                           </span>
@@ -152,189 +168,198 @@ const AdminFlights: React.FC = () => {
                       </div>
                     </div>
 
+                    {/* Expand Trigger */}
                     <button
                       onClick={() => toggleExpand(flight.id)}
-                      className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-slate-300 hover:bg-white/10 hover:text-white transition text-sm font-medium shrink-0"
+                      className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition text-sm font-semibold shrink-0"
                     >
                       <Eye className="w-4 h-4" />
-                      {isExpanded ? 'Hide' : 'View'}
-                      {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                      {isExpanded ? 'Hide' : 'View Details'}
+                      {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                     </button>
                   </div>
 
-                  {/* Expanded Details */}
-{isExpanded && (
-  <div className="border-t border-white/10 px-5 py-5 space-y-5">
-    {/* Route & Schedule */}
-    <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
-      <div className="bg-white/5 rounded-xl p-3 col-span-2 md:col-span-1">
-        <div className="flex items-center gap-2 mb-1">
-          <MapPin className="w-3 h-3 text-slate-400" />
-          <p className="text-slate-400 text-[10px] uppercase tracking-wider">Route</p>
-        </div>
-        <p className="text-white text-xs font-medium">
-          {flight.departureDestination?.name || flight.departureDestinationId}
-          {" → "}
-          {flight.arrivalDestination?.name || flight.arrivalDestinationId}
-        </p>
-      </div>
+                  {/* Expanded Flight Details Grid */}
+                  {isExpanded && (
+                    <div className="border-t border-gray-100 bg-gray-50/50 px-5 py-6 space-y-6">
+                      
+                      {/* Mobile fallbacks for paths/routes */}
+                      <div className="block md:hidden bg-white border border-gray-200 rounded-xl p-4 space-y-2">
+                        <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Route Blueprint</p>
+                        <div className="flex justify-between items-center text-sm font-bold text-gray-900">
+                          <span>{flight.departureDestination?.iataCode || 'N/A'} → {flight.arrivalDestination?.iataCode || 'N/A'}</span>
+                          <span className="text-xs bg-gray-100 px-2 py-0.5 rounded font-mono font-normal text-gray-600">{flight.flightId}</span>
+                        </div>
+                      </div>
 
-      <div className="bg-white/5 rounded-xl p-3">
-        <div className="flex items-center gap-2 mb-1">
-          <Calendar className="w-3 h-3 text-slate-400" />
-          <p className="text-slate-400 text-[10px] uppercase tracking-wider">Departure</p>
-        </div>
-        <p className="text-white text-xs font-medium">
-          {new Date(flight.departureTime).toLocaleString("en-IN", {
-            day: "2-digit", month: "short",
-            hour: "2-digit", minute: "2-digit", hour12: true,
-          })}
-        </p>
-      </div>
+                      {/* Route Timings & Schedule */}
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        <div className="bg-white border border-gray-200 rounded-xl p-3.5 col-span-2 md:col-span-1 shadow-xs">
+                          <div className="flex items-center gap-2 mb-1.5">
+                            <MapPin className="w-3.5 h-3.5 text-gray-400" />
+                            <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Full Route Path</p>
+                          </div>
+                          <p className="text-gray-900 text-xs font-semibold leading-relaxed">
+                            {flight.departureDestination?.name || flight.departureDestinationId}
+                            {" → "}
+                            {flight.arrivalDestination?.name || flight.arrivalDestinationId}
+                          </p>
+                        </div>
 
-      <div className="bg-white/5 rounded-xl p-3">
-        <div className="flex items-center gap-2 mb-1">
-          <Calendar className="w-3 h-3 text-slate-400" />
-          <p className="text-slate-400 text-[10px] uppercase tracking-wider">Arrival</p>
-        </div>
-        <p className="text-white text-xs font-medium">
-          {new Date(flight.arrivalTime).toLocaleString("en-IN", {
-            day: "2-digit", month: "short",
-            hour: "2-digit", minute: "2-digit", hour12: true,
-          })}
-        </p>
-      </div>
+                        <div className="bg-white border border-gray-200 rounded-xl p-3.5 shadow-xs">
+                          <div className="flex items-center gap-2 mb-1.5">
+                            <Calendar className="w-3.5 h-3.5 text-gray-400" />
+                            <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Departure Time</p>
+                          </div>
+                          <p className="text-gray-900 text-xs font-bold">
+                            {new Date(flight.departureTime).toLocaleString("en-IN", {
+                              day: "2-digit", month: "short",
+                              hour: "2-digit", minute: "2-digit", hour12: true,
+                            })}
+                          </p>
+                        </div>
 
-      <div className="bg-white/5 rounded-xl p-3">
-        <div className="flex items-center gap-2 mb-1">
-          <Clock className="w-3 h-3 text-slate-400" />
-          <p className="text-slate-400 text-[10px] uppercase tracking-wider">Duration</p>
-        </div>
-        <p className="text-white text-xs font-medium">{flight.durationMinutes} min</p>
-      </div>
+                        <div className="bg-white border border-gray-200 rounded-xl p-3.5 shadow-xs">
+                          <div className="flex items-center gap-2 mb-1.5">
+                            <Calendar className="w-3.5 h-3.5 text-gray-400" />
+                            <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Arrival Time</p>
+                          </div>
+                          <p className="text-gray-900 text-xs font-bold">
+                            {new Date(flight.arrivalTime).toLocaleString("en-IN", {
+                              day: "2-digit", month: "short",
+                              hour: "2-digit", minute: "2-digit", hour12: true,
+                            })}
+                          </p>
+                        </div>
 
-      <div className="bg-white/5 rounded-xl p-3">
-        <div className="flex items-center gap-2 mb-1">
-          <Clock className="w-3 h-3 text-slate-400" />
-          <p className="text-slate-400 text-[10px] uppercase tracking-wider">Buffer</p>
-        </div>
-        <p className="text-white text-xs font-medium">{flight.bufferMinutes ?? "—"} min</p>
-      </div>
+                        <div className="bg-white border border-gray-200 rounded-xl p-3.5 shadow-xs">
+                          <div className="flex items-center gap-2 mb-1.5">
+                            <Clock className="w-3.5 h-3.5 text-gray-400" />
+                            <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Air Duration</p>
+                          </div>
+                          <p className="text-gray-900 text-xs font-semibold">{flight.durationMinutes} mins</p>
+                        </div>
 
-      {flight.gate && (
-        <div className="bg-white/5 rounded-xl p-3">
-          <div className="flex items-center gap-2 mb-1">
-            <Briefcase className="w-3 h-3 text-slate-400" />
-            <p className="text-slate-400 text-[10px] uppercase tracking-wider">Gate</p>
-          </div>
-          <p className="text-white text-xs font-medium">{flight.gate}</p>
-        </div>
-      )}
-    </div>
+                        <div className="bg-white border border-gray-200 rounded-xl p-3.5 shadow-xs">
+                          <div className="flex items-center gap-2 mb-1.5">
+                            <Clock className="w-3.5 h-3.5 text-gray-400" />
+                            <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Ground Buffer</p>
+                          </div>
+                          <p className="text-gray-900 text-xs font-semibold">{flight.bufferMinutes ?? "—"} mins</p>
+                        </div>
 
-    {/* Baggage Rules */}
-    <div>
-      <div className="flex items-center gap-2 mb-2.5">
-        <Briefcase className="w-3 h-3 text-slate-400" />
-        <p className="text-slate-400 text-[10px] uppercase tracking-wider font-semibold">Baggage Rules</p>
-      </div>
-      <div className="grid grid-cols-3 gap-2.5">
-        <div className="bg-white/5 rounded-xl p-3">
-          <p className="text-slate-400 text-[10px] uppercase tracking-wider mb-1">Free Cabin</p>
-          <p className="text-white text-xs font-bold">{flight.baggageRules?.freeCabinKg ?? 0} kg</p>
-        </div>
-        <div className="bg-white/5 rounded-xl p-3">
-          <p className="text-slate-400 text-[10px] uppercase tracking-wider mb-1">Extra / kg</p>
-          <p className="text-white text-xs font-bold">₹{flight.baggageRules?.extraChargePerKg ?? 0}</p>
-        </div>
-        {flight.baggageRules?.maxExtraKg && (
-          <div className="bg-white/5 rounded-xl p-3">
-            <p className="text-slate-400 text-[10px] uppercase tracking-wider mb-1">Max Extra</p>
-            <p className="text-white text-xs font-bold">{flight.baggageRules.maxExtraKg} kg</p>
-          </div>
-        )}
-      </div>
-    </div>
+                        {flight.gate && (
+                          <div className="bg-white border border-gray-200 rounded-xl p-3.5 shadow-xs">
+                            <div className="flex items-center gap-2 mb-1.5">
+                              <Briefcase className="w-3.5 h-3.5 text-gray-400" />
+                              <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Gate Terminal</p>
+                            </div>
+                            <p className="text-gray-900 text-xs font-bold text-blue-700">{flight.gate}</p>
+                          </div>
+                        )}
+                      </div>
 
-    {/* Seat Surcharges */}
-    {(flight.seatSurcharge?.window || flight.seatSurcharge?.aisle || flight.seatSurcharge?.extraLegroom) && (
-      <div>
-        <div className="flex items-center gap-2 mb-2.5">
-          <Tag className="w-3 h-3 text-slate-400" />
-          <p className="text-slate-400 text-[10px] uppercase tracking-wider font-semibold">Seat Surcharges</p>
-        </div>
-        <div className="grid grid-cols-3 gap-2.5">
-          {flight.seatSurcharge?.window && (
-            <div className="bg-white/5 rounded-xl p-3">
-              <p className="text-slate-400 text-[10px] uppercase tracking-wider mb-1">Window</p>
-              <p className="text-white text-xs font-bold">+₹{flight.seatSurcharge.window.toLocaleString("en-IN")}</p>
-            </div>
-          )}
-          {flight.seatSurcharge?.aisle && (
-            <div className="bg-white/5 rounded-xl p-3">
-              <p className="text-slate-400 text-[10px] uppercase tracking-wider mb-1">Aisle</p>
-              <p className="text-white text-xs font-bold">+₹{flight.seatSurcharge.aisle.toLocaleString("en-IN")}</p>
-            </div>
-          )}
-          {flight.seatSurcharge?.extraLegroom && (
-            <div className="bg-white/5 rounded-xl p-3">
-              <p className="text-slate-400 text-[10px] uppercase tracking-wider mb-1">Extra Legroom</p>
-              <p className="text-white text-xs font-bold">+₹{flight.seatSurcharge.extraLegroom.toLocaleString("en-IN")}</p>
-            </div>
-          )}
-        </div>
-      </div>
-    )}
+                      {/* Baggage Matrix Rules */}
+                      <div>
+                        <div className="flex items-center gap-2 mb-2.5">
+                          <Briefcase className="w-3.5 h-3.5 text-gray-500" />
+                          <p className="text-gray-700 text-xs font-bold uppercase tracking-wider">Baggage Regulations</p>
+                        </div>
+                        <div className="grid grid-cols-3 gap-3">
+                          <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-xs">
+                            <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-1">Free Cabin Allowance</p>
+                            <p className="text-gray-900 text-sm font-bold">{flight.baggageRules?.freeCabinKg ?? 0} kg</p>
+                          </div>
+                          <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-xs">
+                            <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-1">Overage charge / kg</p>
+                            <p className="text-gray-900 text-sm font-bold text-emerald-700">₹{flight.baggageRules?.extraChargePerKg ?? 0}</p>
+                          </div>
+                          {flight.baggageRules?.maxExtraKg && (
+                            <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-xs">
+                              <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-1">Max Weight Cap</p>
+                              <p className="text-gray-900 text-sm font-bold">{flight.baggageRules.maxExtraKg} kg</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
 
-    {/* Fares */}
-    <div>
-      <div className="flex items-center gap-2 mb-2.5">
-        <Tag className="w-3 h-3 text-slate-400" />
-        <p className="text-slate-400 text-[10px] uppercase tracking-wider font-semibold">Base Fares</p>
-      </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-        {flight.baseFare.economy > 0 && (
-          <div className="bg-slate-500/10 border border-slate-400/20 rounded-xl p-3">
-            <p className="text-slate-400 text-[10px] uppercase tracking-wider mb-1">Economy</p>
-            <p className="text-white text-sm font-bold">₹{flight.baseFare.economy.toLocaleString("en-IN")}</p>
-          </div>
-        )}
-        {flight.baseFare.premium_economy && (
-          <div className="bg-blue-500/10 border border-blue-400/20 rounded-xl p-3">
-            <p className="text-blue-300 text-[10px] uppercase tracking-wider mb-1">Prem. Economy</p>
-            <p className="text-white text-sm font-bold">₹{flight.baseFare.premium_economy.toLocaleString("en-IN")}</p>
-          </div>
-        )}
-        {flight.baseFare.business && (
-          <div className="bg-purple-500/10 border border-purple-400/20 rounded-xl p-3">
-            <p className="text-purple-300 text-[10px] uppercase tracking-wider mb-1">Business</p>
-            <p className="text-white text-sm font-bold">₹{flight.baseFare.business.toLocaleString("en-IN")}</p>
-          </div>
-        )}
-        {flight.baseFare.first && (
-          <div className="bg-amber-500/10 border border-amber-400/20 rounded-xl p-3">
-            <p className="text-amber-300 text-[10px] uppercase tracking-wider mb-1">First Class</p>
-            <p className="text-white text-sm font-bold">₹{flight.baseFare.first.toLocaleString("en-IN")}</p>
-          </div>
-        )}
-      </div>
-    </div>
+                      {/* Seat Layout Premium Costs */}
+                      {(flight.seatSurcharge?.window || flight.seatSurcharge?.aisle || flight.seatSurcharge?.extraLegroom) && (
+                        <div>
+                          <div className="flex items-center gap-2 mb-2.5">
+                            <Tag className="w-3.5 h-3.5 text-gray-500" />
+                            <p className="text-gray-700 text-xs font-bold uppercase tracking-wider">Seat Upgrade Surcharges</p>
+                          </div>
+                          <div className="grid grid-cols-3 gap-3">
+                            {flight.seatSurcharge?.window && (
+                              <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-xs">
+                                <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-1">Window Premium</p>
+                                <p className="text-gray-900 text-sm font-bold">+₹{flight.seatSurcharge.window.toLocaleString("en-IN")}</p>
+                              </div>
+                            )}
+                            {flight.seatSurcharge?.aisle && (
+                              <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-xs">
+                                <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-1">Aisle Premium</p>
+                                <p className="text-gray-900 text-sm font-bold">+₹{flight.seatSurcharge.aisle.toLocaleString("en-IN")}</p>
+                              </div>
+                            )}
+                            {flight.seatSurcharge?.extraLegroom && (
+                              <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-xs">
+                                <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-1">Extra Legroom</p>
+                                <p className="text-gray-900 text-sm font-bold text-blue-700">+₹{flight.seatSurcharge.extraLegroom.toLocaleString("en-IN")}</p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
 
-    {/* Action Button */}
-    <div className="flex gap-3 pt-2 border-t border-white/10">
-      <button
-        onClick={() => { setRejectReason(""); handleRejectClick(flight.id); }}
-        disabled={isRejecting}
-        className="flex-1 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-400/30 hover:border-red-400/50 disabled:opacity-50"
-      >
-        <XCircle className="w-4 h-4" /> Cancel Flight
-      </button>
-    </div>
+                      {/* Seat Class Fares */}
+                      <div>
+                        <div className="flex items-center gap-2 mb-2.5">
+                          <Tag className="w-3.5 h-3.5 text-gray-500" />
+                          <p className="text-gray-700 text-xs font-bold uppercase tracking-wider">Base Seat Class Fares</p>
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                          {flight.baseFare.economy > 0 && (
+                            <div className="bg-white border border-gray-200 rounded-xl p-3.5 shadow-xs">
+                              <p className="text-gray-500 text-[10px] font-bold uppercase tracking-wider mb-1">Economy</p>
+                              <p className="text-gray-900 text-base font-bold">₹{flight.baseFare.economy.toLocaleString("en-IN")}</p>
+                            </div>
+                          )}
+                          {flight.baseFare.premium_economy && (
+                            <div className="bg-blue-50/50 border border-blue-100 rounded-xl p-3.5 shadow-xs">
+                              <p className="text-blue-600 text-[10px] font-bold uppercase tracking-wider mb-1">Premium Economy</p>
+                              <p className="text-blue-900 text-base font-bold">₹{flight.baseFare.premium_economy.toLocaleString("en-IN")}</p>
+                            </div>
+                          )}
+                          {flight.baseFare.business && (
+                            <div className="bg-purple-50/50 border border-purple-100 rounded-xl p-3.5 shadow-xs">
+                              <p className="text-purple-600 text-[10px] font-bold uppercase tracking-wider mb-1">Business</p>
+                              <p className="text-purple-900 text-base font-bold">₹{flight.baseFare.business.toLocaleString("en-IN")}</p>
+                            </div>
+                          )}
+                          {flight.baseFare.first && (
+                            <div className="bg-amber-50/50 border border-amber-100 rounded-xl p-3.5 shadow-xs">
+                              <p className="text-amber-700 text-[10px] font-bold uppercase tracking-wider mb-1">First Class</p>
+                              <p className="text-amber-900 text-base font-bold">₹{flight.baseFare.first.toLocaleString("en-IN")}</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
 
-  </div>
-)}
-                  
+                      {/* Revoke Action Panel */}
+                      <div className="flex gap-3 pt-4 border-t border-gray-200">
+                        <button
+                          onClick={() => { setRejectReason(""); handleRejectClick(flight.id); }}
+                          disabled={isRejecting}
+                          className="flex-1 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 disabled:opacity-50"
+                        >
+                          <XCircle className="w-4 h-4" /> Cancel Flight Schedule
+                        </button>
+                      </div>
 
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -351,47 +376,47 @@ const AdminFlights: React.FC = () => {
         )}
       </div>
 
-      {/* Reject Modal */}
+      {/* Reject Reason Dialog Modal */}
       {rejectFlightId && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#0a1628] border border-white/20 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden">
-            <div className="h-1 w-full bg-gradient-to-r from-red-500 to-rose-400" />
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-gray-200 rounded-2xl w-full max-w-md shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+            <div className="h-1.5 w-full bg-red-500" />
             <div className="p-6">
-              <div className="flex items-start justify-between mb-5">
+              <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-red-500/20 border border-red-400/30 flex items-center justify-center">
-                    <AlertTriangle className="w-5 h-5 text-red-400" />
+                  <div className="w-10 h-10 rounded-xl bg-red-50 border border-red-100 flex items-center justify-center">
+                    <AlertTriangle className="w-5 h-5 text-red-600" />
                   </div>
                   <div>
-                    <h3 className="text-white font-bold text-lg">Reject Flight</h3>
-                    <p className="text-slate-400 text-xs">Only this flight will be affected</p>
+                    <h3 className="text-gray-900 font-bold text-lg">Cancel Scheduled Flight</h3>
+                    <p className="text-gray-500 text-xs">This action will instantly notify the air carrier.</p>
                   </div>
                 </div>
                 <button
                   onClick={handleRejectCancel}
-                  className="text-slate-400 hover:text-white transition text-xl font-bold"
+                  className="text-gray-400 hover:text-gray-600 text-lg font-bold p-1 transition"
                 >
                   ✕
                 </button>
               </div>
 
-              <div className="border-t border-white/5 mb-5" />
+              <div className="border-t border-gray-100 mb-4" />
 
-              <p className="text-slate-300 text-sm mb-4">
-                Provide a reason for rejecting this flight. The provider will be notified.
+              <p className="text-gray-600 text-sm mb-4 leading-relaxed">
+                Please enter an explicit cancellation or rejection reason. This message displays on the provider dashboard log.
               </p>
 
               <textarea
                 value={rejectReason}
                 onChange={(e) => setRejectReason(e.target.value)}
-                placeholder="e.g., Schedule conflict, invalid gate assignment..."
-                className="w-full p-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:border-red-400/50 focus:outline-none focus:ring-1 focus:ring-red-400/30 resize-none text-sm transition"
-                rows={5}
+                placeholder="e.g., Unstable flight path validation, operational gate conflict, scheduling overhaul..."
+                className="w-full p-3.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:border-red-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-red-500 resize-none text-sm transition"
+                rows={4}
               />
 
-              <div className="flex items-center justify-between mt-2 mb-5">
-                <span className="text-slate-500 text-xs">Minimum 10 characters</span>
-                <span className={`text-xs font-medium ${rejectReason.trim().length >= 10 ? 'text-emerald-400' : 'text-slate-500'}`}>
+              <div className="flex items-center justify-between mt-1 mb-6">
+                <span className="text-gray-400 text-xs">Minimum 10 characters required</span>
+                <span className={`text-xs font-semibold ${rejectReason.trim().length >= 10 ? 'text-emerald-600' : 'text-gray-400'}`}>
                   {rejectReason.trim().length} chars
                 </span>
               </div>
@@ -399,24 +424,26 @@ const AdminFlights: React.FC = () => {
               <div className="flex gap-3">
                 <button
                   onClick={handleRejectCancel}
-                  className="flex-1 py-2.5 rounded-xl font-semibold text-sm text-slate-300 border border-white/10 hover:bg-white/5 transition"
+                  className="flex-1 py-2.5 rounded-xl font-semibold text-sm text-gray-700 bg-gray-50 border border-gray-200 hover:bg-gray-100 transition"
                 >
-                  Cancel
+                  Go Back
                 </button>
                 <button
                   onClick={() => handleRejectConfirm(rejectReason)}
                   disabled={!rejectReason.trim() || rejectReason.trim().length < 10 || isRejecting}
-                  className="flex-1 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-400/30 hover:border-red-400/50 disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="flex-1 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white disabled:bg-gray-100 disabled:text-gray-400 disabled:border-transparent disabled:cursor-not-allowed"
                 >
                   <XCircle className="w-4 h-4" />
-                  {isRejecting ? "Rejecting..." : "Confirm Reject"}
+                  {isRejecting ? "Processing..." : "Confirm Drop"}
                 </button>
               </div>
             </div>
           </div>
         </div>
       )}
-    </AdminLayout>
+   </div>
+    </div>
+     </>
   );
 };
 

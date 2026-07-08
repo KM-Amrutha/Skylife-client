@@ -241,6 +241,7 @@ export const getUserBookings = createAsyncThunk(
       const res = await axiosInstance.get(
         `/user/bookings?page=${page}&limit=${limit}`
       );
+      console.log('user bookings details: ', res.data?.data)
       return res.data?.data;
     } catch (error: any) {
       return rejectWithValue(
@@ -281,6 +282,18 @@ export const getTicket = createAsyncThunk(
       return rejectWithValue(
         error.response?.data?.message || "Failed to fetch ticket"
       );
+    }
+  }
+);
+
+export const payWithWallet = createAsyncThunk(
+  "booking/payWithWallet",
+  async ({ sessionId, offerId }: { sessionId: string; offerId?: string }, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.post("/user/wallet/pay", { sessionId, offerId });
+      return res.data?.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || "Failed to pay with wallet");
     }
   }
 );

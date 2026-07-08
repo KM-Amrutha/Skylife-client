@@ -27,7 +27,7 @@ const useProviderFood = () => {
 
   // ─── Load foods on mount and page change ─────────────────────────────────
   useEffect(() => {
-    dispatch(getProviderFoods({ page: currentPage, limit: 4 }));
+    dispatch(getProviderFoods({ page: currentPage, limit: 3 }));
   }, [currentPage, dispatch]);
 
   // ─── Show errors as toasts ────────────────────────────────────────────────
@@ -123,6 +123,7 @@ const useProviderFood = () => {
     },
     [dispatch]
   );
+ 
 
   // ─── Pagination ───────────────────────────────────────────────────────────
   const handlePageChange = useCallback((page: number) => {

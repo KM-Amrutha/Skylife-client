@@ -29,7 +29,7 @@ const FlightCard: React.FC<{
   onSelect: (id: string) => void;
   onView: () => void;
 }> = ({ flight, isSelected, isAddingFlight, onSelect, onView }) => (
-  <div className="bg-white border border-gray-200 rounded-xl p-3 sm:p-4 hover:shadow-md hover:border-gray-300 transition-all duration-200 overflow-hidden">
+  <div className="bg-white border border-gray-200 rounded-xl p-3 sm:p-4 shadow-sm hover:shadow-md hover:border-gray-300 transition-all duration-200 overflow-hidden">
     <div className="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-4 min-w-0 w-full">
 
       <div className="flex items-center gap-2 lg:w-36 lg:flex-shrink-0 min-w-0">
@@ -44,8 +44,8 @@ const FlightCard: React.FC<{
           <p className="text-gray-900 font-bold text-sm leading-tight truncate">
             {flight.providerName ?? flight.aircraftName}
           </p>
-          <p className="text-gray-400 text-xs truncate">{flight.flightNumber}</p>
-          <p className="text-gray-300 text-xs truncate">{flight.aircraftName}</p>
+          <p className="text-gray-600 text-xs truncate">{flight.flightNumber}</p>
+          <p className="text-gray-600 text-xs truncate">{flight.aircraftName}</p>
         </div>
       </div>
 
@@ -53,20 +53,20 @@ const FlightCard: React.FC<{
         <div className="text-center flex-shrink-0 max-w-[110px] sm:max-w-none">
           <p className="text-gray-900 font-bold text-lg sm:text-xl leading-none">{formatTime(flight.departure.time)}</p>
           <p className="text-gray-600 text-xs font-semibold mt-1">{flight.departure.iataCode}</p>
-          <p className="text-gray-400 text-[10px] sm:text-xs truncate">{flight.departure.name}</p>
+          <p className="text-gray-600 text-[10px] sm:text-xs truncate">{flight.departure.name}</p>
         </div>
         <div className="flex-1 flex flex-col items-center gap-1 min-w-[40px]">
-          <p className="text-gray-400 text-[10px] sm:text-xs whitespace-nowrap">{formatDuration(flight.durationMinutes)}</p>
+          <p className="text-gray-600 text-[10px] sm:text-xs whitespace-nowrap">{formatDuration(flight.durationMinutes)}</p>
           <div className="flex items-center w-full gap-1">
             <div className="flex-1 h-px bg-gray-200" />
-            <span className="text-gray-400 text-xs flex-shrink-0">✈</span>
+            <span className="text-gray-600 text-xs flex-shrink-0">✈</span>
             <div className="flex-1 h-px bg-gray-200" />
           </div>
         </div>
         <div className="text-center flex-shrink-0 max-w-[110px] sm:max-w-none">
           <p className="text-gray-900 font-bold text-lg sm:text-xl leading-none">{formatTime(flight.arrival.time)}</p>
           <p className="text-gray-600 text-xs font-semibold mt-1">{flight.arrival.iataCode}</p>
-          <p className="text-gray-400 text-[10px] sm:text-xs truncate">{flight.arrival.name}</p>
+          <p className="text-gray-600 text-[10px] sm:text-xs truncate">{flight.arrival.name}</p>
         </div>
       </div>
 
@@ -79,14 +79,14 @@ const FlightCard: React.FC<{
       </div>
 
       <div className="hidden md:block text-center flex-shrink-0 lg:w-20">
-        <p className="text-gray-400 text-xs">Cabin</p>
+        <p className="text-gray-600 text-xs">Cabin</p>
         <p className="text-gray-700 text-sm font-semibold">{flight.baggageRules?.freeCabinKg ?? 0}kg</p>
       </div>
 
       {flight.amenities && flight.amenities.length > 0 && (
         <div className="hidden md:flex flex-wrap gap-1 lg:w-28 flex-shrink-0">
           {flight.amenities.slice(0, 3).map((a) => (
-            <span key={a} className="text-[10px] px-1.5 py-0.5 rounded-full bg-gray-50 border border-gray-200 text-gray-500">
+            <span key={a} className="text-[10px] px-1.5 py-0.5 rounded-full bg-gray-50 border border-gray-200 text-gray-700">
               {AMENITY_ICONS[a] ?? "✓"} {AMENITY_LABELS[a] ?? a}
             </span>
           ))}
@@ -95,7 +95,7 @@ const FlightCard: React.FC<{
 
       <div className="flex items-center justify-between lg:flex-col lg:items-end lg:justify-center gap-3 lg:gap-1 flex-shrink-0 lg:w-32 pt-2 lg:pt-0 border-t lg:border-t-0 border-gray-100">
         <div className="text-left lg:text-right">
-          <p className="text-gray-400 text-xs">from</p>
+          <p className="text-gray-600 text-xs">from</p>
           <p className="text-gray-900 font-bold text-lg sm:text-xl leading-tight">
             ₹{getLowestFare(flight.baseFare).toLocaleString('en-IN')}
           </p>
@@ -133,11 +133,11 @@ const FlightSection: React.FC<{
   <div className="mb-8">
     <h3 className="text-gray-900 font-bold text-base mb-3">
       {title}
-      <span className="text-gray-400 font-normal text-sm ml-2">{flights.length} of {total}</span>
+      <span className="text-gray-600 font-normal text-sm ml-2">{flights.length} of {total}</span>
     </h3>
     {flights.length === 0 ? (
-      <div className="bg-white border border-gray-200 rounded-xl p-8 text-center">
-        <p className="text-gray-500">No flights match your filters.</p>
+      <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-8 text-center">
+        <p className="text-gray-700">No flights match your filters.</p>
         <button onClick={onResetFilters} className="mt-2 text-sm text-[#0a3a8a] hover:underline font-medium">
           Reset filters
         </button>
@@ -194,7 +194,7 @@ const UserHome: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full max-w-[100vw] overflow-x-hidden bg-gray-50 text-gray-900">
+    <div className="min-h-screen w-full max-w-[100vw] overflow-x-hidden bg-slate-100 text-gray-900">
       <UserHeader />
 
       {!hasSearched && (
@@ -222,24 +222,24 @@ const UserHome: React.FC = () => {
           {isSearching && (
             <div className="flex flex-col items-center py-20 gap-4">
               <div className="w-10 h-10 border-4 border-gray-200 border-t-[#0a3a8a] rounded-full animate-spin" />
-              <p className="text-gray-500 text-lg">Searching for flights...</p>
+              <p className="text-gray-700 text-lg">Searching for flights...</p>
             </div>
           )}
 
           {!isSearching && searchError && (
             <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
               <p className="text-red-600 font-medium">{searchError}</p>
-              <button onClick={handleClear} className="mt-3 text-sm text-gray-500 hover:text-gray-800 underline">
+              <button onClick={handleClear} className="mt-3 text-sm text-gray-700 hover:text-gray-800 underline">
                 Try again
               </button>
             </div>
           )}
 
           {!isSearching && !searchError && !hasResults && (
-            <div className="bg-white border border-gray-200 rounded-xl p-12 text-center">
+            <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-12 text-center">
               <p className="text-5xl mb-4">✈️</p>
               <p className="text-gray-900 text-xl font-semibold">No flights found</p>
-              <p className="text-gray-500 mt-2">Try different dates or destinations</p>
+              <p className="text-gray-700 mt-2">Try different dates or destinations</p>
               <button onClick={handleClear} className="mt-6 px-6 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium transition">
                 Clear Search
               </button>
@@ -254,19 +254,19 @@ const UserHome: React.FC = () => {
                   <p className="text-xs text-white/70 font-medium">Best</p>
                   <p className="font-bold text-lg">₹{cheapest.toLocaleString('en-IN')}</p>
                 </div>
-                <div className="bg-white border border-gray-200 rounded-lg px-4 py-3">
-                  <p className="text-xs text-gray-400 font-medium">Cheapest</p>
+                <div className="bg-white border border-gray-200 rounded-lg shadow-sm px-4 py-3">
+                  <p className="text-xs text-gray-600 font-medium">Cheapest</p>
                   <p className="font-bold text-lg text-gray-900">₹{cheapest.toLocaleString('en-IN')}</p>
                 </div>
-                <div className="bg-white border border-gray-200 rounded-lg px-4 py-3">
-                  <p className="text-xs text-gray-400 font-medium">Fastest</p>
+                <div className="bg-white border border-gray-200 rounded-lg shadow-sm px-4 py-3">
+                  <p className="text-xs text-gray-600 font-medium">Fastest</p>
                   <p className="font-bold text-lg text-gray-900">{fastest ? formatDuration(fastest.durationMinutes) : '-'}</p>
                 </div>
               </div>
 
               <div className="flex flex-col lg:flex-row gap-6">
                 <aside className="w-full lg:w-64 flex-shrink-0">
-                  <div className="bg-white border border-gray-200 rounded-xl p-5 sticky top-6">
+                  <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-5 sticky top-6">
                     <div className="flex items-center justify-between mb-5">
                       <h3 className="font-bold text-gray-900 text-base">Filters</h3>
                       <button onClick={resetFilters} className="text-xs text-[#0a3a8a] hover:underline font-medium">Reset</button>
@@ -277,7 +277,7 @@ const UserHome: React.FC = () => {
                       <input type="range" min={0} max={maxPrice} step={500} value={priceFilter}
                         onChange={(e) => setPriceFilter(Number(e.target.value))} className="w-full accent-[#0a3a8a]" />
                       <div className="flex justify-between mt-1">
-                        <span className="text-gray-400 text-xs">₹0</span>
+                        <span className="text-gray-600 text-xs">₹0</span>
                         <span className="text-gray-900 font-semibold text-sm">₹{priceFilter.toLocaleString('en-IN')}</span>
                       </div>
                     </div>
@@ -296,7 +296,7 @@ const UserHome: React.FC = () => {
                     </div>
 
                     <div className="pt-4 border-t border-gray-100">
-                      <p className="text-gray-400 text-xs text-center">
+                      <p className="text-gray-600 text-xs text-center">
                         {filteredOutbound.length + filteredReturn.length} of {totalResults} flights
                       </p>
                     </div>
@@ -306,7 +306,7 @@ const UserHome: React.FC = () => {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-5">
                     <p className="text-gray-900 font-semibold">{totalResults} flight{totalResults !== 1 ? 's' : ''} found</p>
-                    <button onClick={handleClear} className="text-sm text-gray-400 hover:text-gray-800 underline transition">Clear</button>
+                    <button onClick={handleClear} className="text-sm text-gray-600 hover:text-gray-800 underline transition">Clear</button>
                   </div>
 
                   <FlightSection
@@ -358,7 +358,7 @@ const UserHome: React.FC = () => {
       )}
 
       <footer className="mt-20 px-6 md:px-8 py-8 text-sm border-t border-gray-200">
-        <div className="flex flex-wrap justify-between items-center gap-4 max-w-7xl mx-auto text-gray-400">
+        <div className="flex flex-wrap justify-between items-center gap-4 max-w-7xl mx-auto text-gray-600">
           <span>India · English (UK) · INR</span>
           <div className="flex flex-wrap gap-6">
             <span>Help</span><span>Privacy</span><span>Company</span>

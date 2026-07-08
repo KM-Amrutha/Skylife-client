@@ -18,14 +18,14 @@ const FlightSegmentCard: React.FC<{
     .map(([k]) => k);
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-3 sm:p-5 hover:shadow-md hover:border-gray-300 transition-all duration-200 overflow-hidden min-w-0">
+    <div className="bg-white border border-gray-200 rounded-xl p-3 sm:p-5 shadow-sm hover:shadow-md hover:border-gray-300 transition-all duration-200 overflow-hidden min-w-0">
       {/* Card header */}
       <div className="flex items-center justify-between mb-4 gap-2">
         <div className="flex items-center gap-2 min-w-0">
           <div className="w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0">
             <span className="text-[#0a3a8a] text-xs font-bold">{index + 1}</span>
           </div>
-          <span className="text-gray-400 text-xs uppercase tracking-widest truncate">
+          <span className="text-gray-600 text-xs uppercase tracking-widest truncate">
             {index === 0 ? "Outbound" : index === 1 ? "Return" : `Stop ${index}`}
           </span>
         </div>
@@ -60,7 +60,7 @@ const FlightSegmentCard: React.FC<{
             </span>
           </div>
 
-          <p className="text-gray-400 text-xs mt-1 truncate">
+          <p className="text-gray-600 text-xs mt-1 truncate">
             {flight.from} → {flight.to}
           </p>
         </div>
@@ -72,14 +72,14 @@ const FlightSegmentCard: React.FC<{
               {formatTime(flight.departureTime)}
             </p>
             <p className="text-gray-600 text-xs font-semibold mt-1">{flight.from}</p>
-            <p className="text-gray-400 text-[10px] sm:text-xs truncate">{flight.fromName}</p>
+            <p className="text-gray-600 text-[10px] sm:text-xs truncate">{flight.fromName}</p>
           </div>
 
           <div className="flex-1 flex flex-col items-center gap-1 min-w-[40px]">
-            <p className="text-gray-400 text-[10px] sm:text-xs whitespace-nowrap">{formatDuration(flight.durationMinutes)}</p>
+            <p className="text-gray-600 text-[10px] sm:text-xs whitespace-nowrap">{formatDuration(flight.durationMinutes)}</p>
             <div className="flex items-center w-full gap-1">
               <div className="flex-1 h-px bg-gray-200" />
-              <Plane className="w-3 h-3 text-gray-400 flex-shrink-0" />
+              <Plane className="w-3 h-3 text-gray-600 flex-shrink-0" />
               <div className="flex-1 h-px bg-gray-200" />
             </div>
           </div>
@@ -89,14 +89,14 @@ const FlightSegmentCard: React.FC<{
               {formatTime(flight.arrivalTime)}
             </p>
             <p className="text-gray-600 text-xs font-semibold mt-1">{flight.to}</p>
-            <p className="text-gray-400 text-[10px] sm:text-xs truncate">{flight.toName}</p>
+            <p className="text-gray-600 text-[10px] sm:text-xs truncate">{flight.toName}</p>
           </div>
         </div>
 
         {/* Fare + classes */}
         <div className="flex items-center justify-between lg:flex-col lg:items-end lg:justify-center gap-2 flex-shrink-0 lg:w-32 pt-2 lg:pt-0 border-t lg:border-t-0 border-gray-100">
           <div className="text-left lg:text-right">
-            <p className="text-gray-400 text-xs">from</p>
+            <p className="text-gray-600 text-xs">from</p>
             <p className="text-gray-900 font-bold text-lg leading-tight">
               ₹{getLowestFare(flight.baseFare).toLocaleString("en-IN")}
             </p>
@@ -115,7 +115,7 @@ const FlightSegmentCard: React.FC<{
       </div>
 
       {/* Baggage info */}
-      <div className="mt-4 pt-4 border-t border-gray-100 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-400">
+      <div className="mt-4 pt-4 border-t border-gray-100 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-600">
         <span>
           Free cabin:{" "}
           <span className="text-gray-700 font-semibold">
@@ -159,10 +159,10 @@ const BookingSegment: React.FC = () => {
   // ─── Loading ───────────────────────────────────────────────────────────────
   if (isLoadingSegment) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-slate-100 flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <div className="w-10 h-10 border-4 border-gray-200 border-t-[#0a3a8a] rounded-full animate-spin" />
-          <p className="text-gray-500">Loading your booking...</p>
+          <p className="text-gray-700">Loading your booking...</p>
         </div>
       </div>
     );
@@ -171,7 +171,7 @@ const BookingSegment: React.FC = () => {
   // ─── Error ─────────────────────────────────────────────────────────────────
   if (segmentError) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <div className="min-h-screen bg-slate-100 flex items-center justify-center px-4">
         <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center max-w-md">
           <p className="text-red-600 font-medium mb-4">{segmentError}</p>
           <button
@@ -188,11 +188,11 @@ const BookingSegment: React.FC = () => {
   // ─── No segment ────────────────────────────────────────────────────────────
   if (!segment || segment.segments.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-        <div className="bg-white border border-gray-200 rounded-xl p-12 text-center max-w-md">
-          <Plane className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+      <div className="min-h-screen bg-slate-100 flex items-center justify-center px-4">
+        <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-12 text-center max-w-md">
+          <Plane className="w-16 h-16 text-gray-600 mx-auto mb-4" />
           <p className="text-gray-900 text-xl font-semibold">No flights selected</p>
-          <p className="text-gray-500 mt-2 mb-6">Go back and select flights to continue</p>
+          <p className="text-gray-700 mt-2 mb-6">Go back and select flights to continue</p>
           <button
             onClick={handleBack}
             className="px-6 py-2 rounded-lg bg-[#0a3a8a] text-white text-sm font-bold hover:bg-[#082c6b] transition"
@@ -207,7 +207,7 @@ const BookingSegment: React.FC = () => {
   const passengerOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
   return (
-    <div className="min-h-screen w-full max-w-[100vw] overflow-x-hidden bg-gray-50 text-gray-900">
+    <div className="min-h-screen w-full max-w-[100vw] overflow-x-hidden bg-slate-100 text-gray-900">
       <UserHeader
         onBack={handleBack}
         backLabel="Back to Search"
@@ -217,16 +217,27 @@ const BookingSegment: React.FC = () => {
           { label: " Payment", active: false },
         ]}
       />
+      {/* Blue Banner Header */}
+<div className="bg-[#0a3a8a] text-white px-6 py-8 rounded-2xl mt-6 shadow-xs max-w-4xl mx-auto">
+  <div className="max-w-3xl mx-auto flex items-center gap-5">
+    <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center flex-shrink-0 shadow-lg">
+      <Plane className="w-6 h-6 text-[#0a3a8a]" />
+    </div>
+    <div className="flex-1 min-w-0">
+      <h1 className="text-2xl sm:text-3xl font-bold">Confirm your flights</h1>
+      <p className="text-blue-200 text-sm mt-1">
+        Review your selected flights and passenger count before continuing.
+      </p>
+    </div>
+    {segment && (
+      <div className="flex-shrink-0 px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-sm font-semibold text-white">
+        {segment.segments.length} flight{segment.segments.length > 1 ? "s" : ""}
+      </div>
+    )}
+  </div>
+</div>
+
       <div className="max-w-3xl mx-auto px-4 md:px-8 py-6 md:py-10">
-
-        {/* Page title */}
-        <div className="mb-6 md:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Confirm your flights</h1>
-          <p className="text-gray-500 mt-2 text-sm">
-            Review your selected flights and passenger count before continuing.
-          </p>
-        </div>
-
         {/* Flight cards */}
         <div className="flex flex-col gap-4 mb-8 min-w-0">
           {segment.segments.map((flight, index) => (
@@ -244,7 +255,7 @@ const BookingSegment: React.FC = () => {
         </div>
 
         {/* Passenger count */}
-        <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 mb-8">
+        <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-4 sm:p-5 mb-8">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3 min-w-0">
               <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
@@ -252,7 +263,7 @@ const BookingSegment: React.FC = () => {
               </div>
               <div className="min-w-0">
                 <p className="text-gray-900 font-semibold text-sm">Passengers</p>
-                <p className="text-gray-400 text-xs">Select how many passengers</p>
+                <p className="text-gray-600 text-xs">Select how many passengers</p>
               </div>
             </div>
             <div className="flex items-center gap-2 flex-wrap">
@@ -275,15 +286,15 @@ const BookingSegment: React.FC = () => {
         </div>
 
         {/* Summary footer */}
-        <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 mb-8">
+        <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-4 sm:p-5 mb-8">
           <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
-            <span className="text-gray-500">
+            <span className="text-gray-700">
               {segment.segments.length} flight{segment.segments.length > 1 ? "s" : ""}
             </span>
-            <span className="text-gray-500">
+            <span className="text-gray-700">
               {segment.passengerCount} passenger{segment.passengerCount > 1 ? "s" : ""}
             </span>
-            <span className="text-gray-400 text-xs">
+            <span className="text-gray-600 text-xs">
               Seat selection on next step
             </span>
           </div>

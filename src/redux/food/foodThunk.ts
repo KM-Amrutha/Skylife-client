@@ -5,16 +5,20 @@ import { CreateFoodDTO, UpdateFoodDTO } from "./foodType";
 export const getProviderFoods = createAsyncThunk(
   "food/getProviderFoods",
   async (
-    { page = 1, limit = 8 }: { page?: number; limit?: number } = {},
+    { page = 1, limit = 3 }: { page?: number; limit?: number } = {},
     { rejectWithValue }
   ) => {
     try {
       const res = await axiosInstance.get(`/provider/foods?page=${page}&limit=${limit}`);
     
+      console.log("pagination ", res.data?.data?.pagination)
       return {
         foods: res.data?.data?.foods || [],
-
-        pagination: res.data?.data?.pagination || null,
+         pagination: {
+    currentPage: res.data?.data?.currentPage || 1,
+    totalPages: res.data?.data?.totalPages || 1,
+    totalCount: res.data?.data?.totalCount || 0,
+  },
       };
     } catch (error: any) {
       if (error.response?.data?.message) {

@@ -1,5 +1,6 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
+import { Trash2 } from 'lucide-react';
 
 interface DeleteFlightModalProps {
   onConfirm: () => Promise<void>;
@@ -9,38 +10,49 @@ interface DeleteFlightModalProps {
 
 const DeleteFlightModal: React.FC<DeleteFlightModalProps> = ({ onConfirm, onCancel, isLoading }) => {
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
-      <div className="bg-[#0a1628] border border-white/20 rounded-2xl w-full max-w-md shadow-2xl p-8 text-center">
-        <div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mx-auto mb-4">
-          <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-          </svg>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs px-4">
+      {/* Modal Container */}
+      <div className="bg-white border border-gray-200 rounded-2xl w-full max-w-md shadow-2xl p-6 text-center text-gray-900 animate-in fade-in zoom-in-95 duration-150">
+        
+        {/* Warning Icon Badge */}
+        <div className="w-12 h-12 rounded-xl bg-red-50 flex items-center justify-center mx-auto mb-4 border border-red-100 text-red-600">
+          <Trash2 className="w-5 h-5" />
         </div>
-        <h2 className="text-white text-xl font-bold mb-2">Delete Flight</h2>
-        <p className="text-slate-400 text-sm mb-8">
-          Are you sure you want to delete this flight? This action cannot be undone and the aircraft will be reset to active.
+        
+        {/* Descriptive Text */}
+        <h2 className="text-gray-900 text-lg font-bold mb-1.5">Delete Flight Schedule</h2>
+        <p className="text-gray-500 text-sm mb-6 leading-relaxed px-2">
+          Are you sure you want to delete this flight? This action cannot be undone and the assigned aircraft status will be reset back to active.
         </p>
-        <div className="flex gap-3">
+        
+        {/* Action Controls */}
+        <div className="flex flex-col sm:flex-row gap-3">
           <button
+            type="button"
             onClick={onCancel}
-            className="flex-1 py-3 rounded-full border border-white/20 text-white text-sm font-semibold hover:bg-white/10 transition-colors"
+            disabled={isLoading}
+            className="flex-1 order-2 sm:order-1 py-2.5 rounded-xl border border-gray-300 text-gray-700 text-sm font-semibold hover:bg-gray-50 transition-colors disabled:opacity-50"
           >
             Cancel
           </button>
+          
           <button
+            type="button"
             onClick={onConfirm}
             disabled={isLoading}
-            className="flex-1 py-3 rounded-full bg-red-500 hover:bg-red-600 text-white text-sm font-semibold transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="flex-1 order-1 sm:order-2 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-semibold transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-xs"
           >
             {isLoading ? (
               <>
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                Deleting...
+                <span>Deleting...</span>
               </>
-            ) : 'Delete Flight'}
+            ) : (
+              <span>Delete Flight</span>
+            )}
           </button>
         </div>
+
       </div>
     </div>,
     document.body

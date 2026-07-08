@@ -7,7 +7,7 @@ import { Aircraft, AircraftPagination } from '../../redux/aircraft/aircraftTypes
 import { showSuccessToast, showErrorToast } from '../../utils/toast';
 import usePagination from '../sharedHooks/usePagination';
 
-const LIMIT = 4;
+const LIMIT = 3;
 
 interface UseAircraftListReturn {
   aircrafts: Aircraft[];
@@ -17,6 +17,7 @@ interface UseAircraftListReturn {
   currentPage: number;
   confirmDeleteId: string | null;
   selectedAircraft: Aircraft | null;
+  seatModalAircraftId: string | null;
   handleViewDetails: (aircraft: Aircraft) => void;
   handleCloseDetails: () => void;
   handleDeleteClick: (aircraftId: string) => void;
@@ -24,6 +25,8 @@ interface UseAircraftListReturn {
   handleDeleteCancel: () => void;
   handleEditClick: (aircraftId: string) => void;
   handlePageChange: (page: number) => void;
+  handleManageSeats: (aircraftId: string) => void;
+  handleCloseSeatModal: () => void;
 }
 
 const useAircraftList = (): UseAircraftListReturn => {
@@ -37,6 +40,10 @@ const useAircraftList = (): UseAircraftListReturn => {
   const { currentPage, handlePageChange, resetPage } = usePagination();
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [selectedAircraft, setSelectedAircraft] = useState<Aircraft | null>(null);
+  const [seatModalAircraftId, setSeatModalAircraftId] = useState<string | null>(null);
+
+  const handleManageSeats = (aircraftId: string) => setSeatModalAircraftId(aircraftId);
+const handleCloseSeatModal = () => setSeatModalAircraftId(null);
 
 const providerId = useSelector((state: RootState) => state.auth.provider?.id ?? '');
 
@@ -96,6 +103,9 @@ useEffect(() => {
     selectedAircraft,
     handleViewDetails,
     handleCloseDetails,
+    seatModalAircraftId,
+  handleManageSeats,
+  handleCloseSeatModal,
   };
 };
 

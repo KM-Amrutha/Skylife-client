@@ -11,14 +11,12 @@ const ProtectedUser: React.FC = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const token = localStorage.getItem("accessToken");
-
-      if (token && !user) {
+      if (!user) {
         try {
           await dispatch(getUserProfile()).unwrap();
         } catch (error) {
           console.error("Failed to fetch user:", error);
-          localStorage.removeItem("accessToken");
+        
         }
       }
 
@@ -26,7 +24,7 @@ const ProtectedUser: React.FC = () => {
     };
 
     checkAuth();
-  }, [dispatch, user]);
+  }, [dispatch]);
 
   if (isChecking) {
     return (
@@ -36,13 +34,8 @@ const ProtectedUser: React.FC = () => {
     );
   }
 
-  const token = localStorage.getItem("accessToken");
 
-  if (!token || !user) {
-    return <Navigate to="/" replace />;
-  }
-
-  if (user.role !== "user") {
+  if (!user || user.role !== "user") {
     return <Navigate to="/" replace />;
   }
 

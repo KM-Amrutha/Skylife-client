@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plane, MapPin, Clock } from 'lucide-react';
+import { Plane, MapPin, Clock, Hash, Calendar, Layers, Eye, Edit3, Trash2 } from 'lucide-react';
 import useFlightList from '../../hooks/provider/useFlightList';
 import DeleteFlightModal from './DeleteFlightModal';
 import FlightDetailModal from './FlightDetailModal';
@@ -22,37 +22,41 @@ const FlightList: React.FC = () => {
     handleDeleteCancel,
     handleEditClick,
     handlePageChange,
-     flightSeats,
-  isLoadingSeats,
-  seatsError,
-  selectedSeatFlightId,
-  handleViewSeats,
-  handleCloseSeats,
+    flightSeats,
+    isLoadingSeats,
+    seatsError,
+    selectedSeatFlightId,
+    handleViewSeats,
+    handleCloseSeats,
   } = useFlightList();
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white" />
+        <div className="animate-spin rounded-full h-10 w-10 border-4 border-gray-200 border-t-blue-600" />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-red-500/10 border border-red-400/60 text-red-200 px-4 py-3 rounded-xl">
-        <p className="text-sm font-medium">Error loading flights</p>
-        <p className="text-xs mt-1">{error}</p>
+      <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl my-4 mx-4 sm:mx-8">
+        <p className="text-sm font-bold">Error loading flights</p>
+        <p className="text-xs mt-1 opacity-90">{error}</p>
       </div>
     );
   }
 
-  if (flights.length === 0) {
+  if (!flights || flights.length === 0) {
     return (
-      <div className="bg-white/5 border border-dashed border-slate-500/40 rounded-2xl p-10 text-center">
-        <Plane className="w-16 h-16 text-slate-500 mx-auto mb-4" />
-        <p className="text-slate-100 text-base mb-2">No flights scheduled yet</p>
-        <p className="text-slate-400 text-sm">Schedule your first flight to get started</p>
+      <div className="bg-white border border-dashed border-gray-300 rounded-2xl p-10 text-center shadow-xs my-4 mx-4 sm:mx-8">
+        <Plane className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+        <p className="text-gray-800 text-base font-semibold mb-1">
+          No flights scheduled yet
+        </p>
+        <p className="text-gray-500 text-sm">
+          Schedule your first flight to get started
+        </p>
       </div>
     );
   }
@@ -73,130 +77,189 @@ const FlightList: React.FC = () => {
         />
       )}
       {selectedSeatFlightId && (
-     <FlightSeatModal
-    flightSeats={flightSeats}
-    isLoading={isLoadingSeats}
-    error={seatsError}
-    onClose={handleCloseSeats}
-       />
-       )}
+        <FlightSeatModal
+          flightSeats={flightSeats}
+          isLoading={isLoadingSeats}
+          error={seatsError}
+          onClose={handleCloseSeats}
+        />
+      )}
 
-      <div className="space-y-4">
-        <p className="text-sm text-slate-300">
-          Total flights: <span className="font-semibold text-white">{flights.length}</span>
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {flights.map((flight) => (
-            <div
-              key={flight.id}
-              className={`bg-white/5 border rounded-2xl p-5 shadow-lg shadow-black/30 transition duration-150 flex flex-col justify-between ${
-                flight.adminApproval.status === 'rejected'
-                  ? 'border-red-400/30 hover:border-red-400/60'
-                  : 'border-white/10 hover:border-blue-400/60 hover:shadow-blue-500/20'
-              }`}
-            >
-              {/* Title */}
-              <div className="mb-3">
-                <div className="flex items-center justify-between gap-2">
-                  <h3 className="text-lg font-semibold text-white">{flight.flightNumber}</h3>
-                  <span className="text-[11px] px-2 py-1 rounded-full bg-slate-900/60 text-slate-200 uppercase tracking-wide">
-                    {flight.flightStatus}
-                  </span>
-                </div>
-                <p className="text-xs text-slate-300 mt-1">{flight.aircraftName}</p>
-              </div>
-
-              {/* Details */}
-              <div className="space-y-1.5 text-xs text-slate-200">
-                <div className="flex justify-between">
-                  <span className="text-slate-400 flex items-center gap-1">
-                    <MapPin className="w-3 h-3" /> From
-                  </span>
-                  <span className="font-medium max-w-[60%] text-right truncate">
-                    {flight.departureDestination?.name || '—'} ({flight.departureDestination?.iataCode || 'N/A'})
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400 flex items-center gap-1">
-                    <MapPin className="w-3 h-3" /> To
-                  </span>
-                  <span className="font-medium max-w-[60%] text-right truncate">
-                    {flight.arrivalDestination?.name || '—'} ({flight.arrivalDestination?.iataCode || 'N/A'})
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400 flex items-center gap-1">
-                    <Clock className="w-3 h-3" /> Departure
-                  </span>
-                  <span className="font-medium">
-                    {new Date(flight.departureTime).toLocaleString('en-IN', {
-                      day: '2-digit', month: 'short',
-                      hour: '2-digit', minute: '2-digit', hour12: true,
-                    })}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Duration</span>
-                  <span className="font-medium">{flight.durationMinutes} min</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Economy fare</span>
-                  <span className="font-medium">₹{flight.baseFare.economy.toLocaleString('en-IN')}</span>
-                </div>
-              </div>
-
-              {/* Footer */}
-              <div className="flex items-center justify-between mt-4 pt-3 border-t border-white/10">
-                <span className={`px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wide border ${
-                  flight.adminApproval.status === 'approved'
-                    ? 'bg-emerald-500/15 text-emerald-300 border-emerald-400/40'
-                    : flight.adminApproval.status === 'rejected'
-                    ? 'bg-red-500/15 text-red-300 border-red-400/40'
-                    : 'bg-amber-500/15 text-amber-300 border-amber-400/40'
-                }`}>
-                  {flight.adminApproval.status}
-                </span>
-
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => handleViewDetails(flight)}
-                    className="text-xs px-3 py-1.5 rounded-lg bg-slate-500/20 text-slate-300 border border-slate-400/30 hover:bg-slate-500/30 transition font-medium"
-                  >
-                    View
-                  </button>
-                  <button
-                    onClick={() => handleViewSeats(flight.id)}
-                    className="text-xs px-3 py-1.5 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 hover:bg-indigo-500/30 transition font-medium"
-                    >
-                    Seats
-                   </button>
-                  <button
-                    onClick={() => handleEditClick(flight.id)}
-                    className="text-xs px-3 py-1.5 rounded-lg bg-blue-500/20 text-blue-300 border border-blue-400/30 hover:bg-blue-500/30 transition font-medium"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDeleteClick(flight.id)}
-                    className="text-xs px-3 py-1.5 rounded-lg bg-red-500/20 text-red-300 border border-red-400/30 hover:bg-red-500/30 transition font-medium"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
+      <div className="space-y-6">
+        {/* Blue Banner Header Block */}
+        <div className="bg-[#0a3a8a] text-white px-4 sm:px-8 py-8 rounded-2xl mx-4 sm:mx-8 mt-6 shadow-xs">
+          <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-start sm:items-center gap-5">
+            <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center flex-shrink-0 shadow-lg">
+              <Plane className="w-8 h-8 text-[#0a3a8a]" />
             </div>
-          ))}
+            <div className="flex-1 min-w-0">
+              <h1 className="text-2xl sm:text-3xl font-bold">Flight List</h1>
+              <p className="text-blue-200 text-sm mt-1">
+                Manage scheduling details and flight operations for your fleet
+              </p>
+            </div>
+            {!isLoading && flights.length > 0 && (
+              <div className="flex flex-col sm:flex-row gap-2">
+                <div className="flex-shrink-0 px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-sm font-semibold text-white">
+                  {flights.length} flights
+                </div>
+                <div className="flex-shrink-0 px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-sm font-semibold text-white">
+                  {pagination?.totalPages ?? 1} pages
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
-        {pagination && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={pagination.totalPages ?? 1}
-            isLoading={isLoading}
-            onPageChange={handlePageChange}
-          />
-        )}
+        {/* Constrained Grid Layout to match exact booking list width */}
+        <div className="max-w-6xl mx-auto px-4 sm:px-8 pb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {flights.map((flight) => (
+              <div
+                key={flight.id}
+                className={`rounded-2xl border shadow-xs bg-white hover:border-gray-300 transition duration-200 flex flex-col justify-between ${
+                  flight.adminApproval.status === 'rejected'
+                    ? 'border-red-200 hover:border-red-300'
+                    : 'border-gray-200'
+                }`}
+              >
+                <div className="p-5 flex-1">
+                  {/* Profile Header Style */}
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-xs shrink-0">
+                      <Plane className="w-6 h-6 text-blue-600" />
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-1.5">
+                        <h3 className="text-gray-900 font-bold text-base truncate">
+                          {flight.flightNumber}
+                        </h3>
+                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-gray-100 text-gray-600 uppercase tracking-wider border border-gray-200 whitespace-nowrap">
+                          {flight.flightStatus}
+                        </span>
+                      </div>
+                      <p className="text-gray-500 text-xs truncate mt-0.5">{flight.aircraftName}</p>
+                    </div>
+                  </div>
+
+                  <div className="border-t border-gray-100 my-3" />
+
+                  {/* Info Grid Style */}
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="bg-gray-50/60 rounded-xl p-2.5 border border-gray-100 col-span-2">
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        <MapPin className="w-3 h-3 text-gray-400" />
+                        <p className="text-gray-400 text-[9px] font-bold uppercase tracking-wider">From</p>
+                      </div>
+                      <p className="text-gray-800 text-xs font-semibold truncate">
+                        {flight.departureDestination?.name || '—'} ({flight.departureDestination?.iataCode || 'N/A'})
+                      </p>
+                    </div>
+
+                    <div className="bg-gray-50/60 rounded-xl p-2.5 border border-gray-100 col-span-2">
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        <MapPin className="w-3 h-3 text-gray-400" />
+                        <p className="text-gray-400 text-[9px] font-bold uppercase tracking-wider">To</p>
+                      </div>
+                      <p className="text-gray-800 text-xs font-semibold truncate">
+                        {flight.arrivalDestination?.name || '—'} ({flight.arrivalDestination?.iataCode || 'N/A'})
+                      </p>
+                    </div>
+
+                    <div className="bg-gray-50/60 rounded-xl p-2.5 border border-gray-100 col-span-2">
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        <Clock className="w-3 h-3 text-gray-400" />
+                        <p className="text-gray-400 text-[9px] font-bold uppercase tracking-wider">Departure</p>
+                      </div>
+                      <p className="text-gray-800 text-xs font-semibold">
+                        {new Date(flight.departureTime).toLocaleString('en-IN', {
+                          day: '2-digit', month: 'short',
+                          hour: '2-digit', minute: '2-digit', hour12: true,
+                        })}
+                      </p>
+                    </div>
+
+                    <div className="bg-gray-50/60 rounded-xl p-2.5 border border-gray-100">
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        <Calendar className="w-3 h-3 text-gray-400" />
+                        <p className="text-gray-400 text-[9px] font-bold uppercase tracking-wider">Duration</p>
+                      </div>
+                      <p className="text-gray-800 text-xs font-semibold truncate">{flight.durationMinutes} min</p>
+                    </div>
+
+                    <div className="bg-gray-50/60 rounded-xl p-2.5 border border-gray-100">
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        <Hash className="w-3 h-3 text-gray-400" />
+                        <p className="text-gray-400 text-[9px] font-bold uppercase tracking-wider">Economy fare</p>
+                      </div>
+                      <p className="text-gray-800 text-xs font-semibold truncate">₹{flight.baseFare.economy.toLocaleString('en-IN')}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Actions Block */}
+                <div className="p-4 bg-gray-50 rounded-b-2xl border-t border-gray-100 flex items-center justify-between gap-2">
+                  <span
+                    className={
+                      'px-2.5 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-wider border ' +
+                      (flight.adminApproval.status === 'approved'
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                        : flight.adminApproval.status === 'rejected'
+                        ? 'bg-red-50 text-red-700 border-red-200'
+                        : 'bg-amber-50 text-amber-700 border-amber-200')
+                    }
+                  >
+                    {flight.adminApproval.status}
+                  </span>
+
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      onClick={() => handleViewDetails(flight)}
+                      className="p-2 rounded-xl bg-white border border-gray-200 text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition shadow-xs"
+                      title="View Details"
+                    >
+                      <Eye className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => handleViewSeats(flight.id)}
+                      className="p-2 rounded-xl bg-white border border-indigo-100 text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700 transition shadow-xs"
+                      title="View Seats"
+                    >
+                      <Layers className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => handleEditClick(flight.id)}
+                      className="p-2 rounded-xl bg-white border border-blue-100 text-blue-600 hover:bg-blue-50 hover:text-blue-700 transition shadow-xs"
+                      title="Edit Flight"
+                    >
+                      <Edit3 className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteClick(flight.id)}
+                      className="p-2 rounded-xl bg-white border border-red-100 text-red-600 hover:bg-red-50 hover:text-red-700 transition shadow-xs"
+                      title="Delete Flight"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Dynamic Pagination Footer Element inside structural bounds */}
+          {pagination && (
+            <div className="mt-8">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={pagination.totalPages ?? 1}
+                isLoading={isLoading}
+                onPageChange={handlePageChange}
+              />
+            </div>
+          )}
+        </div>
       </div>
     </>
   );

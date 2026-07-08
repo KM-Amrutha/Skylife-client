@@ -89,7 +89,7 @@ const SeatSelectionModal: React.FC<SeatSelectionModalProps> = ({
   // ─── Seat color logic ─────────────────────────────────────────────────────
   const getSeatColor = (seat: BookingFlightSeatDTO, cabinClass: string): string => {
     if (seat.isBooked) return "bg-red-500 border-red-400 text-white cursor-not-allowed opacity-80";
-    if (seat.isBlocked) return "bg-gray-700 border-gray-600 text-gray-400 cursor-not-allowed opacity-60";
+    if (seat.isBlocked) return "bg-gray-700 border-gray-600 text-gray-600 cursor-not-allowed opacity-60";
 
     // Locked by current active passenger
     const myLocked = getLockedSeatForPassenger(flightId, activePassengerId);
@@ -253,7 +253,7 @@ const SeatSelectionModal: React.FC<SeatSelectionModalProps> = ({
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-start justify-center px-4 py-6 overflow-y-auto">
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
+     <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
 
       <div className="relative z-10 flex flex-col items-center my-auto">
         <button
@@ -264,11 +264,11 @@ const SeatSelectionModal: React.FC<SeatSelectionModalProps> = ({
         </button>
 
         {/* Cockpit */}
-        <div style={{ width: "100%", height: "50px", background: "#eef5f6", clipPath: "polygon(50% 0%, 100% 100%, 0% 100%)" }} />
+        <div style={{ width: "100%", height: "50px", background: "#ffffff", clipPath: "polygon(50% 0%, 100% 100%, 0% 100%)" }} />
 
         {/* Fuselage */}
         <div
-          style={{ background: "#ecf2fc", borderLeft: "1px solid rgba(255,255,255,0.2)", borderRight: "1px solid rgba(255,255,255,0.2)" }}
+          style={{ background:"#ffffff", borderLeft: "1px solid rgba(255,255,255,0.2)", borderRight: "1px solid rgba(255,255,255,0.2)" }}
           className="px-6 py-4 flex flex-col items-center gap-3 w-auto"
         >
           {/* Header */}
@@ -288,7 +288,7 @@ const SeatSelectionModal: React.FC<SeatSelectionModalProps> = ({
                     onClick={() => setActivePassengerId(p.passengerId)}
                     className={`px-3 py-1.5 rounded-full text-xs font-semibold transition border ${
                       activePassengerId === p.passengerId
-                        ? "bg-[#001233] text-white border-[#001233]"
+                        ? "bg-[#0a3a8a] text-white border-[#0a3a8a]"
                         : "bg-white text-slate-600 border-slate-300 hover:border-slate-400"
                     }`}
                   >
@@ -335,8 +335,8 @@ const SeatSelectionModal: React.FC<SeatSelectionModalProps> = ({
             <div key={cabin.cabinClass} className="flex flex-col items-center w-full">
               {index > 0 && (
                 <div className="w-full flex items-center gap-2 my-3">
-                  <div className="flex-1 h-px bg-white/10" />
-                  <div className="flex-1 h-px bg-white/10" />
+                  <div className="flex-1 h-px bg-slate-200" />
+                  <div className="flex-1 h-px bg-slate-200" />
                 </div>
               )}
               {renderCabinGrid(cabin)}
@@ -347,7 +347,7 @@ const SeatSelectionModal: React.FC<SeatSelectionModalProps> = ({
           <button
             onClick={onClose}
             disabled={!allSeatsSelected || isLockingSeat}
-            className="mt-4 w-full py-2.5 rounded-full bg-[#001233] text-white text-sm font-bold hover:bg-[#001f4d] transition disabled:opacity-40 disabled:cursor-not-allowed"
+            className="mt-4 w-full py-2.5 rounded-full bg-[#0a3a8a] text-white text-sm font-bold hover:bg-[#082c6b] transition disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {allSeatsSelected ? "Done — All seats selected" : `Select seats for all ${passengers.length} passengers`}
           </button>
@@ -355,7 +355,7 @@ const SeatSelectionModal: React.FC<SeatSelectionModalProps> = ({
 
         {/* Wings */}
         <div
-          style={{ background: "#fbffff", borderLeft: "1px solid rgba(255,255,255,0.2)", borderRight: "1px solid rgba(255,255,255,0.2)", borderTop: "1px solid rgba(255,255,255,0.1)" }}
+          style={{ background: "#ffffff", borderLeft: "1px solid rgba(255,255,255,0.2)", borderRight: "1px solid rgba(255,255,255,0.2)", borderTop: "1px solid rgba(255,255,255,0.1)" }}
           className="w-full flex"
         >
           <div className="flex-1 py-3 flex items-center justify-center" style={{ borderRight: "1px solid rgba(241,248,249,0.1)" }}>
@@ -367,30 +367,30 @@ const SeatSelectionModal: React.FC<SeatSelectionModalProps> = ({
         </div>
 
         {/* Tail */}
-        <div style={{ width: "100%", height: "50px", background: "#e6e9ef", clipPath: "polygon(0% 0%, 100% 0%, 50% 100%)" }} />
+        <div style={{ width: "100%", height: "50px", background: "#ffffff", clipPath: "polygon(0% 0%, 100% 0%, 50% 100%)" }} />
       </div>
 
       {/* Tooltip */}
       {tooltip && (
         <div
-          className="fixed z-[100] bg-[#0d1f3c] border border-white/20 rounded-xl p-3 shadow-2xl text-xs text-white min-w-[180px] pointer-events-none"
+          className="fixed z-[100] bg-white border border-slate-200 rounded-xl p-3.5 shadow-xl text-xs text-slate-700 min-w-[190px] pointer-events-none"
           style={{ top: tooltip.y - 10, left: tooltip.x + 36 }}
         >
-          <p className="font-bold text-sm mb-2">{tooltip.seat.seatNumber}</p>
-          <div className="space-y-1 text-slate-300">
-            <p>Cabin: <span className="text-white">{CABIN_LABELS[tooltip.seat.cabinClass] ?? tooltip.seat.cabinClass}</span></p>
-            <p>Position: <span className="text-white capitalize">{tooltip.seat.position}</span></p>
-            <p>Status: <span className={`font-semibold ${
-              tooltip.seat.isBooked ? "text-red-400" :
-              tooltip.seat.isLocked ? "text-amber-400" :
-              tooltip.seat.isBlocked ? "text-gray-400" : "text-emerald-400"
-            }`}>{getSeatStatus(tooltip.seat)}</span></p>
-            {tooltip.seat.isExitRow && <p className="text-yellow-400 font-medium">⚠ Exit Row</p>}
-            <p>Fare: <span className="text-white font-semibold">₹{tooltip.seat.fare.toLocaleString("en-IN")}</span></p>
-            {tooltip.seat.features.length > 0 && (
-              <p>Features: <span className="text-white">{tooltip.seat.features.join(", ")}</span></p>
-            )}
-          </div>
+         <p className="font-extrabold text-slate-900 text-sm mb-1.5 border-b border-slate-100 pb-1">{tooltip.seat.seatNumber}</p>
+<div className="space-y-1 font-medium">
+  <p className="text-slate-400">Cabin: <span className="text-slate-800">{CABIN_LABELS[tooltip.seat.cabinClass] ?? tooltip.seat.cabinClass}</span></p>
+  <p className="text-slate-400">Position: <span className="text-slate-800 capitalize">{tooltip.seat.position}</span></p>
+  <p className="text-slate-400">Status: <span className={`font-bold ${
+    tooltip.seat.isBooked ? "text-red-500" :
+    tooltip.seat.isLocked ? "text-amber-500" :
+    tooltip.seat.isBlocked ? "text-gray-500" : "text-emerald-600"
+  }`}>{getSeatStatus(tooltip.seat)}</span></p>
+  {tooltip.seat.isExitRow && <p className="text-amber-600 font-bold bg-amber-50 px-1.5 py-0.5 rounded-sm inline-block mt-0.5">⚠ Exit Row</p>}
+  <p className="text-slate-400 border-t border-slate-100 pt-1.5 mt-1.5">Fare: <span className="text-slate-900 font-extrabold text-sm">₹{tooltip.seat.fare.toLocaleString("en-IN")}</span></p>
+  {tooltip.seat.features.length > 0 && (
+    <p className="text-slate-400">Features: <span className="text-slate-800">{tooltip.seat.features.join(", ")}</span></p>
+  )}
+</div>
         </div>
       )}
     </div>,

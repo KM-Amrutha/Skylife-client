@@ -17,7 +17,6 @@ const useUserHeader = () => {
 
   const handleSignOut = useCallback(async () => {
     await dispatch(signOutUser());
-      localStorage.removeItem("accessToken");
     setIsDropdownOpen(false);
     navigate("/");
   }, [dispatch, navigate]);

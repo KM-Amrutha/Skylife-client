@@ -4,6 +4,7 @@ import { RootState, AppDispatch } from '../redux/store';
 import { useNavigate } from 'react-router-dom';
 import { signOutUser } from '../redux/auth/authThunk';
 import { showSuccessToast, showErrorToast } from '../utils/toast';
+import { ChevronDown, LayoutDashboard, LogOut } from 'lucide-react';
 
 const ProviderHeaderLayout: React.FC = () => {
   const navigate = useNavigate();
@@ -14,7 +15,6 @@ const ProviderHeaderLayout: React.FC = () => {
   const handleSignOut = async () => {
     try {
       await dispatch(signOutUser()).unwrap();
-      localStorage.removeItem('accessToken');
       showSuccessToast('Signed out successfully');
       navigate('/sign-in');
     } catch (error: any) {
@@ -23,62 +23,69 @@ const ProviderHeaderLayout: React.FC = () => {
   };
 
   return (
-    <header className="bg-[#00001F] text-white py-3 px-4 md:px-6 flex justify-between items-center border-b border-gray-700">
-      {/* Logo */}
-      <div className="flex items-center gap-2">
+    <header className="bg-white text-gray-900 py-3.5 px-4 md:px-8 grid grid-cols-3 items-center border-b border-gray-200 sticky top-0 z-30">
+      
+      {/* Left Slot: Maintained for mobile layout spacing balance */}
+      <div className="flex items-center">
+        {/* Keeps layout space empty on desktop, leaves room for mobile hamburger button position */}
+      </div>
+
+      {/* Center Slot: Logo and Stylized Typography */}
+      <div className="flex items-center justify-center gap-3">
         <img 
           src="/image/gemlogo.png" 
           alt="Logo" 
-          className="h-6 w-6 md:h-8 md:w-8"
+          className="h-8 w-8 object-contain"
         />
-        <span className="text-lg md:text-xl font-semibold">skylife</span>
+       <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-blue-700 to-indigo-600 bg-clip-text text-transparent">
+  skylife
+</span>
       </div>
 
-      {/* User Info & Dropdown */}
-      <div className="flex items-center gap-2 md:gap-3 relative">
-        <span className="text-xs md:text-sm hidden sm:inline">Hello</span>
+      {/* Right Slot: User Info & Dropdown */}
+      <div className="flex items-center justify-end gap-3 relative">
+        <span className="text-sm font-medium text-gray-400 hidden sm:inline">
+          Hello,
+        </span>
         <div className="relative">
           <button 
             onClick={() => setShowDropdown(!showDropdown)}
-            className="flex items-center gap-1 md:gap-2 bg-white text-[#00001F] px-2 md:px-4 py-1 md:py-1.5 rounded-full text-xs md:text-sm font-medium hover:bg-gray-100 transition-colors"
+            className="flex items-center gap-2 bg-gray-50 text-gray-800 border border-gray-200 px-3 md:px-4 py-2 rounded-xl text-xs md:text-sm font-semibold hover:bg-gray-100/80 transition-all cursor-pointer shadow-xs"
           >
-            <span className="max-w-[80px] md:max-w-none truncate">
+            <span className="max-w-[100px] md:max-w-none truncate">
               {provider?.companyName || 'Provider'}
             </span>
-            <svg 
-              className="w-3 h-3 md:w-4 md:h-4" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M19 9l-7 7-7-7" 
-              />
-            </svg>
+            <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${showDropdown ? 'rotate-180' : ''}`} />
           </button>
 
           {/* Dropdown Menu */}
           {showDropdown && (
-            <div className="absolute right-0 mt-2 w-40 md:w-48 bg-white text-gray-800 rounded-lg shadow-xl z-50">
-              <button
-                onClick={() => {
-                  navigate('/provider/dashboard');
-                  setShowDropdown(false);
-                }}
-                className="w-full text-left px-3 md:px-4 py-2 hover:bg-gray-100 text-xs md:text-sm font-medium rounded-t-lg"
-              >
-                Dashboard
-              </button>
-              <button
-                onClick={handleSignOut}
-                className="w-full text-left px-3 md:px-4 py-2 hover:bg-gray-100 text-xs md:text-sm font-medium text-red-600 rounded-b-lg"
-              >
-                Sign Out
-              </button>
-            </div>
+            <>
+              <div className="fixed inset-0 z-40" onClick={() => setShowDropdown(false)} />
+              
+              <div className="absolute right-0 mt-2 w-44 md:w-52 bg-white text-gray-800 rounded-2xl border border-gray-200 shadow-xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-100 origin-top-right">
+                <button
+                  onClick={() => {
+                    navigate('/provider/dashboard');
+                    setShowDropdown(false);
+                  }}
+                  className="w-full text-left px-3.5 py-2.5 hover:bg-gray-50 text-xs md:text-sm font-semibold text-gray-700 hover:text-gray-900 rounded-xl flex items-center gap-2.5 transition-all cursor-pointer"
+                >
+                  <LayoutDashboard className="w-4 h-4 text-gray-400" />
+                  Dashboard
+                </button>
+                
+                <div className="h-px bg-gray-100 my-1" />
+                
+                <button
+                  onClick={handleSignOut}
+                  className="w-full text-left px-3.5 py-2.5 hover:bg-red-50 text-xs md:text-sm font-semibold text-red-600 rounded-xl flex items-center gap-2.5 transition-all cursor-pointer"
+                >
+                  <LogOut className="w-4 h-4 text-red-500" />
+                  Sign Out
+                </button>
+              </div>
+            </>
           )}
         </div>
       </div>
