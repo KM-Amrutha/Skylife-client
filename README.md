@@ -311,5 +311,3 @@ VITE_CLOUDINARY_PRESET=
 VITE_GOOGLE_CLIENT_ID=
 VITE_STRIPE_PUBLISHABLE_KEY=
 \`\`\`
-
-One more tip: don't nest the folder-structure fence inside another fence in your actual file (I only did that here because this whole response itself needed to be one fence for you to copy cleanly) — in your real README.md, just use a single set of triple backticks around the tree, exactly like the block above.
