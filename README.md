@@ -1,10 +1,23 @@
-SKYLIFE-FRONTEND
+# Skylife — Frontend
 
+Aircraft booking platform frontend.
 
+## Tech Stack
 
+- **Framework:** React (Vite)
+- **UI Framework:** React 18
+- **Icon Factory:** Lucid React
+- **Type Safty:** TypeScript
+- **Form handling& validation:** Formik + Yup
+- **TicketvPDF generation:** html2Canvas + jsPDF
+- **State Management:** Redux Toolkit
+- **Styling:** Tailwind CSS
+- **Routing:** React Router v6
+- **HTTP Client:** Axios
+- **Payments:** Stripe Elements
+- **Image Upload:** Cloudinary,s3Bucket
 
- 
-The fodler strucutre is like this
+## Folder Structure
 front-end/
 ├── node_modules/
 ├── public/
@@ -280,3 +293,23 @@ front-end/
 ├── tsconfig.json
 ├── tsconfig.node.json
 └── vite.config.ts
+
+## Getting Started
+
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
+
+## Environment Variables
+
+\`\`\`
+VITE_CLOUDINARY_NAME=
+VITE_API_URL=
+VITE_CLOUDINARY_URL=
+VITE_CLOUDINARY_PRESET=
+VITE_GOOGLE_CLIENT_ID=
+VITE_STRIPE_PUBLISHABLE_KEY=
+\`\`\`
+
+One more tip: don't nest the folder-structure fence inside another fence in your actual file (I only did that here because this whole response itself needed to be one fence for you to copy cleanly) — in your real README.md, just use a single set of triple backticks around the tree, exactly like the block above.
