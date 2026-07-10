@@ -1,23 +1,36 @@
 # Skylife — Frontend
 
+<<<<<<< HEAD
 Aircraft booking platform frontend
+=======
+Aircraft booking platform frontend.
+>>>>>>> 0294bc0aa379ba4ef3a4c354dd55a68373f9f413
 
 ## Tech Stack
 
 - **Framework:** React (Vite)
+<<<<<<< HEAD
 - **State Management:** Redux Toolkit
 - **Styling:** Tailwind CSS
+=======
+>>>>>>> 0294bc0aa379ba4ef3a4c354dd55a68373f9f413
 - **UI Framework:** React 18
 - **Icon Factory:** Lucid React
 - **Type Safty:** TypeScript
 - **Form handling& validation:** Formik + Yup
 - **TicketvPDF generation:** html2Canvas + jsPDF
+<<<<<<< HEAD
+=======
+- **State Management:** Redux Toolkit
+- **Styling:** Tailwind CSS
+>>>>>>> 0294bc0aa379ba4ef3a4c354dd55a68373f9f413
 - **Routing:** React Router v6
 - **HTTP Client:** Axios
 - **Payments:** Stripe Elements
 - **Image Upload:** Cloudinary,s3Bucket
 
 ## Folder Structure
+<<<<<<< HEAD
 
 front-end/
 ├── node_modules/
