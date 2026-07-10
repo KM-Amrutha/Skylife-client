@@ -1,69 +1,314 @@
-# React + TypeScript + Vite
+# Skylife — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aircraft booking platform frontend
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Framework:** React (Vite)
+- **State Management:** Redux Toolkit
+- **Styling:** Tailwind CSS
+- **UI Framework:** React 18
+- **Icon Factory:** Lucid React
+- **Type Safty:** TypeScript
+- **Form handling& validation:** Formik + Yup
+- **TicketvPDF generation:** html2Canvas + jsPDF
+- **Routing:** React Router v6
+- **HTTP Client:** Axios
+- **Payments:** Stripe Elements
+- **Image Upload:** Cloudinary,s3Bucket
 
-## Expanding the ESLint configuration
+## Folder Structure
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+front-end/
+├── node_modules/
+├── public/
+├── src/
+│   ├── components/
+│   │   ├── admin/
+│   │   │   ├── AdminDashboard.tsx
+│   │   │   ├── AdminFlights.tsx
+│   │   │   ├── AdminWallet.tsx
+│   │   │   ├── AllProvidersTable.tsx
+│   │   │   ├── AllUsersTable.tsx
+│   │   │   ├── PendingFlight.tsx
+│   │   │   ├── PendingProvider.tsx
+│   │   │   └── Sidebar.tsx
+│   │   ├── aircraft/
+│   │   │   ├── AircraftDetailModal.tsx
+│   │   │   ├── aircraftForm.tsx
+│   │   │   ├── aircraftListForm.tsx
+│   │   │   ├── AircraftSeatModal.tsx
+│   │   │   ├── DeleteAircraftModal.tsx
+│   │   │   ├── EditAircraftForm.tsx
+│   │   │   └── seatLayoutForm.tsx
+│   │   ├── booking/
+│   │   │   ├── BookedDetail.tsx
+│   │   │   ├── BookingDetails.tsx
+│   │   │   ├── BookingSegment.tsx
+│   │   │   ├── BookingSummary.tsx
+│   │   │   ├── FoodSelectionModal.tsx
+│   │   │   ├── Payment.tsx
+│   │   │   ├── PaymentSuccess.tsx
+│   │   │   ├── RetryPayment.tsx
+│   │   │   └── SeatSelectionModal.tsx
+│   │   ├── flight/
+│   │   │   ├── DeleteFlightModal.tsx
+│   │   │   ├── EditFlightForm.tsx
+│   │   │   ├── FlightDetailModal.tsx
+│   │   │   ├── flightForm.tsx
+│   │   │   ├── FlightList.tsx
+│   │   │   ├── FlightSeatModal.tsx
+│   │   │   └── RecurringFlightForm.tsx
+│   │   ├── food/
+│   │   │   ├── EditFood.tsx
+│   │   │   ├── FoodForm.tsx
+│   │   │   └── FoodList.tsx
+│   │   ├── offer/
+│   │   │   ├── EditOffer.tsx
+│   │   │   ├── OfferForm.tsx
+│   │   │   └── OfferList.tsx
+│   │   ├── protected/
+│   │   │   ├── ProtectedAdmin.tsx
+│   │   │   ├── ProtectedProvider.tsx
+│   │   │   └── ProtectedUser.tsx
+│   │   ├── provider/
+│   │   │   ├── CompleteProfileFom.tsx
+│   │   │   ├── ProviderBookedDetail.tsx
+│   │   │   ├── ProviderBookings.tsx
+│   │   │   ├── ProviderDashboard.tsx
+│   │   │   └── ProviderWallet.tsx
+│   │   ├── user/
+│   │   │   ├── SearchForm.tsx
+│   │   │   ├── UserBookings.tsx
+│   │   │   ├── UserDashboard.tsx
+│   │   │   ├── UserEditProfileModal.tsx
+│   │   │   ├── UserHeader.tsx
+│   │   │   ├── UserHome.tsx
+│   │   │   └── UserWallet.tsx
+│   │   ├── user-authentication/
+│   │   │   ├── AuthForm.tsx
+│   │   │   ├── ChangePasswordModal.tsx
+│   │   │   ├── ForgotPasswordForm.tsx
+│   │   │   ├── GoogleAuth.tsx
+│   │   │   ├── OtpForm.tsx
+│   │   │   ├── ResetPasswordForm.tsx
+│   │   │   ├── SignInForm.tsx
+│   │   │   ├── SignUpForm.tsx
+│   │   │   └── SignUpFormProvider.tsx
+│   │   └── wallet/
+│   │       ├── AddMoneyModal.tsx
+│   │       └── AddMoneyProviderModal.tsx
+│   ├── config/
+│   │   └── axios.ts
+│   ├── hooks/
+│   │   ├── admin/
+│   │   │   ├── useAdminDashboard.tsx
+│   │   │   ├── useAdminFlights.tsx
+│   │   │   ├── useAdminProviders.tsx
+│   │   │   ├── useAdminUsers.tsx
+│   │   │   ├── useAdminWallet.tsx
+│   │   │   ├── useFlightApproval.tsx
+│   │   │   └── useProviderVerification.tsx
+│   │   ├── booking/
+│   │   │   ├── useBookedDetail.tsx
+│   │   │   ├── useBookingDetails.tsx
+│   │   │   ├── useBookingSegment.tsx
+│   │   │   ├── useBookingSummary.tsx
+│   │   │   ├── useFoodSelection.tsx
+│   │   │   ├── usePassengerForm.tsx
+│   │   │   ├── usePayment.tsx
+│   │   │   ├── usePaymentSuccess.tsx
+│   │   │   ├── useRetryPayment.tsx
+│   │   │   ├── useSeatSelection.tsx
+│   │   │   └── useUserBookings.tsx
+│   │   ├── food/
+│   │   │   ├── useEditFood.tsx
+│   │   │   ├── useFood.tsx
+│   │   │   └── useProviderFood.tsx
+│   │   ├── offer/
+│   │   │   ├── useEditOffer.tsx
+│   │   │   ├── useOffer.tsx
+│   │   │   └── useProviderOffer.tsx
+│   │   ├── provider/
+│   │   │   ├── useAircraft.tsx
+│   │   │   ├── useAircraftList.tsx
+│   │   │   ├── useAircraftSchedule.tsx
+│   │   │   ├── useAircraftSeats.tsx
+│   │   │   ├── useCompleteProviderHook.tsx
+│   │   │   ├── useEditAircraft.tsx
+│   │   │   ├── useEditFlight.tsx
+│   │   │   ├── useFlight.tsx
+│   │   │   ├── useFlightDestinations.tsx
+│   │   │   ├── useFlightList.tsx
+│   │   │   ├── useProviderBookedDetail.tsx
+│   │   │   ├── useProviderBookings.tsx
+│   │   │   ├── useProviderDashboard.tsx
+│   │   │   ├── useProviderWallet.tsx
+│   │   │   ├── useRecurringFlight.tsx
+│   │   │   └── useSeatLayout.tsx
+│   │   ├── sharedHooks/
+│   │   │   ├── useFrogotpasswordForm.tsx
+│   │   │   ├── useOtpVerification.tsx
+│   │   │   ├── usePagination.tsx
+│   │   │   ├── useResetPasswordForm.tsx
+│   │   │   └── useUserHeader.tsx
+│   │   ├── user/
+│   │   │   ├── useChangePassword.tsx
+│   │   │   ├── useEditUserProfile.tsx
+│   │   │   ├── useFlightSearch.tsx
+│   │   │   ├── useGoogleAuth.tsx
+│   │   │   ├── userAuthForm.tsx
+│   │   │   ├── useUserDashboard.tsx
+│   │   │   ├── useUserHome.tsx
+│   │   │   └── useUserWallet.tsx
+│   │   └── wallet/
+│   │       ├── useAddMoney.tsx
+│   │       └── useAddmoneyProvider.tsx
+│   ├── layouts/
+│   │   ├── BackGroundLayout.tsx
+│   │   ├── Pagination.tsx
+│   │   ├── ProviderHeaderLayout.tsx
+│   │   └── ProviderSidebarLayout.tsx
+│   ├── pages/
+│   │   ├── admin/
+│   │   │   ├── AdminDashboardPage.tsx
+│   │   │   ├── AdminFlightPage.tsx
+│   │   │   ├── AdminWalletPage.tsx
+│   │   │   ├── AllProvidersPage.tsx
+│   │   │   ├── AllUsersPage.tsx
+│   │   │   ├── PendingFlightPage.tsx
+│   │   │   └── PendingProviderPage.tsx
+│   │   ├── auth/
+│   │   │   ├── AuthPage.tsx
+│   │   │   ├── ForgetPasswordPage.tsx
+│   │   │   ├── OtpVerificationPage.tsx
+│   │   │   └── ResetPasswordPage.tsx
+│   │   ├── booking/
+│   │   │   ├── BookedDetailPage.tsx
+│   │   │   ├── BookingDetailsPage.tsx
+│   │   │   ├── BookingSegmentPage.tsx
+│   │   │   ├── BookingSummaryPage.tsx
+│   │   │   ├── PaymentPage.tsx
+│   │   │   ├── PaymentSuccessPage.tsx
+│   │   │   └── RetryPaymentPage.tsx
+│   │   ├── food/
+│   │   │   ├── AddFoodPage.tsx
+│   │   │   ├── EditFoodPage.tsx
+│   │   │   └── FoodListPage.tsx
+│   │   ├── offer/
+│   │   │   ├── AddOfferPage.tsx
+│   │   │   ├── EditOfferPage.tsx
+│   │   │   └── OfferListPage.tsx
+│   │   ├── provider/
+│   │   │   ├── AddAircraftPage.tsx
+│   │   │   ├── AddFlightPage.tsx
+│   │   │   ├── AircraftListPage.tsx
+│   │   │   ├── AricraftSeatLayoutPage.tsx
+│   │   │   ├── CompleteProfilePage.tsx
+│   │   │   ├── EditAircraftPage.tsx
+│   │   │   ├── EditFlightPage.tsx
+│   │   │   ├── FlightListPage.tsx
+│   │   │   ├── ProviderBookedDetailPage.tsx
+│   │   │   ├── ProviderBookingsPage.tsx
+│   │   │   ├── ProviderDashboardPage.tsx
+│   │   │   ├── ProviderWalletPage.tsx
+│   │   │   └── SeatLayoutPage.tsx
+│   │   ├── user/
+│   │   │   ├── UserBookingsPage.tsx
+│   │   │   ├── UserDashboardPage.tsx
+│   │   │   ├── UserHomePage.tsx
+│   │   │   └── UserWalletPage.tsx
+│   │   ├── HomePage.tsx
+│   │   └── PageNOtFound.tsx
+│   ├── redux/
+│   │   ├── admin/
+│   │   │   ├── adminSlice.ts
+│   │   │   ├── adminThunk.ts
+│   │   │   └── adminTypes.ts
+│   │   ├── aircraft/
+│   │   │   ├── aircraftSlice.ts
+│   │   │   ├── aircraftThunk.ts
+│   │   │   └── aircraftTypes.ts
+│   │   ├── auth/
+│   │   │   ├── authSlice.ts
+│   │   │   ├── authThunk.ts
+│   │   │   └── authTypes.ts
+│   │   ├── booking/
+│   │   │   ├── bookingSlice.ts
+│   │   │   ├── bookingThunk.ts
+│   │   │   └── bookingTypes.ts
+│   │   ├── destination/
+│   │   │   ├── destinationSlice.ts
+│   │   │   ├── destinationThunk.ts
+│   │   │   └── destinationTypes.ts
+│   │   ├── flight/
+│   │   │   ├── flightSlice.ts
+│   │   │   ├── flightThunk.ts
+│   │   │   └── flightTypes.ts
+│   │   ├── food/
+│   │   │   ├── foodSlice.ts
+│   │   │   ├── foodThunk.ts
+│   │   │   └── foodTypes.ts
+│   │   ├── offer/
+│   │   │   ├── offerSlice.ts
+│   │   │   ├── offerThunk.ts
+│   │   │   └── offerTypes.ts
+│   │   ├── providerBooking/
+│   │   │   ├── providerBookingSlice.ts
+│   │   │   ├── providerBookingThunk.ts
+│   │   │   └── providerBookingTypes.ts
+│   │   ├── seat/
+│   │   │   ├── seatSlice.ts
+│   │   │   ├── seatThunk.ts
+│   │   │   └── seatTypes.ts
+│   │   └── wallet/
+│   │       ├── walletSlice.ts
+│   │       ├── walletThunk.ts
+│   │       └── walletTypes.ts
+│   ├── routes/
+│   │   ├── adminRoutes.tsx
+│   │   ├── providerRoutes.tsx
+│   │   └── userRoutes.tsx
+│   ├── types/
+│   │   ├── amenities.ts
+│   │   └── authTypes.ts
+│   ├── utils/
+│   │   ├── amenities.tsx
+│   │   ├── debounce.ts
+│   │   ├── OtpConstants.ts
+│   │   ├── toast.ts
+│   │   ├── uploadToCloudinary.ts
+│   │   └── validationSchema.ts
+│   ├── App.tsx
+│   ├── index.css
+│   ├── main.tsx
+│   └── vite-env.d.ts
+├── .env
+├── .gitignore
+├── eslint.config.js
+├── index.html
+├── package-lock.json
+├── package.json
+├── README.md
+├── tsconfig.app.json
+├── tsconfig.json
+├── tsconfig.node.json
+└── vite.config.ts
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Getting Started
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Environment Variables
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+\`\`\`
+VITE_STRIPE_PUBLISHABLE_KEY=
+VITE_GOOGLE_CLIENT_ID=
+VITE_API_BASE_URL=
+VITE_CLOUDINARY_NAME=
+VITE_CLOUDINARY_URL=
+VITE_CLOUDINARY_PRESET=
+\`\`\`

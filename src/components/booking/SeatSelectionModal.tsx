@@ -130,7 +130,7 @@ const SeatSelectionModal: React.FC<SeatSelectionModalProps> = ({
 
   const handleSeatClick = (seat: BookingFlightSeatDTO, cabinData: BookingFlightSeatMapDTO) => {
     if (!isSeatClickable(seat)) return;
-    // Determine surcharge for this position
+    // Determine surcharge for  this position
     const seatSurcharge =
       seat.position === "window"
         ? (cabinData.seatSurcharge.window ?? 0)
