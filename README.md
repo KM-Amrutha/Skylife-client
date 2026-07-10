@@ -1,5 +1,5 @@
-# Skylife — Frontend
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 Aircraft booking platform frontend
 =======
@@ -325,3 +325,6 @@ VITE_CLOUDINARY_NAME=
 VITE_CLOUDINARY_URL=
 VITE_CLOUDINARY_PRESET=
 \`\`\`
+
+
+
