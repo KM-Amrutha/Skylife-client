@@ -16,6 +16,7 @@ Aircraft booking platform frontend
 - **Image Upload:** Cloudinary, s3Bucket
 
 ## Folder Structure
+```
 front-end/
 ├── node_modules/
 ├── public/
@@ -291,6 +292,7 @@ front-end/
 ├── tsconfig.json
 ├── tsconfig.node.json
 └── vite.config.ts
+```
 
 ## Getting Started
 
