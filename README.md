@@ -1,4 +1,3 @@
-
 Aircraft booking platform frontend
 
 ## Tech Stack
@@ -11,15 +10,12 @@ Aircraft booking platform frontend
 - **Type Safty:** TypeScript
 - **Form handling& validation:** Formik + Yup
 - **TicketvPDF generation:** html2Canvas + jsPDF
-- **State Management:** Redux Toolkit
-- **Styling:** Tailwind CSS
 - **Routing:** React Router v6
 - **HTTP Client:** Axios
 - **Payments:** Stripe Elements
-- **Image Upload:** Cloudinary,s3Bucket
+- **Image Upload:** Cloudinary, s3Bucket
 
 ## Folder Structure
-
 front-end/
 ├── node_modules/
 ├── public/
@@ -298,21 +294,17 @@ front-end/
 
 ## Getting Started
 
-\`\`\`bash
+```bash
 npm install
 npm run dev
-\`\`\`
+```
 
 ## Environment Variables
-
-\`\`\`
 VITE_STRIPE_PUBLISHABLE_KEY=
 VITE_GOOGLE_CLIENT_ID=
 VITE_API_BASE_URL=
 VITE_CLOUDINARY_NAME=
 VITE_CLOUDINARY_URL=
 VITE_CLOUDINARY_PRESET=
-\`\`\`
-
 
 
