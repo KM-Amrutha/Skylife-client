@@ -1,8 +1,5 @@
 import { useState, useCallback } from "react";
 import { PassengerFormData } from "../../redux/booking/bookingType";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
-
 const createEmptyPassenger = (): PassengerFormData => ({
   passengerId: crypto.randomUUID(),
   name: "",

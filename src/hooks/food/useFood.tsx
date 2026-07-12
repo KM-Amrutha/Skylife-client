@@ -50,8 +50,7 @@ const useFood = (): UseAddFoodReturn => {
   const { aircrafts, isLoading: isLoadingAircrafts } = useSelector(
     (state: RootState) => state.aircraft
   );
-  const { isSubmitting } = useSelector((state: RootState) => state.food);
-
+  
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   useEffect(() => {

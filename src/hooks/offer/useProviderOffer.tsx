@@ -7,7 +7,6 @@ import {
   toggleOfferStatus,
 } from "../../redux/offer/offerThunk";
 import { clearOfferError, clearOfferSubmitError } from "../../redux/offer/offerSlice";
-import { OfferResponseDTO } from "../../redux/offer/offerType";
 import { showSuccessToast, showErrorToast } from "../../utils/toast";
 
 const useProviderOffer = () => {

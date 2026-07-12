@@ -63,7 +63,6 @@ const useFlightSearch = (): UseFlightSearchReturn => {
 const outboundResults = useMemo(() => searchResults?.outbound ?? [], [searchResults]);
 const returnResults = useMemo(() => searchResults?.return ?? [], [searchResults]);
   const [hasSearched, setHasSearched] = useState(() => searchResults !== null);
-  const [currentPage, setCurrentPage] = useState(1);
   const [priceFilter, setPriceFilter] = useState<number>(500000);
   const [baggageFilter, setBaggageFilter] = useState<number>(0);
   const [stopsFilter, setStopsFilter] = useState<"all" | "direct">("all");
@@ -173,12 +172,12 @@ const returnResults = useMemo(() => searchResults?.return ?? [], [searchResults]
   const handleSearch = useCallback(() => {
     if (!validate()) return;
     setHasSearched(true);
-    setCurrentPage(1);
+    
     dispatch(searchFlights({ ...form, page: 1, limit: 6 }));
   }, [dispatch, form, validate]);
 
   const handlePageChange = useCallback((page: number) => {
-    setCurrentPage(page);
+   
     window.scrollTo({ top: 0, behavior: "smooth" });
     dispatch(searchFlights({ ...form, page, limit: 6 }));
   }, [dispatch, form]);
@@ -191,7 +190,6 @@ const returnResults = useMemo(() => searchResults?.return ?? [], [searchResults]
     setToDisplayName("");
     setFromResults([]);
     setToResults([]);
-    setCurrentPage(1);
     setPriceFilter(500000);
     setBaggageFilter(0);
     setStopsFilter("all");
@@ -298,6 +296,7 @@ const returnResults = useMemo(() => searchResults?.return ?? [], [searchResults]
     isAddingFlight,
     handleSelect,
     handleViewSegment,
+  
   };
 };
 

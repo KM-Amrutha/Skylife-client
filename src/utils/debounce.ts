@@ -2,7 +2,7 @@ export function debounce<T extends unknown[]>(
   func: (...args: T) => void | Promise<void>,
   wait: number
 ): (...args: T) => void {
-  let timeout: NodeJS.Timeout | null = null;
+  let timeout: ReturnType<typeof setTimeout> | null = null;
 
   return function executedFunction(...args: T) {
     const later = () => {

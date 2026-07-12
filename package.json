@@ -16,7 +16,6 @@
     "@reduxjs/toolkit": "^2.9.0",
     "@stripe/react-stripe-js": "^6.3.0",
     "@stripe/stripe-js": "^9.4.0",
-    "@types/html2canvas": "^0.5.35",
     "axios": "^1.12.2",
     "base64-js": "^1.5.1",
     "formik": "^2.4.6",

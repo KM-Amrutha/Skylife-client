@@ -23,8 +23,6 @@ const useBookingSummary = () => {
 const { userWallet } = useSelector((state: RootState) => state.wallet);
 const [showWalletConfirm, setShowWalletConfirm] = useState(false);
 
-  const segment = useSelector((state: RootState) => state.booking.segment);
-
   const {
     summary,
     isLoadingSummary,

@@ -111,7 +111,6 @@ interface UseRecurringFlightReturn {
 
 const useRecurringFlight = (): UseRecurringFlightReturn => {
   const dispatch = useDispatch<AppDispatch>();
-  const providerId = useSelector((state: RootState) => state.auth.provider?.id ?? "");
   const { availableForSchedule: availableAircrafts, isLoadingAvailableForSchedule: isLoadingAircrafts } =
     useSelector((state: RootState) => state.aircraft);
   const { isCreatingRecurring } = useSelector((state: RootState) => state.flight);

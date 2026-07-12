@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { FlightDetails, SearchFlightsRequest,SearchFlightResult,SearchFlightResponse,
+import { FlightDetails, SearchFlightsRequest,SearchFlightResponse,
    FlightSeatMapDTO, RecurringFlightResultDTO } from "./flightTypes";
 import {
   getProviderFlights,

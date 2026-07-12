@@ -1,6 +1,5 @@
 import { useState, useCallback} from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { AppDispatch, RootState } from "../../redux/store";
 import { addMoneyToWallet, getUserWallet } from "../../redux/wallet/walletThunk";
 import { showSuccessToast, showErrorToast } from "../../utils/toast";
@@ -16,7 +15,7 @@ interface UseAddMoneyReturn {
 
 const useAddMoney = (): UseAddMoneyReturn => {
   const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
+
 
   const { isLoadingUserWallet } = useSelector((state: RootState) => state.wallet);
 
